@@ -10,6 +10,14 @@ class Home extends Controller
         $this->view('templates/footer');
     }
 
+    public function gallery()
+    {
+        $this->view('templates/header');
+        $this->view('templates/navbar');
+        $this->view('home/gallery');
+        $this->view('templates/footer');
+    }
+
     public function contact()
     {
         $this->view('templates/header');
