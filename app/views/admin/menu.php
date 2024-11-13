@@ -1,10 +1,3 @@
-<html lang="en">
-
-<head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-</head>
-
 <body class="bg-gray-100 flex">
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -79,45 +72,42 @@
     <!-- Add Menu Modal Form -->
     <div id="addModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Menu</h2>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Menu Item</h2>
             <form id="addMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnAddMenu" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Kiri: Nama Menu, Deskripsi, Harga, Stock -->
-                <div class="md:col-span-1">
+                <div>
                     <div class="mb-4">
-                        <label for="menuName" class="block text-gray-700">Nama Menu</label>
-                        <input type="text" id="menuName" name="menuName" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama Menu" required>
+                        <label for="menuName" class="block text-gray-700">Menu Name</label>
+                        <input type="text" id="menuName" name="menuName" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Menu Name" required>
                     </div>
                     <div class="mb-4">
-                        <label for="description" class="block text-gray-700">Deskripsi</label>
-                        <textarea id="description" name="description" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Deskripsi Menu" required></textarea>
+                        <label for="description" class="block text-gray-700">Description</label>
+                        <textarea id="description" name="description" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Description" required></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="price" class="block text-gray-700">Harga</label>
-                        <input type="number" id="price" name="price" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Harga Menu" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="stock" class="block text-gray-700">Stock</label>
-                        <input type="number" id="stock" name="stock" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Jumlah Stock" required>
+                        <label for="price" class="block text-gray-700">Price</label>
+                        <input type="number" id="price" name="price" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Price" required>
                     </div>
                 </div>
-
-                <!-- Kanan: Kategori, Foto -->
-                <div class="md:col-span-1">
+                <div>
                     <div class="mb-4">
-                        <label for="category" class="block text-gray-700">Kategori</label>
+                        <label for="category" class="block text-gray-700">Category</label>
                         <select name="category" id="category" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option value="">Pilih Kategori</option>
+                            <option value="">Select Category</option>
                             <option value="Food">Food</option>
-                            <option value="Drinks">Drinks</option>
+                            <option value="Drink">Drink</option>
                         </select>
                     </div>
+
                     <div class="mb-4">
-                        <label for="imageUrl" class="block text-gray-700">Foto</label>
+                        <label for="stock" class="block text-gray-700">Stock</label>
+                        <input type="number" id="stock" name="stock" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Stock" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="imageUrl" class="block text-gray-700">Image</label>
                         <input type="file" id="imageUrl" name="imageUrl" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
-
-                <!-- Tombol Aksi -->
                 <div class="flex justify-end col-span-2">
                     <button type="button" onclick="closeAddModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
@@ -126,71 +116,63 @@
         </div>
     </div>
 
-<!-- Edit Menu Modal Form -->
-<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
-    <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
-        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Menu</h2>
-        <form id="editMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnEditMenu" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="hidden" name="MenuId" id="MenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
-
-            <!-- Kiri: Nama Menu, Deskripsi, Harga, Stock -->
-            <div class="md:col-span-1">
+    <!-- Edit Menu Modal Form -->
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Menu Item</h2>
+            <form id="editMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnEditMenu" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="hidden" name="MenuId" id="MenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
+                
                 <div class="mb-4">
-                    <label for="menuName" class="block text-gray-700">Nama Menu</label>
+                    <label for="menuName" class="block text-gray-700">Menu Name</label>
                     <input type="text" name="menuName" id="menuName" class="w-full p-2 border border-gray-300 rounded"
-                        value="<?= isset($menu['menuName']) ? htmlspecialchars($menu['menuName']) : ''; ?>" required>
+                        value="<?= isset($menu['MenuName']) ? htmlspecialchars($menu['MenuName']) : ''; ?>" required>
                 </div>
                 <div class="mb-4">
-                    <label for="description" class="block text-gray-700">Deskripsi</label>
-                    <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded" required><?= isset($menu['description']) ? htmlspecialchars($menu['description']) : ''; ?></textarea>
+                    <label for="description" class="block text-gray-700">Description</label>
+                    <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded" required><?= isset($menu['Description']) ? htmlspecialchars($menu['Description']) : ''; ?></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="price" class="block text-gray-700">Harga</label>
+                    <label for="price" class="block text-gray-700">Price</label>
                     <input type="number" name="price" id="price" class="w-full p-2 border border-gray-300 rounded"
-                        value="<?= isset($menu['price']) ? $menu['price'] : ''; ?>" required>
+                        value="<?= isset($menu['Price']) ? $menu['Price'] : ''; ?>" required>
+                </div>
+                <div class="mb-4">
+                    <label for="category" class="block text-gray-700">Category</label>
+                    <select name="category" id="category" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="Food" <?= isset($menu['Category']) && $menu['Category'] === 'Food' ? 'selected' : ''; ?>>Food</option>
+                        <option value="Drink" <?= isset($menu['Category']) && $menu['Category'] === 'Drink' ? 'selected' : ''; ?>>Drink</option>
+                        <option value="Snack" <?= isset($menu['Category']) && $menu['Category'] === 'Snack' ? 'selected' : ''; ?>>Snack</option>
+                    </select>
                 </div>
                 <div class="mb-4">
                     <label for="stock" class="block text-gray-700">Stock</label>
                     <input type="number" name="stock" id="stock" class="w-full p-2 border border-gray-300 rounded"
-                        value="<?= isset($menu['stock']) ? $menu['stock'] : ''; ?>" required>
-                </div>
-            </div>
-
-            <!-- Kanan: Kategori, Foto -->
-            <div class="md:col-span-1">
-                <div class="mb-4">
-                    <label for="category" class="block text-gray-700">Kategori</label>
-                    <select name="category" id="category" class="w-full p-2 border border-gray-300 rounded" required>
-                        <option value="Food" <?= isset($menu['category']) && $menu['category'] === 'Food' ? 'selected' : ''; ?>>Food</option>
-                        <option value="Drinks" <?= isset($menu['category']) && $menu['category'] === 'Drinks' ? 'selected' : ''; ?>>Drinks</option>
-                    </select>
+                        value="<?= isset($menu['Stock']) ? $menu['Stock'] : ''; ?>" required>
                 </div>
                 <div class="mb-4">
-                    <label for="imageUrl" class="block text-gray-700">Foto</label>
-                    <img id="imagePreview" src="<?= isset($menu['imageUrl']) ? BASEURL . '/' . $menu['imageUrl'] : ''; ?>" alt="Menu Image" class="w-20 h-20 rounded-full mx-auto mb-2">
+                    <label for="imageUrl" class="block text-gray-700">Image</label>
+                    <img id="imagePreview" src="<?= isset($menu['ImageUrl']) ? BASEURL . '/' . $menu['ImageUrl'] : ''; ?>" alt="Menu Image" class="w-20 h-20 rounded-full mx-auto mb-2">
                     <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
                 </div>
-            </div>
-
-            <!-- Tombol Aksi -->
-            <div class="flex justify-end col-span-2">
-                <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-            </div>
-        </form>
+                <div class="flex justify-end col-span-2">
+                    <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-    <!-- Modal Hapus Menu -->
+    <!-- Delete Menu Modal -->
     <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Hapus Menu</h2>
-            <p class="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus menu ini?</p>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Delete Menu Item</h2>
+            <p class="mb-4 text-gray-600">Are you sure you want to delete this menu item?</p>
             <form id="deleteMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnDeleteMenu">
                 <input type="hidden" name="MenuId" id="deleteMenuId">
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
                 </div>
             </form>
         </div>
@@ -210,28 +192,24 @@
         }
 
         function openEditModal(menu) {
-            document.getElementById('MenuId').value = menu.MenuId; // pastikan 'menuId' adalah ID input tersembunyi di form
+            // Set the form values from the menu object
+            document.getElementById('MenuId').value = menu.MenuId;
             document.getElementById('menuName').value = menu.MenuName;
             document.getElementById('description').value = menu.Description;
             document.getElementById('price').value = menu.Price;
-            document.getElementById('stock').value = menu.Stock;
             document.getElementById('category').value = menu.Category;
-
-            // Handle the image preview, if an image URL is provided
+            document.getElementById('stock').value = menu.Stock;
             const imageUrl = menu.ImageUrl ? "<?= BASEURL; ?>/" + menu.ImageUrl : "";
             document.getElementById('imagePreview').src = imageUrl;
-
-            // Show the modal by removing the 'hidden' class
             editModal.classList.remove('hidden');
         }
 
         function closeEditModal() {
-            const editModal = document.getElementById('editModal'); // Ensure this is properly selected
             editModal.classList.add('hidden');
         }
 
-        function openDeleteModal(menuid) {
-            document.getElementById('deleteMenuId').value = menuid;
+        function openDeleteModal(menuId) {
+            document.getElementById('deleteMenuId').value = menuId;
             deleteModal.classList.remove('hidden');
         }
 
@@ -240,23 +218,19 @@
         }
 
         window.onload = function() {
-            // Check for success notification
             const successNotification = document.getElementById('success-notification');
             if (successNotification) {
                 setTimeout(() => {
                     successNotification.style.display = 'none';
-                }, 2000); // Hide after 2 seconds
+                }, 2000);
             }
-
-            // Check for error notification
             const errorNotification = document.getElementById('error-notification');
             if (errorNotification) {
                 setTimeout(() => {
                     errorNotification.style.display = 'none';
-                }, 2000); // Hide after 2 seconds
+                }, 2000);
             }
         }
     </script>
-</body>
 
-</html>
+</body>

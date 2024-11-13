@@ -35,7 +35,7 @@ class Menu extends Controller
             } else {
                 $_SESSION['error'] = "Penambahan menu gagal, silakan coba lagi.";
             }
-            header("Location: " . BASEURL . "/admin/menu");
+            header("Location: " . BASEURL . "/employee/index");
             exit();
         }
     }
@@ -92,7 +92,7 @@ class Menu extends Controller
                 $_SESSION['error'] = "Pembaharuan menu gagal.";
             }
 
-            header("Location: " . BASEURL . "/admin/menu");
+            header("Location: " . BASEURL . "/menu/index");
             exit();
         }
     }

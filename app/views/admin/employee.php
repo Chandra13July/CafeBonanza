@@ -1,10 +1,3 @@
-<html lang="en">
-
-<head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-</head>
-
 <body class="bg-gray-100 flex">
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -87,7 +80,6 @@
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Employee</h2>
             <form id="addEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnAddEmployee" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Left Column -->
                 <div>
                     <div class="mb-4">
                         <label for="username" class="block text-gray-700">Username</label>
@@ -109,8 +101,6 @@
                         <input type="password" id="password" name="password" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password" required>
                     </div>
                 </div>
-
-                <!-- Right Column -->
                 <div>
                     <div class="mb-4">
                         <label for="role" class="block text-gray-700">Role</label>
@@ -145,8 +135,6 @@
                         <input type="file" id="imageUrl" name="imageUrl" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
-
-                <!-- Action Buttons -->
                 <div class="flex justify-end col-span-2">
                     <button type="button" onclick="closeAddModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
@@ -155,162 +143,156 @@
         </div>
     </div>
 
-    <<!-- Edit Employee Modal Form -->
-        <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
-            <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee</h2>
-                <form id="editEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnEditEmployee" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="hidden" name="EmployeeId" id="EmployeeId" value="<?= isset($employee['EmployeeId']) ? $employee['EmployeeId'] : ''; ?>">
+    <!-- Edit Employee Modal Form -->
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee</h2>
+            <form id="editEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnEditEmployee" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="hidden" name="EmployeeId" id="editEmployeeId" value="<?= isset($employee['EmployeeId']) ? $employee['EmployeeId'] : ''; ?>">
 
-                    <!-- Username -->
-                    <div class="mb-4">
-                        <label for="username" class="block text-gray-700">Username</label>
-                        <input type="text" name="username" id="username" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($employee['Username']) ? htmlspecialchars($employee['Username']) : ''; ?>" required>
-                    </div>
+                <!-- Username -->
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700">Username</label>
+                    <input type="text" name="username" id="editUsername" class="w-full p-2 border border-gray-300 rounded"
+                        value="<?= isset($employee['Username']) ? htmlspecialchars($employee['Username']) : ''; ?>" required>
+                </div>
 
-                    <!-- Email -->
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700">Email</label>
-                        <input type="email" name="email" id="email" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($employee['Email']) ? htmlspecialchars($employee['Email']) : ''; ?>" required>
-                    </div>
+                <!-- Email -->
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" name="email" id="editEmail" class="w-full p-2 border border-gray-300 rounded"
+                        value="<?= isset($employee['Email']) ? htmlspecialchars($employee['Email']) : ''; ?>" required>
+                </div>
 
-                    <!-- Phone -->
-                    <div class="mb-4">
-                        <label for="phone" class="block text-gray-700">Phone</label>
-                        <input type="text" name="phone" id="phone" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($employee['Phone']) ? htmlspecialchars($employee['Phone']) : ''; ?>" required>
-                    </div>
+                <!-- Phone -->
+                <div class="mb-4">
+                    <label for="phone" class="block text-gray-700">Phone</label>
+                    <input type="text" name="phone" id="editPhone" class="w-full p-2 border border-gray-300 rounded"
+                        value="<?= isset($employee['Phone']) ? htmlspecialchars($employee['Phone']) : ''; ?>" required>
+                </div>
 
-                    <!-- Role -->
-                    <div class="mb-4">
-                        <label for="role" class="block text-gray-700">Role</label>
-                        <select name="role" id="role" class="w-full p-2 border border-gray-300 rounded" required>
-                            <option value="Admin" <?= isset($employee['Role']) && $employee['Role'] === 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                            <option value="Cashier" <?= isset($employee['Role']) && $employee['Role'] === 'Cashier' ? 'selected' : ''; ?>>Cashier</option>
-                        </select>
-                    </div>
+                <!-- Role -->
+                <div class="mb-4">
+                    <label for="role" class="block text-gray-700">Role</label>
+                    <select name="role" id="editRole" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="Admin" <?= isset($employee['Role']) && $employee['Role'] === 'Admin' ? 'selected' : ''; ?>>Admin</option>
+                        <option value="Cashier" <?= isset($employee['Role']) && $employee['Role'] === 'Cashier' ? 'selected' : ''; ?>>Cashier</option>
+                    </select>
+                </div>
 
-                    <!-- Gender -->
-                    <div class="mb-4">
-                        <label for="gender" class="block text-gray-700">Gender</label>
-                        <select name="gender" id="gender" class="w-full p-2 border border-gray-300 rounded" required>
-                            <option value="Male" <?= isset($employee['Gender']) && $employee['Gender'] === 'Male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?= isset($employee['Gender']) && $employee['Gender'] === 'Female' ? 'selected' : ''; ?>>Female</option>
-                        </select>
-                    </div>
+                <!-- Gender -->
+                <div class="mb-4">
+                    <label for="gender" class="block text-gray-700">Gender</label>
+                    <select name="gender" id="editGender" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="Male" <?= isset($employee['Gender']) && $employee['Gender'] === 'Male' ? 'selected' : ''; ?>>Male</option>
+                        <option value="Female" <?= isset($employee['Gender']) && $employee['Gender'] === 'Female' ? 'selected' : ''; ?>>Female</option>
+                    </select>
+                </div>
 
-                    <!-- Date of Birth -->
-                    <div class="mb-4">
-                        <label for="dateOfBirth" class="block text-gray-700">Date of Birth</label>
-                        <input type="date" name="dateOfBirth" id="dateOfBirth" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($employee['DateOfBirth']) ? $employee['DateOfBirth'] : ''; ?>" required>
-                    </div>
+                <!-- Date of Birth -->
+                <div class="mb-4">
+                    <label for="dateOfBirth" class="block text-gray-700">Date of Birth</label>
+                    <input type="date" name="dateOfBirth" id="editDateOfBirth" class="w-full p-2 border border-gray-300 rounded"
+                        value="<?= isset($employee['DateOfBirth']) ? $employee['DateOfBirth'] : ''; ?>" required>
+                </div>
 
-                    <!-- Address -->
-                    <div class="mb-4">
-                        <label for="address" class="block text-gray-700">Address</label>
-                        <textarea name="address" id="address" class="w-full p-2 border border-gray-300 rounded" required><?= isset($employee['Address']) ? htmlspecialchars($employee['Address']) : ''; ?></textarea>
-                    </div>
+                <!-- Address -->
+                <div class="mb-4">
+                    <label for="address" class="block text-gray-700">Address</label>
+                    <textarea name="address" id="editAddress" class="w-full p-2 border border-gray-300 rounded" required><?= isset($employee['Address']) ? htmlspecialchars($employee['Address']) : ''; ?></textarea>
+                </div>
 
-                    <!-- Photo -->
-                    <div class="mb-4">
-                        <label for="imageUrl" class="block text-gray-700">Photo</label>
-                        <img id="imagePreview" src="<?= isset($employee['ImageUrl']) ? BASEURL . '/' . $employee['ImageUrl'] : ''; ?>" alt="Employee Image" class="w-20 h-20 rounded-full mx-auto mb-2">
-                        <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
-                    </div>
+                <!-- Photo -->
+                <div class="mb-4">
+                    <label for="imageUrl" class="block text-gray-700">Photo</label>
+                    <img id="editImagePreview" src="<?= isset($employee['ImageUrl']) ? BASEURL . '/' . $employee['ImageUrl'] : ''; ?>" alt="Employee Image" class="w-20 h-20 rounded-full mx-auto mb-2">
+                    <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
+                </div>
 
-                    <!-- Save/Cancel Buttons -->
-                    <div class="flex justify-end col-span-2">
-                        <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-                    </div>
-                </form>
-            </div>
+                <!-- Save/Cancel Buttons -->
+                <div class="flex justify-end col-span-2">
+                    <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Modal Hapus Customer -->
-        <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
-            <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Hapus Employee</h2>
-                <p class="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus employee ini?</p>
-                <form id="deleteEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnDeleteEmployee">
-                    <input type="hidden" name="EmployeeId" id="deleteEmployeeId">
-                    <div class="flex justify-end">
-                        <button type="button" onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
-                    </div>
-                </form>
-            </div>
+    <!-- Modal Hapus Customer -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Hapus Employee</h2>
+            <p class="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus employee ini?</p>
+            <form id="deleteEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnDeleteEmployee">
+                <input type="hidden" name="EmployeeId" id="deleteEmployeeId">
+                <div class="flex justify-end">
+                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <script>
-            const deleteModal = document.getElementById('deleteModal');
-            const addModal = document.getElementById('addModal');
-            const editModal = document.getElementById('editModal');
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        const addModal = document.getElementById('addModal');
+        const editModal = document.getElementById('editModal');
 
-            function openAddModal() {
-                addModal.classList.remove('hidden');
+        function openAddModal() {
+            addModal.classList.remove('hidden');
+        }
+
+        function closeAddModal() {
+            addModal.classList.add('hidden');
+        }
+
+        function openEditModal(employee) {
+            document.getElementById('editEmployeeId').value = employee.EmployeeId;
+            document.getElementById('editUsername').value = employee.Username;
+            document.getElementById('editEmail').value = employee.Email;
+            document.getElementById('editPhone').value = employee.Phone;
+            document.getElementById('editRole').value = employee.Role;
+            document.getElementById('editGender').value = employee.Gender;
+            document.getElementById('editDateOfBirth').value = employee.DateOfBirth; // Perbaikan di sini
+
+            document.getElementById('editAddress').value = employee.Address;
+
+            const imageUrl = employee.ImageUrl ? "<?= BASEURL; ?>/" + employee.ImageUrl : "";
+            document.getElementById('editImagePreview').src = imageUrl;
+
+            editModal.classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            editModal.classList.add('hidden');
+        }
+
+        function openDeleteModal(employeeId) {
+            document.getElementById('deleteEmployeeId').value = employeeId;
+            deleteModal.classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.add('hidden');
+        }
+
+        window.onload = function() {
+            const successNotification = document.getElementById('success-notification');
+            if (successNotification) {
+                setTimeout(() => {
+                    successNotification.style.display = 'none';
+                }, 2000);
+                s
             }
 
-            function closeAddModal() {
-                addModal.classList.add('hidden');
+            const errorNotification = document.getElementById('error-notification');
+            if (errorNotification) {
+                setTimeout(() => {
+                    errorNotification.style.display = 'none';
+                }, 2000);
             }
-
-            function openEditModal(employee) {
-                // Set the form values from the employee object
-                document.getElementById('EmployeeId').value = employee.EmployeeId;
-                document.getElementById('username').value = employee.Username;
-                document.getElementById('email').value = employee.Email;
-                document.getElementById('phone').value = employee.Phone;
-                document.getElementById('role').value = employee.Role;
-                document.getElementById('gender').value = employee.Gender;
-                // Set the dateOfBirth in the modal automatically
-                document.getElementById('dateOfBirth').value = employee.DateofBirth;
-
-                document.getElementById('address').value = employee.Address;
-
-                // Handle the image preview, if an image URL is provided
-                const imageUrl = employee.ImageUrl ? "<?= BASEURL; ?>/" + employee.ImageUrl : "";
-                document.getElementById('imagePreview').src = imageUrl;
-
-                // Show the modal by removing the 'hidden' class
-                editModal.classList.remove('hidden');
-            }
-
-            function closeEditModal() {
-                const editModal = document.getElementById('editModal'); // Ensure this is properly selected
-                editModal.classList.add('hidden');
-            }
-
-            function openDeleteModal(employeeId) {
-                document.getElementById('deleteEmployeeId').value = employeeId;
-                deleteModal.classList.remove('hidden');
-            }
-
-            function closeDeleteModal() {
-                deleteModal.classList.add('hidden');
-            }
-
-            window.onload = function() {
-                // Check for success notification
-                const successNotification = document.getElementById('success-notification');
-                if (successNotification) {
-                    setTimeout(() => {
-                        successNotification.style.display = 'none';
-                    }, 2000); // Hide after 2 seconds
-                }
-
-                // Check for error notification
-                const errorNotification = document.getElementById('error-notification');
-                if (errorNotification) {
-                    setTimeout(() => {
-                        errorNotification.style.display = 'none';
-                    }, 2000); // Hide after 2 seconds
-                }
-            }
-        </script>
+        }
+    </script>
 </body>
 
 </html>
