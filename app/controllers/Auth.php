@@ -41,12 +41,12 @@ class Auth extends Controller
                 unset($_SESSION['login_data']);
                 $_SESSION['user_id'] = $user['EmployeeId'];
                 $_SESSION['username'] = $user['Username'];
-                $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/customer/User.png';
+                $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
 
                 $role = $user['Role'];
 
                 $_SESSION['success'] = "{$user['Username']} berhasil login sebagai {$role}!";
-                $_SESSION['redirect_url'] = ($role == 'Admin') ? '/dashboard/dashboard' : '/admin/order';
+                $_SESSION['redirect_url'] = ($role == 'Admin') ? '/dashboard/index' : '/order/index';
                 header('Location: ' . BASEURL . '/auth/loginAdmin');
                 exit;
             } else {
