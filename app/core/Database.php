@@ -22,7 +22,7 @@ class Database {
         try {
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $option);
         } catch(PDOException $e) {
-            die($e->getMessage());
+            die("Connection failed: " . $e->getMessage());
         }
     }
 
@@ -54,7 +54,14 @@ class Database {
 
     public function execute()
     {
-        return $this->stmt->execute();
+        try {
+            $this->stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            // Tangani error saat eksekusi query
+            echo "Error executing query: " . $e->getMessage();
+            return false;
+        }
     }
 
     public function resultSet()

@@ -15,7 +15,7 @@ class Menu extends Controller
 
         $this->view('layout/header');
         $this->view('layout/sidebar');
-        $this->view('admin/menu', ['menu' => $menu]); // Perbaikan penamaan array
+        $this->view('admin/menu', ['menu' => $menu]);
     }
 
     public function btnAddMenu()
@@ -35,7 +35,7 @@ class Menu extends Controller
             } else {
                 $_SESSION['error'] = "Penambahan menu gagal, silakan coba lagi.";
             }
-            header("Location: " . BASEURL . "/employee/index");
+            header("Location: " . BASEURL . "/menu/index");
             exit();
         }
     }
@@ -83,7 +83,7 @@ class Menu extends Controller
                 'price' => trim($_POST['price']),
                 'stock' => trim($_POST['stock']),
                 'category' => trim($_POST['category']),
-                'imageUrl' => $this->uploadImage()
+                'imageUrl' => $this->uploadImage() ?? $_POST['imageUrl']
             ];
 
             if ($this->menuModel->editMenu($data)) {
@@ -99,8 +99,8 @@ class Menu extends Controller
 
     public function btnDeleteMenu()
     {
-        if (isset($_POST['menuId'])) {
-            $menuId = $_POST['menuId'];
+        if (isset($_POST['MenuId'])) {
+            $menuId = $_POST['MenuId'];
 
             if ($this->menuModel->deleteMenu($menuId)) {
                 $_SESSION['success'] = "Menu berhasil dihapus!";
@@ -111,7 +111,7 @@ class Menu extends Controller
             $_SESSION['error'] = "Menu ID tidak valid.";
         }
 
-        header("Location: " . BASEURL . "/admin/menu");
+        header("Location: " . BASEURL . "/menu/index");
         exit();
     }
 }

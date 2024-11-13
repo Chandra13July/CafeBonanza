@@ -121,25 +121,25 @@
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Menu Item</h2>
             <form id="editMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnEditMenu" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="hidden" name="MenuId" id="MenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
-                
+                <input type="hidden" name="menuId" id="editMenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
+
                 <div class="mb-4">
                     <label for="menuName" class="block text-gray-700">Menu Name</label>
-                    <input type="text" name="menuName" id="menuName" class="w-full p-2 border border-gray-300 rounded"
+                    <input type="text" name="menuName" id="editMenuName" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($menu['MenuName']) ? htmlspecialchars($menu['MenuName']) : ''; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="description" class="block text-gray-700">Description</label>
-                    <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded" required><?= isset($menu['Description']) ? htmlspecialchars($menu['Description']) : ''; ?></textarea>
+                    <textarea name="description" id="editDescription" class="w-full p-2 border border-gray-300 rounded" required><?= isset($menu['Description']) ? htmlspecialchars($menu['Description']) : ''; ?></textarea>
                 </div>
                 <div class="mb-4">
                     <label for="price" class="block text-gray-700">Price</label>
-                    <input type="number" name="price" id="price" class="w-full p-2 border border-gray-300 rounded"
+                    <input type="number" name="price" id="editPrice" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($menu['Price']) ? $menu['Price'] : ''; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="category" class="block text-gray-700">Category</label>
-                    <select name="category" id="category" class="w-full p-2 border border-gray-300 rounded" required>
+                    <select name="category" id="editCategory" class="w-full p-2 border border-gray-300 rounded" required>
                         <option value="Food" <?= isset($menu['Category']) && $menu['Category'] === 'Food' ? 'selected' : ''; ?>>Food</option>
                         <option value="Drink" <?= isset($menu['Category']) && $menu['Category'] === 'Drink' ? 'selected' : ''; ?>>Drink</option>
                         <option value="Snack" <?= isset($menu['Category']) && $menu['Category'] === 'Snack' ? 'selected' : ''; ?>>Snack</option>
@@ -147,12 +147,12 @@
                 </div>
                 <div class="mb-4">
                     <label for="stock" class="block text-gray-700">Stock</label>
-                    <input type="number" name="stock" id="stock" class="w-full p-2 border border-gray-300 rounded"
+                    <input type="number" name="stock" id="editStock" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($menu['Stock']) ? $menu['Stock'] : ''; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="imageUrl" class="block text-gray-700">Image</label>
-                    <img id="imagePreview" src="<?= isset($menu['ImageUrl']) ? BASEURL . '/' . $menu['ImageUrl'] : ''; ?>" alt="Menu Image" class="w-20 h-20 rounded-full mx-auto mb-2">
+                    <img id="editImagePreview" src="<?= isset($menu['ImageUrl']) ? BASEURL . '/' . $menu['ImageUrl'] : ''; ?>" alt="Menu Image" class="w-20 h-20 rounded-full mx-auto mb-2">
                     <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
                 </div>
                 <div class="flex justify-end col-span-2">
@@ -192,15 +192,14 @@
         }
 
         function openEditModal(menu) {
-            // Set the form values from the menu object
-            document.getElementById('MenuId').value = menu.MenuId;
-            document.getElementById('menuName').value = menu.MenuName;
-            document.getElementById('description').value = menu.Description;
-            document.getElementById('price').value = menu.Price;
-            document.getElementById('category').value = menu.Category;
-            document.getElementById('stock').value = menu.Stock;
+            document.getElementById('editMenuId').value = menu.MenuId;
+            document.getElementById('editMenuName').value = menu.MenuName;
+            document.getElementById('editDescription').value = menu.Description;
+            document.getElementById('editPrice').value = menu.Price;
+            document.getElementById('editCategory').value = menu.Category;
+            document.getElementById('editStock').value = menu.Stock;
             const imageUrl = menu.ImageUrl ? "<?= BASEURL; ?>/" + menu.ImageUrl : "";
-            document.getElementById('imagePreview').src = imageUrl;
+            document.getElementById('editImagePreview').src = imageUrl;
             editModal.classList.remove('hidden');
         }
 
