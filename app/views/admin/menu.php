@@ -41,7 +41,9 @@
                                 <tr class="text-sm text-gray-600">
                                     <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['MenuName']) ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Description']) ?></td>
+                                    <td class="py-3 px-4 text-center" style="word-wrap: break-word; max-width: 200px; text-align: center; vertical-align: middle;">
+                                        <?= htmlspecialchars($menu['Description']) ?>
+                                    </td>
                                     <td class="py-3 px-4 text-center">
                                         <?= 'Rp ' . number_format($menu['Price'], 0, ',', '.'); ?>
                                     </td>

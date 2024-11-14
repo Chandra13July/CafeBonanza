@@ -22,12 +22,22 @@ class Menu extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+            // Panggil fungsi uploadImage dan ambil hasil path gambar
+            $imagePath = $this->uploadImage();
+
+            // Jika ada error saat upload, redirect dan hentikan eksekusi
+            if ($imagePath === false) {
+                header("Location: " . BASEURL . "/menu/index");
+                exit();
+            }
+
             $data = [
                 'menuName' => trim($_POST['menuName']),
                 'description' => trim($_POST['description']),
                 'price' => trim($_POST['price']),
                 'stock' => trim($_POST['stock']),
                 'category' => trim($_POST['category']),
+                'imageUrl' => $imagePath // Tambahkan path gambar ke data
             ];
 
             if ($this->menuModel->addMenu($data)) {
@@ -51,12 +61,12 @@ class Menu extends Controller
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (in_array($imageExt, $allowed)) {
-                if ($imageSize < 5000000) {
+                if ($imageSize < 5000000) { // Batas ukuran 5MB
                     $newImageName = uniqid('', true) . '.' . $imageExt;
                     $imageUploadPath = 'upload/menu/' . $newImageName;
 
                     if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $imageUploadPath;
+                        return $imageUploadPath; // Berhasil upload, return path
                     } else {
                         $_SESSION['error'] = "Gagal mengunggah gambar.";
                         return false;
@@ -70,7 +80,7 @@ class Menu extends Controller
                 return false;
             }
         }
-        return null;
+        return null; // Jika tidak ada gambar yang diunggah
     }
 
     public function btnEditMenu()
