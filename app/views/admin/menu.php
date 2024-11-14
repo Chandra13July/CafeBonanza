@@ -42,7 +42,9 @@
                                     <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['MenuName']) ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Description']) ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Price']) ?></td>
+                                    <td class="py-3 px-4 text-center">
+                                        <?= 'Rp ' . number_format($menu['Price'], 0, ',', '.'); ?>
+                                    </td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Stock']) ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Category']) ?></td>
                                     <td class="py-3 px-4 text-center">
