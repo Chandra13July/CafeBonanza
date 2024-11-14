@@ -16,6 +16,13 @@ class EmployeeModel
         return $this->db->single();
     }
 
+    public function findUserById($id)
+    {
+        $this->db->query('SELECT * FROM employee WHERE EmployeeId = :EmployeeId');
+        $this->db->bind(':EmployeeId', $id);
+        return $this->db->single();
+    }
+
     public function getAllEmployee()
     {
         $this->db->query('SELECT EmployeeId, Username, Email, Phone, Gender, DateOfBirth, Address, Role, ImageUrl FROM employee');
@@ -68,7 +75,7 @@ class EmployeeModel
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':role', $data['role']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
-        $this->db->bind(':EmployeeId', $data['EmployeeId']); // Perbaikan penamaan bind
+        $this->db->bind(':EmployeeId', $data['EmployeeId']); 
 
         if (isset($data['password']) && !empty($data['password'])) {
             $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));

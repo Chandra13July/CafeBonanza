@@ -149,29 +149,22 @@
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee</h2>
             <form id="editEmployeeForm" method="POST" action="<?= BASEURL; ?>/employee/btnEditEmployee" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="hidden" name="EmployeeId" id="editEmployeeId" value="<?= isset($employee['EmployeeId']) ? $employee['EmployeeId'] : ''; ?>">
-
-                <!-- Username -->
+                
                 <div class="mb-4">
                     <label for="username" class="block text-gray-700">Username</label>
                     <input type="text" name="username" id="editUsername" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($employee['Username']) ? htmlspecialchars($employee['Username']) : ''; ?>" required>
                 </div>
-
-                <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-gray-700">Email</label>
                     <input type="email" name="email" id="editEmail" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($employee['Email']) ? htmlspecialchars($employee['Email']) : ''; ?>" required>
                 </div>
-
-                <!-- Phone -->
                 <div class="mb-4">
                     <label for="phone" class="block text-gray-700">Phone</label>
                     <input type="text" name="phone" id="editPhone" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($employee['Phone']) ? htmlspecialchars($employee['Phone']) : ''; ?>" required>
                 </div>
-
-                <!-- Role -->
                 <div class="mb-4">
                     <label for="role" class="block text-gray-700">Role</label>
                     <select name="role" id="editRole" class="w-full p-2 border border-gray-300 rounded" required>
@@ -179,8 +172,6 @@
                         <option value="Cashier" <?= isset($employee['Role']) && $employee['Role'] === 'Cashier' ? 'selected' : ''; ?>>Cashier</option>
                     </select>
                 </div>
-
-                <!-- Gender -->
                 <div class="mb-4">
                     <label for="gender" class="block text-gray-700">Gender</label>
                     <select name="gender" id="editGender" class="w-full p-2 border border-gray-300 rounded" required>
@@ -188,28 +179,20 @@
                         <option value="Female" <?= isset($employee['Gender']) && $employee['Gender'] === 'Female' ? 'selected' : ''; ?>>Female</option>
                     </select>
                 </div>
-
-                <!-- Date of Birth -->
                 <div class="mb-4">
                     <label for="dateOfBirth" class="block text-gray-700">Date of Birth</label>
                     <input type="date" name="dateOfBirth" id="editDateOfBirth" class="w-full p-2 border border-gray-300 rounded"
                         value="<?= isset($employee['DateOfBirth']) ? $employee['DateOfBirth'] : ''; ?>" required>
                 </div>
-
-                <!-- Address -->
                 <div class="mb-4">
                     <label for="address" class="block text-gray-700">Address</label>
                     <textarea name="address" id="editAddress" class="w-full p-2 border border-gray-300 rounded" required><?= isset($employee['Address']) ? htmlspecialchars($employee['Address']) : ''; ?></textarea>
                 </div>
-
-                <!-- Photo -->
                 <div class="mb-4">
                     <label for="imageUrl" class="block text-gray-700">Photo</label>
                     <img id="editImagePreview" src="<?= isset($employee['ImageUrl']) ? BASEURL . '/' . $employee['ImageUrl'] : ''; ?>" alt="Employee Image" class="w-20 h-20 rounded-full mx-auto mb-2">
                     <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
                 </div>
-
-                <!-- Save/Cancel Buttons -->
                 <div class="flex justify-end col-span-2">
                     <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>

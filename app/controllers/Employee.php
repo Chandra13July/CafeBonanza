@@ -21,6 +21,7 @@ class Employee extends Controller
     public function btnAddEmployee()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
             $data = [
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
@@ -79,6 +80,7 @@ class Employee extends Controller
     public function btnEditEmployee()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $user = $this->employeeModel->findUserById($_POST['EmployeeId']);
             $data = [
                 'EmployeeId' => $_POST['EmployeeId'],
                 'username' => trim($_POST['username']),
@@ -88,13 +90,18 @@ class Employee extends Controller
                 'dateOfBirth' => trim($_POST['dateOfBirth']),
                 'address' => trim($_POST['address']),
                 'role' => trim($_POST['role']),
-                'imageUrl' => $this->uploadImage()
             ];
 
             if (!empty($_POST['password'])) {
                 $data['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
             }
 
+            if ($_FILES['imageUrl']['name'] != "") {
+                $data['imageUrl'] = $this->uploadImage();
+            } else {
+                $data['imageUrl'] = $user['ImageUrl'];
+            }
+            
             if ($this->employeeModel->editEmployee($data)) {
                 $_SESSION['success'] = "Employee berhasil diperbarui!";
             } else {

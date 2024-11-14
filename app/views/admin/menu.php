@@ -121,7 +121,7 @@
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Menu Item</h2>
             <form id="editMenuForm" method="POST" action="<?= BASEURL; ?>/menu/btnEditMenu" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="hidden" name="menuId" id="editMenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
+                <input type="hidden" name="MenuId" id="editMenuId" value="<?= isset($menu['MenuId']) ? $menu['MenuId'] : ''; ?>">
 
                 <div class="mb-4">
                     <label for="menuName" class="block text-gray-700">Menu Name</label>
@@ -142,7 +142,6 @@
                     <select name="category" id="editCategory" class="w-full p-2 border border-gray-300 rounded" required>
                         <option value="Food" <?= isset($menu['Category']) && $menu['Category'] === 'Food' ? 'selected' : ''; ?>>Food</option>
                         <option value="Drink" <?= isset($menu['Category']) && $menu['Category'] === 'Drink' ? 'selected' : ''; ?>>Drink</option>
-                        <option value="Snack" <?= isset($menu['Category']) && $menu['Category'] === 'Snack' ? 'selected' : ''; ?>>Snack</option>
                     </select>
                 </div>
                 <div class="mb-4">

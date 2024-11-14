@@ -21,13 +21,13 @@ class Menu extends Controller
     public function btnAddMenu()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
             $data = [
                 'menuName' => trim($_POST['menuName']),
                 'description' => trim($_POST['description']),
                 'price' => trim($_POST['price']),
                 'stock' => trim($_POST['stock']),
                 'category' => trim($_POST['category']),
-                'imageUrl' => $this->uploadImage()
             ];
 
             if ($this->menuModel->addMenu($data)) {
@@ -76,22 +76,33 @@ class Menu extends Controller
     public function btnEditMenu()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Mengambil data menu yang akan diedit
+            $menu = $this->menuModel->findMenuById($_POST['MenuId']); // Pastikan ini mengambil menu, bukan user
+
             $data = [
-                'menuId' => $_POST['menuId'],
+                'MenuId' => $_POST['MenuId'], // Sesuaikan dengan nama kolom di database
                 'menuName' => trim($_POST['menuName']),
                 'description' => trim($_POST['description']),
                 'price' => trim($_POST['price']),
                 'stock' => trim($_POST['stock']),
                 'category' => trim($_POST['category']),
-                'imageUrl' => $this->uploadImage() ?? $_POST['imageUrl']
             ];
 
+            // Periksa apakah ada file gambar baru yang diunggah
+            if (!empty($_FILES['imageUrl']['name'])) {
+                $data['imageUrl'] = $this->uploadImage(); // Metode untuk mengupload gambar
+            } else {
+                $data['imageUrl'] = $menu['ImageUrl'];
+            }
+
+            // Panggil metode untuk memperbarui data menu
             if ($this->menuModel->editMenu($data)) {
                 $_SESSION['success'] = "Menu berhasil diperbarui!";
             } else {
                 $_SESSION['error'] = "Pembaharuan menu gagal.";
             }
 
+            // Redirect ke halaman menu
             header("Location: " . BASEURL . "/menu/index");
             exit();
         }
