@@ -18,4 +18,12 @@ class Home extends Controller
         $this->view('home/about');
         $this->view('layout/footer');
     }
+
+    public function contact()
+    {
+        $this->view('layout/header');
+        $this->view('layout/navbar');
+        $this->view('home/contact');
+        $this->view('layout/footer');
+    }
 }
