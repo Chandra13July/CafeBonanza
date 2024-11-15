@@ -41,16 +41,16 @@
                             <?php foreach ($data['customer'] as $index => $customer): ?>
                                 <tr class="text-sm text-gray-600">
                                     <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Username']) ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Email']) ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Phone']) ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Gender']) ?></td>
+                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Username'] ?? '') ?></td>
+                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Email'] ?? '') ?></td>
+                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Phone'] ?? 'N/A') ?></td>
+                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Gender'] ?? 'N/A') ?></td>
                                     <td class="py-3 px-4 text-center">
                                         <?= !empty($customer['DateOfBirth']) ? date("d F Y", strtotime($customer['DateOfBirth'])) : 'N/A' ?>
                                     </td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Address']) ?></td>
+                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($customer['Address'] ?? 'N/A') ?></td>
                                     <td class="py-3 px-4 text-center">
-                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($customer['ImageUrl']) ?>" alt="Employee Image" class="w-12 h-12 rounded-full mx-auto">
+                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($customer['ImageUrl'] ?? '/img/user.png') ?>" alt="Customer Image" class="w-12 h-12 rounded-full mx-auto">
                                     </td>
                                     <td class="py-3 px-4 text-center">
                                         <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200" onclick="openEditModal(<?= htmlspecialchars(json_encode($customer), ENT_QUOTES, 'UTF-8'); ?>)">
@@ -218,7 +218,7 @@
             document.getElementById('editEmail').value = customer.Email;
             document.getElementById('editPhone').value = customer.Phone;
             document.getElementById('editGender').value = customer.Gender;
-            document.getElementById('editDateOfBirth').value = customer.DateOfBirth; 
+            document.getElementById('editDateOfBirth').value = customer.DateOfBirth;
 
             document.getElementById('editAddress').value = customer.Address;
 
