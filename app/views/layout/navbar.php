@@ -79,7 +79,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="text-gray-700 hover:text-black nav-link" href="<?= BASEURL; ?>/home/gallery">
+                        <a class="text-gray-700 hover:text-black nav-link" href="<?= BASEURL; ?>/home/gallery1">
                             Galeri
                         </a>
                     </li>
@@ -101,7 +101,7 @@
 
                         <!-- Menu Dropdown -->
                         <div id="dropdown-menu" class="absolute right-[-10px] top-full mt-2 w-48 bg-white rounded-lg shadow-lg hidden z-40">
-                            <a href="<?= BASEURL; ?>/home/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profil</a>
+                            <a href="<?= BASEURL; ?>/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profil</a>
                             <a href="<?= BASEURL; ?>/cart" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Keranjang</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200" onclick="openLogoutModal()">Keluar</a>
                         </div>

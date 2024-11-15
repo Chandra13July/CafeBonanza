@@ -7,7 +7,11 @@ class Dashboard extends Controller
     public function __construct()
     {
         $this->EmployeeModel = $this->model('EmployeeModel');
-    }
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASEURL . '/auth/loginAdmin');
+            exit;
+        }
+    }    
 
     public function index()
     {

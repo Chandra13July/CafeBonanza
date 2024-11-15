@@ -7,6 +7,10 @@ class Gallery extends Controller
     public function __construct()
     {
         $this->galleryModel = $this->model('GalleryModel');
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASEURL . '/auth/loginAdmin');
+            exit;
+        }
     }
 
     public function index()

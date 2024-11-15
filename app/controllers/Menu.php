@@ -7,6 +7,10 @@ class Menu extends Controller
     public function __construct()
     {
         $this->menuModel = $this->model('MenuModel');
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASEURL . '/auth/loginAdmin');
+            exit;
+        }
     }
 
     public function index()
