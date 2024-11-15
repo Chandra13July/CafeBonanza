@@ -3,10 +3,12 @@
 class Auth extends Controller
 {
     private $EmployeeModel;
+    private $CustomerModel;
 
     public function __construct()
     {
         $this->EmployeeModel = $this->model('EmployeeModel');
+        $this->CustomerModel = $this->model('CustomerModel');
     }
 
     public function loginAdmin()
@@ -15,10 +17,23 @@ class Auth extends Controller
         $this->view('auth/loginAdmin');
     }
 
+    public function login()
+    {
+        $this->view('layout/header');
+        $this->view('auth/login');
+    }
+
+    public function logoutAdmin()
+    {
+        session_destroy();
+        header('Location: ' . BASEURL . '/auth/loginAdmin');
+        exit();
+    }
+
     public function logout()
     {
-        session_destroy(); 
-        header('Location: ' . BASEURL . '/auth/login'); 
+        session_destroy();
+        header('Location: ' . BASEURL . '/auth/login');
         exit();
     }
 
@@ -60,4 +75,40 @@ class Auth extends Controller
             exit;
         }
     }
-}
+
+    public function btnLogin()
+    {
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
+
+        if (empty($email) || empty($password)) {
+            $_SESSION['error'] = "Email dan password harus diisi!";
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        }
+
+        $user = $this->CustomerModel->findUserByEmail($email);
+
+        if ($user) {
+            if (password_verify($password, $user['Password'])) {
+                unset($_SESSION['error']);
+                unset($_SESSION['login_data']);
+                $_SESSION['user_id'] = $user['CustomerId'];
+                $_SESSION['username'] = $user['Username'];
+                $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
+
+                $_SESSION['success'] = "{$user['Username']} berhasil login!";
+                header('Location: ' . BASEURL . '/home/index');
+                exit;
+            } else {
+                $_SESSION['error'] = "Password salah!";
+                header('Location: ' . BASEURL . '/auth/login');
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Email tidak ditemukan!";
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        }
+    }
+ }

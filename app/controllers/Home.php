@@ -19,6 +19,20 @@ class Home extends Controller
         $this->view('layout/footer');
     }
 
+    public function gallery()
+    {
+        $galleryItems = $this->model('GalleryModel')->getAllGallery();
+
+        $data = [
+            'galleryItems' => $galleryItems
+        ];
+
+        $this->view('layout/header');
+        $this->view('layout/navbar');
+        $this->view('home/gallery', $data);
+        $this->view('layout/footer');
+    }
+
     public function contact()
     {
         $this->view('layout/header');
