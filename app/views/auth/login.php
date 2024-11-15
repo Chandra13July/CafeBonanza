@@ -21,13 +21,13 @@
             <!-- Left Side -->
             <div class="w-full md:w-3/5 hidden md:flex items-center justify-center">
                 <div class="text-center">
-                    <img src="<?= BASEURL; ?>/img/auth/auth.png" alt="Illustration of two people sitting at a table, drinking coffee and talking" class="w-5/5 h-auto" width="626" height="626" />
+                    <img src="<?= BASEURL; ?>/img/auth1.png" alt="Illustration of two people sitting at a table, drinking coffee and talking" class="w-5/5 h-auto" width="626" height="626" />
                 </div>
             </div>
             <!-- Right Side -->
             <div class="w-full md:w-2/5 flex flex-col justify-center px-4 md:px-8 max-w-md mx-auto">
                 <div class="mb-4 flex items-center">
-                    <img src="<?= BASEURL; ?>/img/auth/logo-bonanza.png" alt="Bonanza Logo" width="50" height="50" />
+                    <img src="<?= BASEURL; ?>/img/logo-bonanza.png" alt="Bonanza Logo" width="50" height="50" />
                     <span class="ml-4 text-2xl font-semibold">Cafe Bonanza</span>
                 </div>
                 <div class="mb-4">
