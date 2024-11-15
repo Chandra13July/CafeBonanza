@@ -7,12 +7,20 @@
         </div>
     <?php endif; ?>
 
+    <!-- Notifikasi Flash Message -->
+    <?php if (isset($_SESSION['flash_message'])): ?>
+        <div class="bg-yellow-500 text-white p-2 rounded shadow-lg absolute top-4 right-4 text-sm z-50" id="flash-notification">
+            <?= $_SESSION['flash_message']; ?>
+            <?php unset($_SESSION['flash_message']); ?>
+        </div>
+    <?php endif; ?>
+
     <div class="container relative">
         <div class="flex flex-col md:flex-row w-full h-full">
             <!-- Left Side -->
             <div class="w-full md:w-3/5 hidden md:flex items-center justify-center">
                 <div class="text-center">
-                    <img  class="w-5/5 h-auto" height="626" src="<?= BASEURL; ?>/img/auth2.png" width="626" />
+                    <img class="w-5/5 h-auto" height="626" src="<?= BASEURL; ?>/img/auth2.png" width="626" />
                 </div>
             </div>
 

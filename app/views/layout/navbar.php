@@ -94,14 +94,14 @@
                 <?php if (isset($_SESSION['username'])): ?>
                     <div class="flex items-center relative">
                         <!-- Gambar Pengguna -->
-                        <img onerror="this.src = '<?= BASEURL . '/img/user.png' ?>'" src="<?= (empty($_SESSION['ImageUrl']) ? BASEURL . '/img/auth/default.avif' : $_SESSION['ImageUrl']); ?>" class="w-10 h-10 rounded-full mr-2 cursor-pointer" onclick="toggleDropdown()">
+                        <img onerror="this.src = '<?= BASEURL . '/img/user.png' ?>'" src="<?= !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . $_SESSION['ImageUrl'] : BASEURL . '/img/user.png'; ?>" class="w-10 h-10 rounded-full mr-2 cursor-pointer" onclick="toggleDropdown()">
 
                         <!-- Tampilkan Nama Pengguna -->
                         <span class="text-gray-800 cursor-pointer" onclick="toggleDropdown()"><?= htmlspecialchars($_SESSION['username']); ?></span>
 
                         <!-- Menu Dropdown -->
                         <div id="dropdown-menu" class="absolute right-[-10px] top-full mt-2 w-48 bg-white rounded-lg shadow-lg hidden z-40">
-                            <a href="<?= BASEURL; ?>/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profil</a>
+                            <a href="<?= BASEURL; ?>/home/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profil</a>
                             <a href="<?= BASEURL; ?>/cart" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Keranjang</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200" onclick="openLogoutModal()">Keluar</a>
                         </div>

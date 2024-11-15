@@ -40,4 +40,10 @@ class Home extends Controller
         $this->view('home/contact');
         $this->view('layout/footer');
     }
+
+    public function profile()
+    {
+        $this->view('layout/header');
+        $this->view('home/profile');
+    }
 }

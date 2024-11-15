@@ -8,6 +8,7 @@ class Employee extends Controller
     {
         $this->employeeModel = $this->model('EmployeeModel');
         if (!isset($_SESSION['user_id'])) {
+            $_SESSION['flash_message'] = 'Anda harus login terlebih dahulu!';
             header('Location: ' . BASEURL . '/auth/loginAdmin');
             exit;
         }
@@ -105,7 +106,7 @@ class Employee extends Controller
             } else {
                 $data['imageUrl'] = $user['ImageUrl'];
             }
-            
+
             if ($this->employeeModel->editEmployee($data)) {
                 $_SESSION['success'] = "Employee berhasil diperbarui!";
             } else {
