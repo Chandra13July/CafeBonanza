@@ -79,7 +79,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="text-gray-700 hover:text-black nav-link" href="<?= BASEURL; ?>/home/gallery1">
+                        <a class="text-gray-700 hover:text-black nav-link" href="<?= BASEURL; ?>/home/gallery">
                             Galeri
                         </a>
                     </li>
@@ -94,7 +94,7 @@
                 <?php if (isset($_SESSION['username'])): ?>
                     <div class="flex items-center relative">
                         <!-- Gambar Pengguna -->
-                        <img onerror="this.src = '<?= BASEURL . '/img/auth/default.avif' ?>'" src="<?= (empty($_SESSION['ImageUrl']) ? BASEURL . '/img/auth/default.avif' : $_SESSION['ImageUrl']); ?>" class="w-10 h-10 rounded-full mr-2 cursor-pointer" onclick="toggleDropdown()">
+                        <img onerror="this.src = '<?= BASEURL . '/img/user.png' ?>'" src="<?= (empty($_SESSION['ImageUrl']) ? BASEURL . '/img/auth/default.avif' : $_SESSION['ImageUrl']); ?>" class="w-10 h-10 rounded-full mr-2 cursor-pointer" onclick="toggleDropdown()">
 
                         <!-- Tampilkan Nama Pengguna -->
                         <span class="text-gray-800 cursor-pointer" onclick="toggleDropdown()"><?= htmlspecialchars($_SESSION['username']); ?></span>
