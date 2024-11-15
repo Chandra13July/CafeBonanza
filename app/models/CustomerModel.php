@@ -88,4 +88,15 @@ class CustomerModel
 
         return $this->db->execute();
     }
+
+    public function signup($data)
+    {
+        $this->db->query('INSERT INTO customer (Username, Email, Password) VALUES (:username, :email, :password)');
+        $this->db->bind(':username', $data['username']);
+        $this->db->bind(':email', $data['email']);
+        // Hash the password before storing it
+        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+        $this->db->bind(':password', $hashedPassword);
+        return $this->db->execute();
+    }
 }

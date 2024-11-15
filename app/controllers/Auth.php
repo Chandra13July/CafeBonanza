@@ -22,6 +22,11 @@ class Auth extends Controller
         $this->view('layout/header');
         $this->view('auth/login');
     }
+    public function signup()
+    {
+        $this->view('layout/header');
+        $this->view('auth/signup');
+    }
 
     public function logoutAdmin()
     {
@@ -114,4 +119,48 @@ class Auth extends Controller
             exit;
         }
     }
- }
+    public function btnSignup()
+    {
+        $data = [
+            'username' => trim($_POST['username']),
+            'email' => trim($_POST['email']),
+            'password' => $_POST['password'],
+            'confirm_password' => $_POST['confirm_password']
+        ];
+
+        if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
+            $_SESSION['error'] = "Semua kolom harus diisi!";
+            $_SESSION['signup_data'] = $data; 
+            header('Location: ' . BASEURL . '/auth/signup');
+            exit;
+        }
+
+        if ($data['password'] !== $data['confirm_password']) {
+            $_SESSION['error'] = "Kata sandi tidak cocok!";
+            $_SESSION['signup_data'] = $data;
+            header('Location: ' . BASEURL . '/auth/signup');
+            exit;
+        }
+
+        if ($this->CustomerModel->findUserByEmail($data['email'])) {
+            $_SESSION['error'] = "Email sudah terdaftar!";
+            $_SESSION['signup_data'] = $data;
+            header('Location: ' . BASEURL . '/auth/signup');
+            exit;
+        }
+
+        if ($this->CustomerModel->signup($data)) {
+            unset($_SESSION['error']);
+            unset($_SESSION['signup_data']);
+            $_SESSION['success'] = "Pendaftaran berhasil! Silakan masuk.";
+            $_SESSION['signup_success'] = true;
+            header("Location: " . BASEURL . "/auth/signup");
+            exit();
+        } else {
+            $_SESSION['error'] = "Pendaftaran gagal, silakan coba lagi.";
+            $_SESSION['signup_data'] = $data; 
+            header("Location: " . BASEURL . "/auth/signup");
+            exit();
+        }
+    }
+}
