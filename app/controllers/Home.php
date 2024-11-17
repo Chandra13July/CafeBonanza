@@ -82,6 +82,7 @@ class Home extends Controller
                 if ($customerData) {
                     // Kirimkan data ke view profile
                     $this->view('layout/header');
+                    $this->view('layout/sidebarprofil');
                     $this->view('home/profile', $customerData); // Kirim data ke view profile
                 } else {
                     // Jika tidak ada data pengguna, beri pesan error

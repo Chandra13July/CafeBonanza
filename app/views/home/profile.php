@@ -7,11 +7,46 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+            padding-left: 500px;
+            padding-right: 10px;
+            background-color: #ffffff; /* Set background color to white */
+        }
+
+        .profile-background {
+            background-color: white; /* White background for the profile section */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 10%;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px; /* Adjusted width for the profile box */
+        }
+
+        .profile-background img {
+            margin-bottom: 15px; /* Added some space below the image */
+        }
+
+        .profile-background button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px; /* Added margin bottom for spacing */
+        }
+
+        .profile-background p {
+            font-size: 0.875rem;
+            color: #4a4a4a;
+            margin-top: 10px;
         }
     </style>
 </head>
-<body class="bg-white flex justify-center items-center min-h-screen">
-    <div class="w-full max-w-lg p-6">
+<body class="flex justify-center items-center min-h-screen">
+    <div class="w-full max-w-lg p-6 profile-container">
         <h1 class="text-3xl font-bold mb-2">PROFIL ANDA</h1>
         <p class="text-base mb-6">
             Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun
@@ -43,12 +78,17 @@
             </div>
         </form>
     </div>
-    <!-- Gambar Profil dan Tombol Pilih Foto -->
-  <div class="absolute top-10 right-40 flex flex-col items-center">
-    <img alt="Profile picture of a person" class="w-40 h-40 rounded-full mb-4" height="160" src="<?= !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . $_SESSION['ImageUrl'] : BASEURL . '/img/user.png'; ?>" width="160"/>
-    <button class="border border-gray-300 rounded-md p-2">
-      Pilih Foto Profil
-    </button>
-  </div>
+
+    <!-- Gambar Profil dan Tombol Pilih Foto with White Background -->
+    <div class="profile-background">
+        <img alt="Profile picture of a person" class="w-40 h-40 rounded-full mb-4" height="160" src="<?= !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . $_SESSION['ImageUrl'] : BASEURL . '/img/user.png'; ?>" width="160"/>
+        <button class="border border-gray-300 rounded-md p-2">
+            Pilih Foto Profil
+        </button>
+        <!-- Keterangan Format dan Ukuran File (Centered) -->
+        <p class="text-sm text-gray-500 mt-2 text-center">
+            Hanya file dengan format <strong>JPG, PNG, JPEG</strong> dan ukuran <strong>1:1</strong> diperbolehkan.
+        </p>
+    </div>
 </body>
 </html>
