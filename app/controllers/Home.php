@@ -3,6 +3,13 @@
 class Home extends Controller
 {
 
+    private $contactModel;
+
+    public function __construct()
+    {
+        $this->contactModel = $this->model('ContactModel');
+    }
+
     public function index()
     {
         $this->view('layout/header');
@@ -41,6 +48,26 @@ class Home extends Controller
         $this->view('layout/footer');
     }
 
+    public function btnContact()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'name' => trim($_POST['name']),
+                'email' => trim($_POST['email']),
+                'type' => $_POST['type'],
+                'message' => trim($_POST['message']),
+            ];
+
+            if ($this->contactModel->addContact($data)) {
+                $_SESSION['success'] = "Kontak berhasil ditambahkan!";
+            } else {
+                $_SESSION['error'] = "Penambahan kontak gagal, silakan coba lagi.";
+            }
+            header("Location: " . BASEURL . "/home/contact");
+            exit();
+        }
+    }
+    
     public function profile()
     {
         $this->view('layout/header');

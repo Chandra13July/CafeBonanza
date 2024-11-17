@@ -52,10 +52,9 @@
                     <div>
                         <label for="type" class="block text-gray-700 text-sm md:text-base">Tipe</label>
                         <select id="type" name="type" class="w-full border border-gray-300 p-3 rounded text-sm md:text-base" required>
-                            <option value="Kritik">Kritik</option>
-                            <option value="Saran">Saran</option>
-                            <option value="Pertanyaan">Pertanyaan</option>
-                            <option value="Lainnya">Lainnya</option>
+                            <option value="Suggestion">Suggestion</option>
+                            <option value="Complaint">Complaint</option>
+                            <option value="Inquiry">Inquiry</option>
                         </select>
                     </div>
                     <div>

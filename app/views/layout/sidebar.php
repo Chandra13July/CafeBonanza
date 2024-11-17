@@ -4,8 +4,10 @@
     }
 
     .no-scrollbar {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
     }
 </style>
 
@@ -15,7 +17,7 @@
             <img alt="Logo of Cafe Bonanza" class="w-10 h-10 rounded-full" src="<?= BASEURL; ?>/img/logo-bonanza1.png" width="50" height="50" />
             <h2 class="ml-4 text-xl font-semibold">Cafe Bonanza</h2>
         </div>
-        
+
         <ul class="flex-1">
             <li class="mb-4">
                 <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/dashboard/index">
@@ -26,7 +28,7 @@
             <h4 class="text-gray-400 mb-2">Data Master</h4>
             <li class="mb-4">
                 <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/employee/index">
-                    <i class="fas fa-folder mr-4"></i>
+                    <i class="fas fa-user-tie mr-4"></i>
                     Employee
                 </a>
             </li>
@@ -46,6 +48,12 @@
                 <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/gallery/index">
                     <i class="fas fa-images mr-4"></i>
                     Gallery
+                </a>
+            </li>
+            <li class="mb-4">
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/contact/index">
+                    <i class="fas fa-envelope mr-4"></i>
+                    Contact
                 </a>
             </li>
             <h4 class="text-gray-400 mb-2">Report</h4>
