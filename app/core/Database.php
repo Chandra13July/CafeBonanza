@@ -26,6 +26,13 @@ class Database {
         }
     }
 
+    // Adding the prepare method
+    public function prepare($query)
+    {
+        $this->stmt = $this->dbh->prepare($query);
+        return $this->stmt;
+    }
+
     public function query($query)
     {
         $this->stmt = $this->dbh->prepare($query);

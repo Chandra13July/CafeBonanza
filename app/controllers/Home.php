@@ -67,6 +67,74 @@ class Home extends Controller
             exit();
         }
     }
+    Public function menu($category = null)
+    {
+        // Tangkap parameter search query (jika ada)
+        $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        // Dapatkan data menu berdasarkan kategori atau pencarian
+        if ($searchQuery) {
+            $MenuItems = $this->model('MenuCustModel')->searchMenu($searchQuery);
+        } else {
+            $MenuItems = $this->model('MenuCustModel')->getMenu($category);
+        }
+        
+        // Siapkan data untuk view
+        $data = [
+            'MenuItems' => $MenuItems,
+            'SelectedCategory' => $category,
+            'SearchQuery' => $searchQuery,
+            'Notification' => isset($_SESSION['notification']) ? $_SESSION['notification'] : null,
+        ];
+        
+        // Hapus notifikasi setelah ditampilkan
+        if (isset($_SESSION['notification'])) {
+            unset($_SESSION['notification']);
+        }
+        
+        // Panggil view
+        $this->view('layout/header');
+        $this->view('layout/navbar');
+        $this->view('home/menu', $data);
+        $this->view('layout/footer');
+    }
+
+    public function addToCart() {
+        // Pastikan ada data yang diterima
+        if (!isset($_POST['MenuId']) || !isset($_POST['Quantity'])) {
+            $_SESSION['notification'] = 'Input tidak valid';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+
+        $menuId = $_POST['MenuId'];
+        $quantity = $_POST['Quantity'];
+        $menuName = $_POST['MenuName'];        
+        $price = $_POST['Price'];       
+        $userId = $_SESSION['user_id']; // Ambil user_id dari session jika pengguna login
+
+        // Menambahkan item ke cart melalui CartModel
+        $cartModel = $this->model('CartModel');
+        $cartModel->addToCart($menuId, $menuName, $price, $quantity, $userId);
+
+        $_SESSION['notification'] = 'Berhasil menambahkan ke keranjang';
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    // Mendapatkan cart untuk ditampilkan
+    public function getCart() {
+        $userId = $_SESSION['user_id']; // Ambil user_id dari session
+        $cartModel = $this->model('CartModel');
+        $cartItems = $cartModel->getCart($userId);
+
+        $data = [
+            'CartItems' => $cartItems
+        ];
+
+        // Panggil view untuk menampilkan cart
+        $this->view('cart/index', $data);
+    }
     
     public function profile()
         {
