@@ -69,8 +69,30 @@ class Home extends Controller
     }
     
     public function profile()
-    {
-        $this->view('layout/header');
-        $this->view('home/profile');
-    }
+        {
+            // Pastikan user sudah login dan memiliki username
+            if (isset($_SESSION['username'])) {
+                // Ambil data pengguna dari database berdasarkan username yang ada di session
+                $username = $_SESSION['username'];
+    
+                // Memuat model UserModel
+                $userModel = $this->model('UserModel');
+                $customerData = $userModel->getUserByUsername($username); // Ambil data berdasarkan username
+    
+                if ($customerData) {
+                    // Kirimkan data ke view profile
+                    $this->view('layout/header');
+                    $this->view('home/profile', $customerData); // Kirim data ke view profile
+                } else {
+                    // Jika tidak ada data pengguna, beri pesan error
+                    echo "Data pengguna tidak ditemukan!";
+                }
+            } else {
+                // Jika user tidak login, arahkan ke halaman login
+                header('Location: ' . BASEURL . '/login');
+                exit;
+            }
+        }
+     
+      
 }
