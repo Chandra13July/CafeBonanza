@@ -64,7 +64,15 @@
     </div>
 
     <div class="space-y-4" id="cartItems">
-      <?php foreach ($cartItems as $item): ?>
+      <?php 
+        // Fetch the cart items for the logged-in user
+        session_start();
+        $customerId = $_SESSION['customerId']; // Assuming session management for logged-in user
+        $cartModel = new CartModel();
+        $cartItems = $cartModel->getCart($customerId); 
+
+        foreach ($cartItems as $item): 
+      ?>
         <div class="cart-item" data-id="<?php echo $item['CartId']; ?>">
           <div class="col-product flex items-center">
             <img src="https://storage.googleapis.com/a1aa/image/uxeaCkhBWp0DCq6sV8d3V1jZvCXwxsFj6y9delXYfxEPxfCPB.jpg" alt="Coffe kuning" class="w-16 h-16 rounded-lg"/>
@@ -79,7 +87,7 @@
             <button onclick="changeQuantity(<?php echo $item['CartId']; ?>, 'increase')">+</button>
           </div>
           <div class="col-price text-center" id="price-<?php echo $item['CartId']; ?>"><?php echo number_format($item['Price']); ?></div>
-          <div class="col-subtotal text-center" id="subtotal-<?php echo $item['CartId']; ?>"><?php echo number_format($item['SubTotal']); ?></div>
+          <div class="col-subtotal text-center" id="subtotal-<?php echo $item['CartId']; ?>"><?php echo number_format($item['TotalPrice']); ?></div>
         </div>
       <?php endforeach; ?>
     </div>
@@ -89,7 +97,7 @@
         <option>Metode Pembayaran</option>
       </select>
       <button class="bg-black text-white px-6 py-2">Check out</button>
-      <div class="border px-4 py-2" id="totalAmount">Total: <?php echo number_format(array_sum(array_column($cartItems, 'SubTotal'))); ?></div>
+      <div class="border px-4 py-2" id="totalAmount">Total: <?php echo number_format(array_sum(array_column($cartItems, 'TotalPrice'))); ?></div>
     </div>
   </main>
 

@@ -5,48 +5,57 @@ class CartModel
 
     public function __construct()
     {
-        $this->db = new Database();
+        $this->db = new Database(); // Assuming you have a Database class for PDO connections
     }
 
-    // Menambahkan item ke cart dan simpan ke database
-    public function addToCart($menuId, $menuName, $price, $quantity, $customerid) {
-        // Mengecek apakah item sudah ada di database cart
+    public function addToCart($menuId, $quantity, $customerId) {
+        // Ensure the quantity is an integer
+        $quantity = (int)$quantity;
+        
+        // Check if the item already exists in the cart
         $stmt = $this->db->prepare("SELECT * FROM cart WHERE MenuId = :MenuId AND CustomerId = :CustomerId");
         $stmt->bindParam(':MenuId', $menuId);
-        $stmt->bindParam(':CustomerId', $customerid);
+        $stmt->bindParam(':CustomerId', $customerId);
         $stmt->execute();
         $existingItem = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($existingItem) {
-            // Jika item sudah ada, update quantity dan subtotal
+            // If the item exists, update the quantity
             $newQuantity = $existingItem['Quantity'] + $quantity;
-            $newSubTotal = $price * $newQuantity;
-
-            $stmt = $this->db->prepare("UPDATE cart SET Quantity = :Quantity, SubTotal = :SubTotal WHERE CartId = :CartId");
-            $stmt->bindParam(':Quantity', $newQuantity);
-            $stmt->bindParam(':SubTotal', $newSubTotal);
-            $stmt->bindParam(':CartId', $existingItem['CartId']);
+    
+            $stmt = $this->db->prepare("UPDATE cart SET Quantity = :Quantity WHERE CartId = :CartId");
+            $stmt->bindParam(':Quantity', $newQuantity, PDO::PARAM_INT);
+            $stmt->bindParam(':CartId', $existingItem['CartId'], PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            // Jika item belum ada, tambahkan item baru ke cart
-            $subTotal = $price * $quantity;
-
-            $stmt = $this->db->prepare("INSERT INTO cart (MenuId, MenuName, Price, Quantity, SubTotal, CustomerId) 
-                VALUES (:MenuId, :MenuName, :Price, :Quantity, :SubTotal, :CustomerId)");
-            $stmt->bindParam(':MenuId', $menuId);
-            $stmt->bindParam(':MenuName', $menuName);
-            $stmt->bindParam(':Price', $price);
-            $stmt->bindParam(':Quantity', $quantity);
-            $stmt->bindParam(':SubTotal', $subTotal);
-            $stmt->bindParam(':CustomerId', $customerid);  // Pastikan Anda menangkap UserId yang login
+            // If the item does not exist, add it to the cart
+            $stmt = $this->db->prepare("INSERT INTO cart (MenuId, Quantity, CustomerId) 
+                VALUES (:MenuId, :Quantity, :CustomerId)");
+            $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
+            $stmt->bindParam(':Quantity', $quantity, PDO::PARAM_INT);
+            $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
             $stmt->execute();
         }
-    }
+    }    
 
-    // Mendapatkan cart berdasarkan UserId
-    public function getCart($userId) {
-        $stmt = $this->db->prepare("SELECT * FROM cart WHERE CustomerId = :CustomerId");
-        $stmt->bindParam(':CustomerId', $customerid);
+    // Get cart items based on UserId
+    public function getCart($customerId) {
+        $stmt = $this->db->prepare("SELECT 
+                c.CartId,
+                m.MenuName,
+                m.Price,
+                c.Quantity,
+                (m.Price * c.Quantity) AS TotalPrice,
+                c.CreatedAt
+            FROM 
+                cart c
+            JOIN 
+                menu m ON c.MenuId = m.MenuId
+            WHERE 
+                c.CustomerId = :CustomerId
+            ORDER BY 
+                c.CreatedAt");
+        $stmt->bindParam(':CustomerId', $customerId);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
