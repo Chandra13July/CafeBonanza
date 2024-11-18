@@ -67,7 +67,7 @@ class Home extends Controller
             exit();
         }
     }
-    Public function menu($category = null)
+    public function menu($category = null)
     {
         // Tangkap parameter search query (jika ada)
         $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -99,6 +99,7 @@ class Home extends Controller
         $this->view('layout/footer');
     }
 
+    // Menambahkan item ke keranjang (cart)
     public function addToCart() {
         // Pastikan ada data yang diterima
         if (!isset($_POST['MenuId']) || !isset($_POST['Quantity'])) {
@@ -113,9 +114,22 @@ class Home extends Controller
         $price = $_POST['Price'];       
         $userId = $_SESSION['user_id']; // Ambil user_id dari session jika pengguna login
 
+        // Cek apakah stok cukup
+        $menuModel = $this->model('MenuCustModel');
+        $menuItem = $menuModel->getStock($menuId); // Ambil stock dari database
+
+        if (!$menuItem || $menuItem['Stock'] < $quantity) {
+            $_SESSION['notification'] = 'Stok tidak cukup';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+
         // Menambahkan item ke cart melalui CartModel
         $cartModel = $this->model('CartModel');
         $cartModel->addToCart($menuId, $menuName, $price, $quantity, $userId);
+
+        // Update stock di database
+        $menuModel->updateStock($menuId, $quantity);
 
         $_SESSION['notification'] = 'Berhasil menambahkan ke keranjang';
         header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -134,6 +148,41 @@ class Home extends Controller
 
         // Panggil view untuk menampilkan cart
         $this->view('cart/index', $data);
+    }
+
+    // Proses pembelian item dalam keranjang
+    public function buyNow() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Ambil data dari form POST
+            $cartModel = $this->model('CartModel');
+            $userId = $_SESSION['user_id'];
+            $cartItems = $cartModel->getCart($userId); // Ambil semua item di keranjang
+
+            foreach ($cartItems as $item) {
+                // Update stock per item yang dibeli
+                $menuId = $item['MenuId'];
+                $quantity = $item['Quantity'];
+
+                // Cek apakah stok cukup sebelum mengurangi
+                $menuModel = $this->model('MenuCustModel');
+                $menuItem = $menuModel->getStock($menuId);
+                if ($menuItem['Stock'] < $quantity) {
+                    $_SESSION['notification'] = 'Stok tidak cukup untuk beberapa item';
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    exit;
+                }
+
+                // Update stok setelah pembelian
+                $menuModel->updateStock($menuId, $quantity);
+            }
+
+            // Proses checkout (misalnya, simpan pesanan, kurangi saldo, dll)
+            // Setelah pembelian selesai, hapus item dari keranjang
+            $cartModel->clearCart($userId);
+            $_SESSION['notification'] = 'Pembelian berhasil, terima kasih!';
+            header('Location: /cart/success');
+            exit;
+        }
     }
     
     public function profile()
@@ -162,6 +211,13 @@ class Home extends Controller
                 exit;
             }
         }
+        public function cart()
+    {
+        $this->view('layout/header');
+        $this->view('home/cart');     
+    }
+
+        
      
       
 }

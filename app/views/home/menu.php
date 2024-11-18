@@ -64,7 +64,7 @@
     <div class="px-4 sm:px-6 lg:px-8">
         <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <?php foreach ($data['MenuItems'] as $item): ?>
-                <div class="card bg-white rounded-lg shadow-md p-4 text-center" data-name="<?= htmlspecialchars($item['MenuName']); ?>" data-price="<?= $item['Price']; ?>" data-id="<?= $item['MenuId']; ?>">
+                <div class="card bg-white rounded-lg shadow-md p-4 text-center" data-name="<?= htmlspecialchars($item['MenuName']); ?>" data-price="<?= $item['Price']; ?>" data-id="<?= $item['MenuId']; ?>" data-stock="<?= $item['Stock']; ?>">
                     <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)">
                     <h5 class="text-lg font-semibold text-left cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)"><?= htmlspecialchars($item['MenuName']); ?></h5>
                     <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
@@ -132,7 +132,7 @@
             const itemPrice = item.getAttribute('data-price');
             const itemDescription = item.querySelector('p').textContent;
             const itemImage = item.querySelector('img').src;
-            const itemStock = item.querySelector('.text-left').textContent.includes('Habis') ? 'Habis' : 'Tersedia';
+            const itemStock = item.getAttribute('data-stock'); // Get stock from data-stock
 
             selectedItem = {
                 MenuId: itemId,
@@ -140,7 +140,7 @@
                 Price: parseInt(itemPrice.replace(/[^\d]/g, '')), // Remove non-numeric characters
                 Description: itemDescription,
                 ImageUrl: itemImage,
-                Stock: itemStock
+                Stock: itemStock // Set stock directly from data-stock
             };
 
             // Populate modal with item details
@@ -164,9 +164,13 @@
 
         // Quantity buttons
         document.getElementById('increaseQuantity').addEventListener('click', () => {
-            quantity++;
-            document.getElementById('quantityInput').value = quantity;
-            document.getElementById('modalQuantity').value = quantity;
+            if (quantity < selectedItem.Stock) {
+                quantity++;
+                document.getElementById('quantityInput').value = quantity;
+                document.getElementById('modalQuantity').value = quantity;
+            } else {
+                alert("Stock tidak cukup!");
+            }
         });
         document.getElementById('decreaseQuantity').addEventListener('click', () => {
             if (quantity > 1) {
@@ -178,9 +182,29 @@
 
         // Buy now button (you can implement the checkout process here)
         document.getElementById('buyNowButton').addEventListener('click', () => {
-            // Add logic to handle the buy now functionality
-            alert('Proceed to checkout!');
-            document.getElementById('confirmationModal').classList.add('hidden');
+            const quantityToBuy = parseInt(document.getElementById('modalQuantity').value);
+            const currentStock = selectedItem.Stock;
+
+            if (currentStock >= quantityToBuy) {
+                alert('Pembelian berhasil, stock akan berkurang!');
+                
+                // Update the stock on client side
+                selectedItem.Stock -= quantityToBuy;
+                document.getElementById('productStock').innerText = `Stock: ${selectedItem.Stock}`;
+
+                // Update stock in the card
+                const itemCard = document.querySelector(`.card[data-id="${selectedItem.MenuId}"]`);
+                itemCard.setAttribute('data-stock', selectedItem.Stock);
+                
+                // If stock is zero, mark as sold out
+                if (selectedItem.Stock <= 0) {
+                    itemCard.querySelector('.text-left').innerText = "Habis";
+                }
+
+                document.getElementById('confirmationModal').classList.add('hidden');
+            } else {
+                alert('Stock tidak cukup untuk pembelian!');
+            }
         });
     </script>
 </body>
