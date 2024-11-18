@@ -59,28 +59,88 @@
         <h1 class="text-4xl font-bold mb-2">MENU SPESIAL HARI INI</h1>
         <p class="text-lg text-gray-600">Ayo pesan hidangan dan minuman yang enak!</p>
     </div>
-
-    <!-- Menu Grid -->
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            <?php foreach ($data['MenuItems'] as $item): ?>
-                <div class="card bg-white rounded-lg shadow-md p-4 text-center" data-name="<?= htmlspecialchars($item['MenuName']); ?>" data-price="<?= $item['Price']; ?>" data-id="<?= $item['MenuId']; ?>" data-stock="<?= $item['Stock']; ?>">
-                    <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)">
-                    <h5 class="text-lg font-semibold text-left cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)"><?= htmlspecialchars($item['MenuName']); ?></h5>
-                    <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
-                    <div class="flex justify-between items-center mt-2 text-left">
-                        <span class="text-lg font-bold">Rp <?= number_format($item['Price'], 0, ',', '.'); ?></span>
-                        <?php if ($item['Stock'] == 0): ?>
-                            <span class="text-sm text-red-500">Habis</span>
-                        <?php elseif ($item['Stock'] <= 5): ?>
-                            <span class="text-sm text-yellow-500">Hampir Habis <?= $item['Stock']; ?></span>
-                        <?php endif; ?>
-                    </div>
+<!-- Menu Grid -->
+<!-- Menu Grid -->
+<div class="px-4 sm:px-6 lg:px-8">
+    <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <?php foreach ($data['MenuItems'] as $item): ?>
+            <div class="card bg-white rounded-lg shadow-md p-4 text-center" data-name="<?= htmlspecialchars($item['MenuName']); ?>" data-price="<?= $item['Price']; ?>" data-id="<?= $item['MenuId']; ?>" data-stock="<?= $item['Stock']; ?>">
+                <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)">
+                
+                <div class="flex justify-between items-center">
+                    <h5 class="text-lg font-semibold text-left cursor-pointer" onclick="openModal(<?= $item['MenuId']; ?>)">
+                        <?= htmlspecialchars($item['MenuName']); ?>
+                    </h5>
+                    <button class="wishlist-button text-gray-500 text-xl focus:outline-none" data-id="<?= $item['MenuId']; ?>" onclick="toggleWishlist(<?= $item['MenuId']; ?>)">
+                        <i class="far fa-heart"></i>
+                    </button>
                 </div>
-            <?php endforeach; ?>
-        </div>
+                
+                <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
+                <div class="flex justify-between items-center mt-2 text-left">
+                    <span class="text-lg font-bold">Rp <?= number_format($item['Price'], 0, ',', '.'); ?></span>
+                    <?php if ($item['Stock'] == 0): ?>
+                        <span class="text-sm text-red-500">Habis</span>
+                    <?php elseif ($item['Stock'] <= 5): ?>
+                        <span class="text-sm text-yellow-500">Hampir Habis <?= $item['Stock']; ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
+</div>
 
+<!-- Wishlist notification -->
+<div id="wishlistNotification" class="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-md hidden">
+    Item added to wishlist!
+</div>
+
+<script>
+    // Wishlist functionality
+    let wishlist = new Set();
+
+    function toggleWishlist(itemId) {
+        const button = document.querySelector(`.wishlist-button[data-id="${itemId}"]`);
+        const icon = button.querySelector('i');
+
+        console.log("Button clicked for item ID:", itemId);
+
+        // Debugging output to check button and icon classes
+        console.log("Current icon classes before toggle:", icon.classList);
+
+        if (wishlist.has(itemId)) {
+            wishlist.delete(itemId);
+            icon.classList.remove('fas', 'text-red-500'); // Remove the red color
+            icon.classList.add('far');
+            showNotification("Item removed from wishlist!");
+        } else {
+            wishlist.add(itemId);
+            icon.classList.remove('far');
+            icon.classList.add('fas', 'text-red-500'); // Add red color when added to wishlist
+            showNotification("Item added to wishlist!");
+        }
+
+        console.log("Current wishlist:", Array.from(wishlist));
+
+        // Debugging output to check button and icon classes after toggle
+        console.log("Current icon classes after toggle:", icon.classList);
+    }
+
+    // Function to show notification
+    function showNotification(message) {
+        const notification = document.getElementById('wishlistNotification');
+        notification.innerText = message;
+
+        // Ensure notification is visible
+        notification.classList.remove('hidden');
+        console.log("Notification shown:", message);
+
+        // Hide the notification after 3 seconds
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000);
+    }
+</script>
     <!-- Confirmation Modal -->
     <div id="confirmationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-lg relative p-6" onclick="event.stopPropagation()">

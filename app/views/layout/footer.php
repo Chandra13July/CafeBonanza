@@ -82,10 +82,5 @@
     <div class="bg-white py-4 text-center text-gray-400 border-t border-gray-300">
         <p class="text-base">&copy; 2024 Cafe Bonanza. Semua Hak Dilindungi</p>
     </div>
-    <div class="fixed bottom-4 right-4">
-        <a href="https://wa.me/6285964416174?text=Halo,%20Saya%20tertarik%20dengan%20produk%20Anda!" class="bg-green-500 text-white py-2 px-4 rounded-full flex items-center text-base" target="_blank">
-            <i class="fab fa-whatsapp mr-2"></i> WhatsApp kami
-        </a>
-    </div>
-</body>
+ </body>
 </html>
