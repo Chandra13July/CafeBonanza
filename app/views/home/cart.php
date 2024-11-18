@@ -66,7 +66,6 @@
     <div class="space-y-4" id="cartItems">
       <?php 
         // Fetch the cart items for the logged-in user
-        session_start();
         $customerId = $_SESSION['customerId']; // Assuming session management for logged-in user
         $cartModel = new CartModel();
         $cartItems = $cartModel->getCart($customerId); 

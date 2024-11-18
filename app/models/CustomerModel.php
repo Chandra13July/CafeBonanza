@@ -29,6 +29,13 @@ class CustomerModel
         return $this->db->resultSet();
     }
 
+    public function getUserByUsername($username)
+    {
+        $this->db->query("SELECT username, email, phone, gender, DateOfBirth AS dob, Address AS address, ImageUrl FROM customer WHERE username = :username");
+        $this->db->bind(':username', $username);
+        return $this->db->single(); 
+    }
+
     public function addCustomer($data)
     {
         $this->db->query("INSERT INTO customer (Username, Email, Phone, Password, Gender, DateOfBirth, Address, ImageUrl) 

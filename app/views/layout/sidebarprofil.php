@@ -1,16 +1,3 @@
-<style>
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        /* IE and Edge */
-        scrollbar-width: none;
-        /* Firefox */
-    }
-</style>
-
 <body class="bg-white-100 min-h-screen flex">
     <aside class="fixed top-0 left-0 h-full w-64 bg-gray-900 text-white flex flex-col p-6 no-scrollbar overflow-y-auto transition-all duration-400">
         <div class="flex items-center mb-6">
@@ -18,42 +5,36 @@
             <h2 class="ml-4 text-xl font-semibold">Cafe Bonanza</h2>
         </div>
 
-        <ul class="flex-1">
+        <!-- Add Profile Link -->
+        <h4 class="text-gray-400 mb-2">Profile</h4>
+        <ul>
             <li class="mb-4">
-                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/dashboard/index">
-                    <i class="fas fa-tachometer-alt mr-4"></i>
-                    Dashboard
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/profile">
+                    <i class="fas fa-user mr-4"></i>
+                    Profile Saya
                 </a>
             </li>
 
-            <!-- Profile Section -->
-            <h4 class="text-gray-400 mb-2">Profile</h4>
+            <!-- Existing links under Profile -->
             <li class="mb-4">
-                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/profile/change-password">
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/change-password">
                     <i class="fas fa-key mr-4"></i>
                     Ganti Password
                 </a>
             </li>
             <li class="mb-4">
-                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/profile/delete-account">
-                    <i class="fas fa-trash-alt mr-4"></i>
-                    Hapus Akun
-                </a>
-            </li>
-            <li class="mb-4">
-                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/profile/wishlist">
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/wishlist">
                     <i class="fas fa-heart mr-4"></i>
                     Wish List
                 </a>
             </li>
             <li class="mb-4">
-                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/profile/history">
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/history">
                     <i class="fas fa-history mr-4"></i>
                     History
                 </a>
             </li>
         </ul>
-
         <!-- Logout Button at Bottom -->
         <div class="mt-auto">
             <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/auth/logout" onclick="openLogoutModal()">
