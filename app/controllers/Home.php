@@ -30,30 +30,23 @@ class Home extends Controller
 
     public function menu($category = null)
     {
-        $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
-
-        if ($searchQuery) {
-            $MenuItems = $this->model('MenuCustModel')->searchMenu($searchQuery);
-        } else {
-            $MenuItems = $this->model('MenuCustModel')->getMenu($category);
-        }
-
+        $MenuItems = $this->model('MenuModel')->getMenu($category);
+    
         $data = [
             'MenuItems' => $MenuItems,
             'SelectedCategory' => $category,
-            'SearchQuery' => $searchQuery,
             'Notification' => isset($_SESSION['notification']) ? $_SESSION['notification'] : null,
         ];
-
+    
         if (isset($_SESSION['notification'])) {
             unset($_SESSION['notification']);
         }
-
+    
         $this->view('layout/header');
         $this->view('layout/navbar');
         $this->view('home/menu', $data);
         $this->view('layout/footer');
-    }
+    }    
 
     public function gallery()
     {

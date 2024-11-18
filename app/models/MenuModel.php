@@ -22,6 +22,18 @@ class MenuModel
         return $this->db->resultSet();
     }
 
+    public function getMenu($category = null)
+    {
+        if ($category) {
+            $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu WHERE Category = :category');
+            $this->db->bind(':category', $category);
+        } else {
+            $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu');
+        }
+
+        return $this->db->resultSet();
+    }
+
     public function addMenu($data)
     {
         $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
@@ -55,7 +67,7 @@ class MenuModel
         $this->db->bind(':stock', $data['stock']);
         $this->db->bind(':category', $data['category']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
-        $this->db->bind(':MenuId', $data['MenuId']); 
+        $this->db->bind(':MenuId', $data['MenuId']);
 
         return $this->db->execute();
     }
