@@ -65,21 +65,23 @@ class CartModel
     public function getCart($customerId)
     {
         $stmt = $this->db->prepare("SELECT 
-                c.CartId,
-                m.MenuName,
-                m.Price,
-                c.Quantity,
-                (m.Price * c.Quantity) AS TotalPrice,
-                c.CreatedAt
-            FROM 
-                cart c
-            JOIN 
-                menu m ON c.MenuId = m.MenuId
-            WHERE 
-                c.CustomerId = :CustomerId
-            ORDER BY 
-                c.CreatedAt");
-        $stmt->bindParam(':CustomerId', $customerId);
+            c.CartId,
+            m.ImageUrl, -- Tambahkan koma di sini
+            m.MenuName,
+            m.Price,
+            m.Stock,
+            c.Quantity,
+            (m.Price * c.Quantity) AS TotalPrice,
+            c.CreatedAt
+        FROM 
+            cart c
+        JOIN 
+            menu m ON c.MenuId = m.MenuId
+        WHERE 
+            c.CustomerId = :CustomerId
+        ORDER BY 
+            c.CreatedAt");
+        $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

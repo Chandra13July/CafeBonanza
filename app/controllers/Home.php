@@ -5,11 +5,13 @@ class Home extends Controller
 
     private $contactModel;
     private $customerModel;
+    private $cartModel;
 
     public function __construct()
     {
         $this->contactModel = $this->model('ContactModel');
         $this->customerModel = $this->model('CustomerModel');
+        $this->cartModel = $this->model('CartModel');
     }
 
     public function index()
@@ -159,5 +161,12 @@ class Home extends Controller
             header('Location: ' . BASEURL . '/home/menu');
             exit();
         }
+    }
+
+    public function cart()
+    {
+        $this->view('layout/header');
+        $this->view('layout/sidebarprofil');
+        $this->view('home/cart');
     }
 }

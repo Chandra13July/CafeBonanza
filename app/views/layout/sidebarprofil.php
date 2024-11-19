@@ -28,6 +28,15 @@
                     Wish List
                 </a>
             </li>
+
+            <!-- New Cart Link -->
+            <li class="mb-4">
+                <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/cart">
+                    <i class="fas fa-shopping-cart mr-4"></i>
+                    Cart
+                </a>
+            </li>
+
             <li class="mb-4">
                 <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/home/history">
                     <i class="fas fa-history mr-4"></i>
@@ -35,6 +44,7 @@
                 </a>
             </li>
         </ul>
+
         <!-- Logout Button at Bottom -->
         <div class="mt-auto">
             <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/auth/logout" onclick="openLogoutModal()">
