@@ -34,6 +34,13 @@ class MenuModel
         return $this->db->resultSet();
     }
 
+    public function getMenuById($menuId)
+    {
+        $this->db->query("SELECT * FROM menu WHERE MenuId = :menuId");
+        $this->db->bind(':menuId', $menuId);
+        return $this->db->single(); 
+    }
+
     public function addMenu($data)
     {
         $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 

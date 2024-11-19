@@ -65,7 +65,6 @@ class Database {
             $this->stmt->execute();
             return true;
         } catch (PDOException $e) {
-            // Tangani error saat eksekusi query
             echo "Error executing query: " . $e->getMessage();
             return false;
         }

@@ -24,7 +24,6 @@
             display: none;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
         .modal {
@@ -92,10 +91,40 @@
             background: transparent;
             pointer-events: none;
         }
+
+        #notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            text-align: center;
+            display: none;
+            z-index: 100;
+            font-size: 16px;
+            font-weight: 600;
+        }
     </style>
 </head>
 
+<?php if (isset($_SESSION['success'])): ?>
+    <div id="success-notification" class="bg-green-500 text-white p-2 rounded shadow-lg fixed top-4 right-4 text-sm z-50">
+        <?= $_SESSION['success']; ?>
+        <?php unset($_SESSION['success']); ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div id="error-notification" class="bg-red-500 text-white p-2 rounded shadow-lg fixed top-16 right-4 text-sm z-50">
+        <?= $_SESSION['error']; ?>
+        <?php unset($_SESSION['error']); ?>
+    </div>
+<?php endif; ?>
+
+
 <body class="bg-gray-100 text-gray-800">
+    <div id="notification" class="hidden"></div>
+
     <div class="text-center my-12">
         <h1 class="text-4xl font-bold mb-2">MENU SPESIAL HARI INI</h1>
         <p class="text-lg text-gray-600">Ayo pesan hidangan dan minuman yang enak!</p>
@@ -105,7 +134,7 @@
         <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <?php foreach ($data['MenuItems'] as $item): ?>
                 <div class="card bg-white rounded-lg shadow-md p-4 text-center flex flex-col">
-                    <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal('<?= htmlspecialchars($item['ImageUrl']); ?>', '<?= htmlspecialchars($item['MenuName']); ?>', '<?= htmlspecialchars($item['Description']); ?>', '<?= number_format($item['Price'], 0, ',', '.'); ?>', '<?= $item['Stock']; ?>')">
+                    <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal('<?= htmlspecialchars($item['MenuId']); ?>','<?= htmlspecialchars($item['ImageUrl']); ?>', '<?= htmlspecialchars($item['MenuName']); ?>', '<?= htmlspecialchars($item['Description']); ?>', '<?= number_format($item['Price'], 0, ',', '.'); ?>', '<?= $item['Stock']; ?>')">
                     <div class="flex flex-col items-start">
                         <h5 class="text-lg font-semibold text-left mb-2"><?= htmlspecialchars($item['MenuName']); ?></h5>
                         <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
@@ -141,36 +170,53 @@
                     <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
                 </div>
                 <div class="flex gap-4 mt-6">
-                    <button class="w-full bg-yellow-400 text-white py-2 rounded hover:bg-yellow-500">
-                        Add to Cart
-                    </button>
-                    <button class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                    <form action="<?= BASEURL; ?>/home/btnAddCart" method="POST" class="w-full" onsubmit="return addToCart()">
+                        <input type="hidden" name="menu_id" value="" id="modalMenuId">
+                        <input type="hidden" id="modalQuantity" name="quantity" value="1">
+                        <button type="submit" class="w-full bg-yellow-400 text-white py-2 rounded hover:bg-yellow-500">
+                            Add to Cart
+                        </button>
+                    </form>
+                    <a id="buyNowLink" href="#" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
                         Buy Now
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function openModal(imageUrl, title, description, price, stock) {
+        window.onload = function() {
+            // Menghapus notifikasi sukses setelah 3 detik
+            const successNotification = document.getElementById('success-notification');
+            if (successNotification) {
+                setTimeout(() => {
+                    successNotification.classList.add('hidden');
+                }, 3000);
+            }
+
+            // Menghapus notifikasi error setelah 3 detik
+            const errorNotification = document.getElementById('error-notification');
+            if (errorNotification) {
+                setTimeout(() => {
+                    errorNotification.classList.add('hidden');
+                }, 3000);
+            }
+        };
+
+        function openModal(menuid, imageUrl, title, description, price, stock) {
+
+            document.getElementById('modalMenuId').value = menuid;
             document.getElementById('modalImage').src = "<?= BASEURL; ?>/" + imageUrl;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalDescription').innerText = description;
             document.getElementById('modalPrice').innerText = "Rp " + price;
             document.getElementById('modalStock').innerText = "Stock: " + stock;
             document.getElementById('quantityInput').value = stock > 0 ? 1 : 0;
+            document.getElementById('modalQuantity').value = stock > 0 ? 1 : 0;
 
-            // Set tombol quantity aktif atau tidak berdasarkan stok
-            const decreaseBtn = document.querySelector('.quantity-btn:first-child');
-            const increaseBtn = document.querySelector('.quantity-btn:last-child');
-            if (stock <= 0) {
-                decreaseBtn.disabled = true;
-                increaseBtn.disabled = true;
-            } else {
-                decreaseBtn.disabled = false;
-                increaseBtn.disabled = false;
-            }
+            const buyNowLink = document.getElementById('buyNowLink');
+            buyNowLink.href = `<?= BASEURL; ?>/checkout?menu_id=${title}&quantity=1`;
 
             document.getElementById('modal').style.display = "flex";
             document.body.classList.add('modal-open');
@@ -187,9 +233,29 @@
             let currentQuantity = parseInt(quantityInput.value);
 
             currentQuantity += change;
-            if (currentQuantity < 1) currentQuantity = 1; 
-            if (currentQuantity > stock) currentQuantity = stock; 
-            quantityInput.value = stock > 0 ? currentQuantity : 0; 
+            if (currentQuantity < 1) currentQuantity = 1;
+            if (currentQuantity > stock) currentQuantity = stock;
+            quantityInput.value = stock > 0 ? currentQuantity : 0;
+
+            document.getElementById('modalQuantity').value = currentQuantity;
+        }
+
+        function addToCart() {
+            let quantity = document.getElementById('quantityInput').value;
+            const stock = parseInt(document.getElementById('modalStock').innerText.replace('Stock: ', ''));
+
+            if (quantity < 1) {
+                showNotification('Jumlah harus lebih dari 0!', false);
+                return false;
+            }
+
+            if (quantity > stock) {
+                showNotification('Jumlah melebihi stok yang tersedia!', false);
+                return false;
+            }
+
+            showNotification('Item berhasil ditambahkan ke keranjang!');
+            return true;
         }
     </script>
 </body>

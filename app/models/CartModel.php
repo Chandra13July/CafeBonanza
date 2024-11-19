@@ -1,45 +1,69 @@
 <?php
-class CartModel 
+
+class CartModel
 {
     private $db;
 
     public function __construct()
     {
-        $this->db = new Database(); // Assuming you have a Database class for PDO connections
+        $this->db = new Database();
     }
 
-    public function addToCart($menuId, $quantity, $customerId) {
-        // Ensure the quantity is an integer
-        $quantity = (int)$quantity;
-        
-        // Check if the item already exists in the cart
-        $stmt = $this->db->prepare("SELECT * FROM cart WHERE MenuId = :MenuId AND CustomerId = :CustomerId");
-        $stmt->bindParam(':MenuId', $menuId);
-        $stmt->bindParam(':CustomerId', $customerId);
-        $stmt->execute();
-        $existingItem = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        if ($existingItem) {
-            // If the item exists, update the quantity
-            $newQuantity = $existingItem['Quantity'] + $quantity;
-    
-            $stmt = $this->db->prepare("UPDATE cart SET Quantity = :Quantity WHERE CartId = :CartId");
-            $stmt->bindParam(':Quantity', $newQuantity, PDO::PARAM_INT);
-            $stmt->bindParam(':CartId', $existingItem['CartId'], PDO::PARAM_INT);
-            $stmt->execute();
-        } else {
-            // If the item does not exist, add it to the cart
-            $stmt = $this->db->prepare("INSERT INTO cart (MenuId, Quantity, CustomerId) 
-                VALUES (:MenuId, :Quantity, :CustomerId)");
-            $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
-            $stmt->bindParam(':Quantity', $quantity, PDO::PARAM_INT);
+    // Menambahkan item ke keranjang
+    public function addToCart($customerId, $menuId, $quantity)
+    {
+        try {
+            // Memeriksa apakah item sudah ada di keranjang
+            $stmt = $this->db->prepare("SELECT Quantity FROM cart WHERE CustomerId = :CustomerId AND MenuId = :MenuId");
             $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+            $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
             $stmt->execute();
-        }
-    }    
 
-    // Get cart items based on UserId
-    public function getCart($customerId) {
+            $existingCartItem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingCartItem) {
+                // Jika sudah ada, tambahkan jumlah item
+                $newQuantity = $existingCartItem['Quantity'] + $quantity;
+
+                // Mengupdate jumlah item dalam keranjang
+                $updateStmt = $this->db->prepare("
+                    UPDATE cart 
+                    SET Quantity = :Quantity 
+                    WHERE CustomerId = :CustomerId AND MenuId = :MenuId
+                ");
+                $updateStmt->bindParam(':Quantity', $newQuantity, PDO::PARAM_INT);
+                $updateStmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+                $updateStmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
+                $updateStmt->execute();
+            } else {
+                // Jika belum ada, tambahkan item baru
+                $insertStmt = $this->db->prepare("
+                    INSERT INTO cart (CustomerId, MenuId, Quantity) 
+                    VALUES (:CustomerId, :MenuId, :Quantity)
+                ");
+                $insertStmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+                $insertStmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
+                $insertStmt->bindParam(':Quantity', $quantity, PDO::PARAM_INT);
+                $insertStmt->execute();
+            }
+
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error in addToCart: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getMenuById($menuId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM menu WHERE MenuId = :MenuId");
+        $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getCart($customerId)
+    {
         $stmt = $this->db->prepare("SELECT 
                 c.CartId,
                 m.MenuName,
@@ -60,4 +84,3 @@ class CartModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>
