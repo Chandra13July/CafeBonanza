@@ -18,7 +18,7 @@ class MenuModel
 
     public function getAllMenu()
     {
-        $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu');
+        $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu ORDER BY CreatedAt DESC');
         return $this->db->resultSet();
     }
 

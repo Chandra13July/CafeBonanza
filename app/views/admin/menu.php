@@ -17,7 +17,6 @@
     <div class="flex-1 ml-64 p-4">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="flex justify-between items-center p-4">
-                <input class="w-1/3 p-2 border border-gray-300 rounded" placeholder="Search..." type="text" />
                 <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="openAddModal()">Add Menu</button>
             </div>
 
@@ -181,7 +180,10 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script>
+        let table = new DataTable('table');
         const deleteModal = document.getElementById('deleteModal');
         const addModal = document.getElementById('addModal');
         const editModal = document.getElementById('editModal');
