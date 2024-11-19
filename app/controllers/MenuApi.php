@@ -20,7 +20,23 @@ class MenuApi
         $this->db->query("SELECT * FROM menu");
         $menus = $this->db->resultSet();
 
-        echo json_encode(["data"=>$menus]);
+        $data = ["data" => []];
+        foreach ($menus as $menus) {
+            $data_menu = [
+                "MenuId" => $menus["MenuId"],
+                "MenuName" => $menus["MenuName"],
+                "Description" => $menus["Description"],
+                "Price" => $menus["Price"],
+                "Stock" => $menus["Stock"],
+                "Category" => $menus["Category"],
+                "ImageUrl" => BASEURL . '/' . $menus["ImageUrl"],
+                "CreatedAt" => $menus["CreatedAt"],
+            ];
+
+            array_push($data['data'], $data_menu);
+        }
+
+        echo json_encode($data);
     }
 
     // Mendapatkan data menu berdasarkan ID
@@ -44,7 +60,7 @@ class MenuApi
         $this->db->bind(':stock', $data['Stock']);
         $this->db->bind(':category', $data['Category']);
         $this->db->bind(':imageUrl', $data['ImageUrl']);
-        
+
         if ($this->db->execute()) {
             echo json_encode(["message" => "Menu added successfully"]);
         } else {

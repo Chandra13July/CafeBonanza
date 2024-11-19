@@ -8,24 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: white;
-      width: 100%;
-    }
-
+    /* Same styling as before */
     .cart-item {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -188,6 +171,39 @@
     .cart-table-header div {
       padding: 0.5rem;
     }
+
+    /* Styling untuk bagian Order Summary */
+    .order-summary {
+      background-color: #f9fafb;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-summary h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 0.5rem;
+    }
+
+    .order-summary .total {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .order-summary select,
+    .order-summary button {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -217,7 +233,7 @@
             ?>
               <div class="cart-item" data-id="<?php echo $item['CartId']; ?>">
                 <div class="product-info">
-                  <input type="checkbox" class="cart-checkbox" id="checkbox-<?php echo $item['CartId']; ?>" data-id="<?php echo $item['CartId']; ?>">
+                  <input type="checkbox" class="cart-checkbox" id="checkbox-<?php echo $item['CartId']; ?>" data-id="<?php echo $item['CartId']; ?>" onchange="updateTotalPrice()">
                   <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl'] ?? '/img/user.png'); ?>"
                     alt="<?= htmlspecialchars($item['MenuName'] ?? 'Produk Tidak Diketahui'); ?>" />
                   <div>
@@ -247,25 +263,25 @@
           </div>
           <div class="check-all-container">
             <label>
-              <input type="checkbox" id="checkAll" class="mr-2"> Semua
+              <input type="checkbox" id="checkAll" class="mr-2" onchange="checkAll()"> Semua
             </label>
           </div>
         </div>
       </div>
 
       <div class="form-right">
-        <h3>Data Transaksi</h3>
-        <div class="transaction-details">
-          <select class="border px-6 py-3 rounded-lg mb-4">
-            <option>Metode Pembayaran</option>
-            <option>Transfer Bank</option>
-            <option>OVO</option>
-            <option>Dana</option>
-          </select>
-          <button class="bg-black text-white px-8 py-3 rounded-lg text-xl">Check Out</button>
-          <div class="total">
-            Total:
-            <span id="totalAmount"><?php echo number_format(array_sum(array_column($cartItems, 'TotalPrice')), 0, ',', '.'); ?></span>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="transaction-details">
+            <select class="rounded-md p-2">
+              <option value="pickUp">Ambil di Tempat</option>
+              <option value="delivery">Pengiriman</option>
+            </select>
+            <div class="total">
+              <p>Total Harga</p>
+              <p>Rp <span id="totalPrice">0</span></p>
+            </div>
+            <button class="bg-black text-white py-3 rounded-md">Lanjutkan ke Pembayaran</button>
           </div>
         </div>
       </div>
@@ -273,72 +289,48 @@
   </main>
 
   <script>
-    function updateCart() {
-      let totalAmount = 0;
-      const items = document.querySelectorAll('.cart-item');
-
-      items.forEach(item => {
-        const checkbox = item.querySelector('.cart-checkbox');
-        if (checkbox.checked) { // Hanya hitung jika checkbox dicentang
-          const id = item.dataset.id;
-          const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent);
-          const price = parseInt(document.getElementById(`price-${id}`).textContent.replace(/\./g, '').trim());
-          const subtotal = quantity * price;
-
-          // Format subtotal agar tetap konsisten
-          document.getElementById(`formatted-subtotal-${id}`).textContent = new Intl.NumberFormat('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          }).format(subtotal);
-
-          totalAmount += subtotal;
-        }
+    function checkAll() {
+      const isChecked = document.getElementById('checkAll').checked;
+      document.querySelectorAll('.cart-checkbox').forEach(checkbox => {
+        checkbox.checked = isChecked;
       });
-
-      // Update totalAmount dengan format
-      document.getElementById('totalAmount').textContent = new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }).format(totalAmount);
+      updateTotalPrice();
     }
 
-    function changeQuantity(id, action) {
-      const quantityElement = document.getElementById(`quantity-${id}`);
-      const stockElement = document.querySelector(`.cart-item[data-id="${id}"] .product-info p`);
-      const stock = parseInt(stockElement.textContent.replace(/\D/g, '')); // Ambil stok dari teks
-
-      let quantity = parseInt(quantityElement.textContent);
-
-      if (action === 'increase' && quantity < stock) {
+    function changeQuantity(cartId, action) {
+      const quantityElement = document.getElementById('quantity-' + cartId);
+      let quantity = parseInt(quantityElement.innerText);
+      if (action === 'increase') {
         quantity++;
       } else if (action === 'decrease' && quantity > 1) {
         quantity--;
-      } else if (action === 'increase' && quantity >= stock) {
-        alert('Jumlah tidak boleh melebihi stok.');
       }
+      quantityElement.innerText = quantity;
 
-      quantityElement.textContent = quantity;
-      updateCart();
+      updateSubtotal(cartId, quantity);
+      updateTotalPrice();
     }
 
-    document.getElementById('checkAll').addEventListener('change', function(e) {
-      const checkboxes = document.querySelectorAll('.cart-checkbox');
-      checkboxes.forEach(checkbox => {
-        checkbox.checked = e.target.checked;
+    function updateSubtotal(cartId, quantity) {
+      const price = parseInt(document.getElementById('price-' + cartId).innerText.replace(/[^0-9]/g, ''));
+      const subtotal = price * quantity;
+      document.getElementById('formatted-subtotal-' + cartId).innerText = subtotal.toLocaleString();
+    }
+
+    function updateTotalPrice() {
+      let total = 0;
+      document.querySelectorAll('.cart-item').forEach(item => {
+        const cartId = item.getAttribute('data-id');
+        const checkbox = document.getElementById('checkbox-' + cartId);
+        if (checkbox.checked) {
+          const quantity = parseInt(document.getElementById('quantity-' + cartId).innerText);
+          const price = parseInt(document.getElementById('price-' + cartId).innerText.replace(/[^0-9]/g, ''));
+          total += price * quantity;
+        }
       });
-      updateCart(); // Update total saat "Check All" berubah
-    });
-
-    // Tambahkan event listener untuk setiap checkbox individu
-    document.querySelectorAll('.cart-checkbox').forEach(checkbox => {
-      checkbox.addEventListener('change', updateCart);
-    });
-
-    updateCart(); // Initial calculation when page loads
+      document.getElementById('totalPrice').innerText = total.toLocaleString();
+    }
   </script>
-
 </body>
 
 </html>
