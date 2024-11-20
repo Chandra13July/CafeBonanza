@@ -8,7 +8,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <style>
-    /* Same styling as before */
+    .description {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+    }
     .cart-item {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -238,6 +245,7 @@
                     alt="<?= htmlspecialchars($item['MenuName'] ?? 'Produk Tidak Diketahui'); ?>" />
                   <div>
                     <h3><?php echo $item['MenuName']; ?></h3>
+                    <p class="description text-sm text-gray-500"><?php echo $item['Description']; ?></p>
                     <p class="text-sm text-gray-500">Stok: <?php echo $item['Stock']; ?></p>
                   </div>
                 </div>

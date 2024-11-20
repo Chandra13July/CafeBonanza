@@ -66,8 +66,9 @@ class CartModel
     {
         $stmt = $this->db->prepare("SELECT 
             c.CartId,
-            m.ImageUrl, -- Tambahkan koma di sini
+            m.ImageUrl,
             m.MenuName,
+            m.Description,
             m.Price,
             m.Stock,
             c.Quantity,
