@@ -146,7 +146,7 @@ class Auth extends Controller
             $_SESSION['signup_data'] = $data;
             header('Location: ' . BASEURL . '/auth/signup');
             exit;
-        }
+        } 
 
         if ($this->CustomerModel->signup($data)) {
             unset($_SESSION['error']);
