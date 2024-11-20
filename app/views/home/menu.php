@@ -104,6 +104,15 @@
             font-size: 16px;
             font-weight: 600;
         }
+
+        .love-icon {
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .love-icon.loved {
+            color: red;
+        }
     </style>
 </head>
 
@@ -136,9 +145,12 @@
                 <div class="card bg-white rounded-lg shadow-md p-4 text-center flex flex-col">
                     <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']); ?>" alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-full h-48 rounded-md object-cover mb-4 cursor-pointer" onclick="openModal('<?= htmlspecialchars($item['MenuId']); ?>','<?= htmlspecialchars($item['ImageUrl']); ?>', '<?= htmlspecialchars($item['MenuName']); ?>', '<?= htmlspecialchars($item['Description']); ?>', '<?= number_format($item['Price'], 0, ',', '.'); ?>', '<?= $item['Stock']; ?>')">
                     <div class="flex flex-col items-start">
-                        <h5 class="text-lg font-semibold text-left mb-2"><?= htmlspecialchars($item['MenuName']); ?></h5>
+                        <div class="flex justify-between items-center w-full">
+                            <h5 class="text-lg font-semibold mb-2"><?= htmlspecialchars($item['MenuName']); ?></h5>
+                            <i class="fas fa-heart text-gray-300 cursor-pointer love-icon" onclick="toggleLove(this)"></i>
+                        </div>
                         <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
-                        <div class="flex justify-between items-center mt-2 text-left w-full">
+                        <div class="flex justify-between items-center mt-2 w-full">
                             <span class="text-lg font-bold">Rp <?= number_format($item['Price'], 0, ',', '.'); ?></span>
                             <span class="text-sm text-gray-600 ml-4">Stock: <?= $item['Stock']; ?></span>
                         </div>
@@ -173,11 +185,11 @@
                     <form action="<?= BASEURL; ?>/home/btnAddCart" method="POST" class="w-full" onsubmit="return addToCart()">
                         <input type="hidden" name="menu_id" value="" id="modalMenuId">
                         <input type="hidden" id="modalQuantity" name="quantity" value="1">
-                        <button type="submit" class="w-full bg-yellow-400 text-white py-2 rounded hover:bg-yellow-500">
+                        <button type="submit" class="w-full bg-yellow-400 text-white py-2 rounded hover:bg-yellow-500 text-center">
                             Add to Cart
                         </button>
                     </form>
-                    <a id="buyNowLink" href="#" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                    <a id="buyNowLink" href="#" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 text-center flex items-center justify-center">
                         Buy Now
                     </a>
                 </div>
@@ -256,6 +268,15 @@
 
             showNotification('Item berhasil ditambahkan ke keranjang!');
             return true;
+        }
+
+        function toggleLove(element) {
+            element.classList.toggle('loved');
+            if (element.classList.contains('loved')) {
+                showNotification('Ditambahkan ke daftar favorit!', true);
+            } else {
+                showNotification('Dihapus dari daftar favorit!', false);
+            }
         }
     </script>
 </body>
