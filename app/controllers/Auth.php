@@ -85,40 +85,37 @@ class Auth extends Controller
     {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
-        // Validasi input
+    
         if (empty($email) || empty($password)) {
-            $_SESSION['error'] = "Email dan kata sandi harus diisi!";
+            $_SESSION['error'] = "Email and password must be filled!";
             header('Location: ' . BASEURL . '/auth/login');
             exit;
         }
-        // Periksa apakah pengguna ada
+    
         $user = $this->CustomerModel->findUserByEmail($email);
-        // Debugging: Periksa data pengguna yang diambil
-        error_log("Pengguna yang diambil: " . print_r($user, true)); // Log data pengguna yang diambil
-        if ($user) {
-            // Debugging: Periksa verifikasi kata sandi
-            if (password_verify($password, $user['Password'])) {
-                // Set variabel session
-                unset($_SESSION['error']);
-                unset($_SESSION['login_data']);
-                $_SESSION['user_id'] = $user['CustomerId'];
-                $_SESSION['username'] = $user['Username'];
-                $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png'; // Set ImageUrl di session
-                $_SESSION['success'] = "Login berhasil!";
-                $_SESSION['redirect'] = true; // Tambahkan baris ini
-                header('Location: ' . BASEURL . '/auth/login'); // Redirect ke login
-                exit;
-            } else {
-                $_SESSION['error'] = "Email atau kata sandi salah!";
-                header('Location: ' . BASEURL . '/auth/login');
-                exit;
-            }
-        } else {
-            $_SESSION['error'] = "Email atau kata sandi salah!";
+    
+        if (!$user) {
+            $_SESSION['error'] = "Email is not registered!";
             header('Location: ' . BASEURL . '/auth/login');
             exit;
         }
-    }
+    
+        if (!password_verify($password, $user['Password'])) {
+            $_SESSION['error'] = "Incorrect password!";
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        }
+    
+        unset($_SESSION['error']);
+        unset($_SESSION['login_data']);
+        $_SESSION['user_id'] = $user['CustomerId'];
+        $_SESSION['username'] = $user['Username'];
+        $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
+        $_SESSION['success'] = "Login successful!";
+        header('Location: ' . BASEURL . '/auth/login'); 
+        exit;
+    }    
+
     public function btnSignup()
     {
         $data = [
@@ -130,7 +127,7 @@ class Auth extends Controller
 
         if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
             $_SESSION['error'] = "Semua kolom harus diisi!";
-            $_SESSION['signup_data'] = $data; 
+            $_SESSION['signup_data'] = $data;
             header('Location: ' . BASEURL . '/auth/signup');
             exit;
         }
@@ -158,7 +155,7 @@ class Auth extends Controller
             exit();
         } else {
             $_SESSION['error'] = "Pendaftaran gagal, silakan coba lagi.";
-            $_SESSION['signup_data'] = $data; 
+            $_SESSION['signup_data'] = $data;
             header("Location: " . BASEURL . "/auth/signup");
             exit();
         }

@@ -1,6 +1,6 @@
 <?php 
 
-define('BASEURL', 'http://localhost/CafeBonanza/public');
+define('BASEURL', 'http://localhost//CafeBonanza/public');
 
 // Database configuration
 define('DB_HOST', 'localhost');
