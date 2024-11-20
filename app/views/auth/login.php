@@ -61,9 +61,9 @@
             const notification = document.getElementById('success-notification');
             if (notification) {
                 setTimeout(() => {
-                    notification.classList.add('hidden'); 
-                    window.location.href = "<?= BASEURL; ?>/home"; 
-                }, 2000); 
+                    notification.classList.add('hidden');
+                    window.location.href = "<?= BASEURL; ?>/home";
+                }, 2000);
             }
         };
 

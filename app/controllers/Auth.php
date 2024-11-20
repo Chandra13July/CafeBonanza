@@ -111,11 +111,13 @@ class Auth extends Controller
         $_SESSION['user_id'] = $user['CustomerId'];
         $_SESSION['username'] = $user['Username'];
         $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
-        $_SESSION['success'] = "Login successful!";
+        
+        $_SESSION['success'] = $user['Username'] . " logged in successfully!";
+        
         header('Location: ' . BASEURL . '/auth/login'); 
         exit;
-    }    
-
+    }
+    
     public function btnSignup()
     {
         $data = [
