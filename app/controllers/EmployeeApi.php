@@ -10,11 +10,48 @@ class EmployeeApi
 
     public function __construct()
     {
-        // Membuat instance database
         $this->db = new Database();
     }
 
-    // Mendapatkan semua data karyawan
+    public function login($data)
+    {
+        if (empty($data['Email']) || empty($data['Password'])) {
+            echo json_encode(["status" => "error", "message" => "Email and password are required"]);
+            return;
+        }
+
+        if (!filter_var($data['Email'], FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["status" => "error", "message" => "Invalid email format"]);
+            return;
+        }
+
+        $this->db->query("SELECT * FROM employee WHERE Email = :email");
+        $this->db->bind(':email', $data['Email']);
+        $employee = $this->db->single();
+
+        if ($employee) {
+            if (password_verify($data['Password'], $employee['Password'])) {
+                $_SESSION['employee_id'] = $employee['EmployeeId'];
+                $_SESSION['username'] = $employee['Username'];
+                $_SESSION['email'] = $employee['Email'];
+                $_SESSION['role'] = $employee['Role'];
+
+                echo json_encode([
+                    "status" => "success",
+                    "message" => "Login successful",
+                    "EmployeeId" => $employee['EmployeeId'],
+                    "Username" => $employee['Username'],
+                    "Email" => $employee['Email'],
+                    "Role" => $employee['Role']
+                ]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Incorrect password"]);
+            }
+        } else {
+            echo json_encode(["status" => "error", "message" => "Email not registered"]);
+        }
+    }
+
     public function getAllEmployees()
     {
         $this->db->query("SELECT * FROM employee");
@@ -41,7 +78,6 @@ class EmployeeApi
         echo json_encode($data);
     }
 
-    // Mendapatkan data karyawan berdasarkan ID
     public function getEmployeeById($id)
     {
         $this->db->query("SELECT * FROM employee WHERE EmployeeId = :id");
@@ -51,7 +87,6 @@ class EmployeeApi
         echo json_encode($employee);
     }
 
-    // Menambahkan data karyawan baru
     public function addEmployee($data)
     {
         $this->db->query("INSERT INTO employee (Username, Email, Phone, Role, Password, Gender, DateOfBirth, Address, ImageUrl) 
@@ -60,20 +95,19 @@ class EmployeeApi
         $this->db->bind(':email', $data['Email']);
         $this->db->bind(':phone', $data['Phone']);
         $this->db->bind(':role', $data['Role']);
-        $this->db->bind(':password', $data['Password']);
+        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT)); 
         $this->db->bind(':gender', $data['Gender']);
         $this->db->bind(':dob', $data['DateOfBirth']);
         $this->db->bind(':address', $data['Address']);
         $this->db->bind(':imageUrl', $data['ImageUrl']);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Employee added successfully"]);
+            echo json_encode(["status" => "success", "message" => "Employee added successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to add employee"]);
+            echo json_encode(["status" => "error", "message" => "Failed to add employee"]);
         }
     }
 
-    // Mengedit data karyawan berdasarkan ID
     public function updateEmployee($id, $data)
     {
         $this->db->query("UPDATE employee SET Username = :username, Email = :email, Phone = :phone, Role = :role, 
@@ -84,34 +118,32 @@ class EmployeeApi
         $this->db->bind(':email', $data['Email']);
         $this->db->bind(':phone', $data['Phone']);
         $this->db->bind(':role', $data['Role']);
-        $this->db->bind(':password', $data['Password']);
+        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT)); 
         $this->db->bind(':gender', $data['Gender']);
         $this->db->bind(':dob', $data['DateOfBirth']);
         $this->db->bind(':address', $data['Address']);
         $this->db->bind(':imageUrl', $data['ImageUrl']);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Employee updated successfully"]);
+            echo json_encode(["status" => "success", "message" => "Employee updated successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to update employee"]);
+            echo json_encode(["status" => "error", "message" => "Failed to update employee"]);
         }
     }
 
-    // Menghapus data karyawan berdasarkan ID
     public function deleteEmployee($id)
     {
         $this->db->query("DELETE FROM employee WHERE EmployeeId = :id");
         $this->db->bind(':id', $id);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Employee deleted successfully"]);
+            echo json_encode(["status" => "success", "message" => "Employee deleted successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to delete employee"]);
+            echo json_encode(["status" => "error", "message" => "Failed to delete employee"]);
         }
     }
 }
 
-// Menggunakan API dengan metode HTTP
 $employeeApi = new EmployeeApi();
 
 header("Content-Type: application/json");
@@ -123,8 +155,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $employeeApi->getAllEmployees();
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $employeeApi->addEmployee($data);
+    if (isset($_GET['action']) && $_GET['action'] == 'login') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $employeeApi->login($data);
+    } else {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $employeeApi->addEmployee($data);
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
     if (isset($_GET['id'])) {
@@ -135,5 +172,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $employeeApi->deleteEmployee($_GET['id']);
     }
 } else {
-    echo json_encode(["message" => "Invalid request"]);
+    echo json_encode(["status" => "error", "message" => "Invalid request"]);
 }
