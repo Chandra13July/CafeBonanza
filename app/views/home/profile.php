@@ -218,12 +218,12 @@
             <h1>Profil Anda</h1>
             <p>Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun.</p>
             <?php
-            $username = !empty($data['username']) ? htmlspecialchars($data['username']) : 'Tidak tersedia';
-            $email = !empty($data['email']) ? htmlspecialchars($data['email']) : 'Tidak tersedia';
-            $phone = !empty($data['phone']) ? htmlspecialchars($data['phone']) : 'Tidak tersedia';
-            $gender = !empty($data['gender']) ? htmlspecialchars($data['gender']) : 'Tidak tersedia';
-            $dob = !empty($data['dob']) ? htmlspecialchars($data['dob']) : 'Tidak tersedia';
-            $address = !empty($data['address']) ? htmlspecialchars($data['address']) : 'Tidak tersedia';
+            $username = !empty($data['username']) ? htmlspecialchars($data['username']) : 'Belum diisi';
+            $email = !empty($data['email']) ? htmlspecialchars($data['email']) : 'Belum diisi';
+            $phone = !empty($data['phone']) ? htmlspecialchars($data['phone']) : 'Belum diisi';
+            $gender = !empty($data['gender']) ? htmlspecialchars($data['gender']) : 'Belum diisi';
+            $dob = !empty($data['dob']) ? htmlspecialchars($data['dob']) : 'Belum diisi';
+            $address = !empty($data['address']) ? htmlspecialchars($data['address']) : 'Belum diisi';
             ?>
             <div class="profile-section">
                 <span class="profile-label">Username:</span>
@@ -255,14 +255,14 @@
             </div>
         </div>
         <!-- Foto Profil -->
-        <div class="profile-picture" style="margin-top: auto; margin-bottom: auto;">
+        <div class="profile-picture" style="margin: auto; text-align: center;">
             <?php
-            $imageUrl = !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
+            $imageUrl = !empty($_SESSION['ImageUrl']) ?  htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
             ?>
-            <img alt="Profile picture" src="<?= $imageUrl; ?>" />
-            <input id="fileInput" style="display: none;" type="file" />
-            <button onclick="document.getElementById('fileInput').click();">Pilih Foto Profil</button>
-            <p>Hanya file dengan format <strong>JPG, PNG, JPEG</strong><br />dan ukuran <strong>1:1</strong> diperbolehkan.</p>
+            <img alt="Profile picture" src="<?= $imageUrl; ?>" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;" />
+            <input id="fileInput" style="display: none;" type="file" accept=".jpg, .jpeg, .png" />
+            <button onclick="document.getElementById('fileInput').click();" style="margin-top: 10px;">Pilih Foto Profil</button>
+            <p style="font-size: 14px; color: gray;">Hanya file dengan format <strong>JPG, PNG, JPEG</strong><br />dan ukuran <strong>1:1</strong> diperbolehkan.</p>
         </div>
     </div>
     <!-- Modal Edit Profil -->

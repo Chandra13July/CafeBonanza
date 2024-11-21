@@ -85,39 +85,39 @@ class Auth extends Controller
     {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
-    
+
         if (empty($email) || empty($password)) {
             $_SESSION['error'] = "Email and password must be filled!";
             header('Location: ' . BASEURL . '/auth/login');
             exit;
         }
-    
+
         $user = $this->CustomerModel->findUserByEmail($email);
-    
+
         if (!$user) {
             $_SESSION['error'] = "Email is not registered!";
             header('Location: ' . BASEURL . '/auth/login');
             exit;
         }
-    
+
         if (!password_verify($password, $user['Password'])) {
             $_SESSION['error'] = "Incorrect password!";
             header('Location: ' . BASEURL . '/auth/login');
             exit;
         }
-    
+
         unset($_SESSION['error']);
         unset($_SESSION['login_data']);
         $_SESSION['user_id'] = $user['CustomerId'];
         $_SESSION['username'] = $user['Username'];
         $_SESSION['ImageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
-        
+
         $_SESSION['success'] = $user['Username'] . " logged in successfully!";
-        
-        header('Location: ' . BASEURL . '/auth/login'); 
+
+        header('Location: ' . BASEURL . '/auth/login');
         exit;
     }
-    
+
     public function btnSignup()
     {
         $data = [
@@ -128,35 +128,49 @@ class Auth extends Controller
         ];
 
         if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
-            $_SESSION['error'] = "Semua kolom harus diisi!";
+            $_SESSION['error'] = "All fields must be filled!";
+            $_SESSION['signup_data'] = $data;
+            header('Location: ' . BASEURL . '/auth/signup');
+            exit;
+        }
+
+        if (!preg_match('/^[a-zA-Z]{5,}$/', $data['username'])) {
+            $_SESSION['error'] = "Username must be at least 5 characters long and contain only letters!";
+            $_SESSION['signup_data'] = $data;
+            header('Location: ' . BASEURL . '/auth/signup');
+            exit;
+        }
+
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $data['password'])) {
+            $_SESSION['error'] = "Password must be at least 8 characters long, contain uppercase and lowercase letters, a number, and a special character!";
             $_SESSION['signup_data'] = $data;
             header('Location: ' . BASEURL . '/auth/signup');
             exit;
         }
 
         if ($data['password'] !== $data['confirm_password']) {
-            $_SESSION['error'] = "Kata sandi tidak cocok!";
+            $_SESSION['error'] = "Passwords do not match!";
             $_SESSION['signup_data'] = $data;
             header('Location: ' . BASEURL . '/auth/signup');
             exit;
         }
 
         if ($this->CustomerModel->findUserByEmail($data['email'])) {
-            $_SESSION['error'] = "Email sudah terdaftar!";
+            $_SESSION['error'] = "Email is already registered!";
             $_SESSION['signup_data'] = $data;
             header('Location: ' . BASEURL . '/auth/signup');
             exit;
-        } 
+        }
 
         if ($this->CustomerModel->signup($data)) {
             unset($_SESSION['error']);
             unset($_SESSION['signup_data']);
-            $_SESSION['success'] = "Pendaftaran berhasil! Silakan masuk.";
+            $_SESSION['success'] = "Registration successful! Please log in.";
             $_SESSION['signup_success'] = true;
             header("Location: " . BASEURL . "/auth/signup");
             exit();
         } else {
-            $_SESSION['error'] = "Pendaftaran gagal, silakan coba lagi.";
+            $_SESSION['error'] = "Registration failed, please try again.";
             $_SESSION['signup_data'] = $data;
             header("Location: " . BASEURL . "/auth/signup");
             exit();
