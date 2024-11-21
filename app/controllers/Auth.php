@@ -22,10 +22,23 @@ class Auth extends Controller
         $this->view('layout/header');
         $this->view('auth/login');
     }
+
     public function signup()
     {
         $this->view('layout/header');
         $this->view('auth/signup');
+    }
+
+    public function forgot()
+    {
+        $this->view('layout/header');
+        $this->view('auth/forgot');
+    }
+
+    public function resetPassword()
+    {
+        $this->view('layout/header');
+        $this->view('auth/reset');
     }
 
     public function logoutAdmin()
@@ -48,7 +61,7 @@ class Auth extends Controller
         $password = $_POST['password'];
 
         if (empty($email) || empty($password)) {
-            $_SESSION['error'] = "Email dan password harus diisi!";
+            $_SESSION['error'] = "Email and password must be filled!";
             header('Location: ' . BASEURL . '/auth/loginAdmin');
             exit;
         }
@@ -65,17 +78,23 @@ class Auth extends Controller
 
                 $role = $user['Role'];
 
-                $_SESSION['success'] = "{$user['Username']} berhasil login sebagai {$role}!";
-                $_SESSION['redirect_url'] = ($role == 'Admin') ? '/dashboard/index' : '/order/index';
-                header('Location: ' . BASEURL . '/auth/loginAdmin');
+                $_SESSION['success'] = "{$user['Username']} logged in successfully as {$role}!";
+
+                if ($role == 'Admin') {
+                    $_SESSION['redirect_url'] = '/dashboard/index';
+                    header('Location: ' . BASEURL . '/dashboard/index');
+                } else {
+                    $_SESSION['redirect_url'] = '/order/index';
+                    header('Location: ' . BASEURL . '/order/index');
+                }
                 exit;
             } else {
-                $_SESSION['error'] = "Password salah!";
+                $_SESSION['error'] = "Incorrect password!";
                 header('Location: ' . BASEURL . '/auth/loginAdmin');
                 exit;
             }
         } else {
-            $_SESSION['error'] = "Email tidak ditemukan!";
+            $_SESSION['error'] = "Email is not registered!";
             header('Location: ' . BASEURL . '/auth/loginAdmin');
             exit;
         }
@@ -174,6 +193,74 @@ class Auth extends Controller
             $_SESSION['signup_data'] = $data;
             header("Location: " . BASEURL . "/auth/signup");
             exit();
+        }
+    }
+
+    public function btnVerifyEmail()
+    {
+        $email = trim($_POST['reset_email']);
+
+        if (empty($email)) {
+            $_SESSION['error'] = "Email must be filled!";
+            header('Location: ' . BASEURL . '/auth/forgot');
+            exit;
+        }
+
+        $user = $this->CustomerModel->findUserByEmail($email);
+
+        if ($user) {
+            unset($_SESSION['error']);
+            $_SESSION['emailVerified'] = true;
+            $_SESSION['verifiedEmail'] = $email;
+            $_SESSION['success'] = "Email successfully verified! Please reset your password.";
+            header('Location: ' . BASEURL . '/auth/forgot#reset-password-form'); // Go directly to the reset password form
+            exit;
+        } else {
+            $_SESSION['error'] = "Email not registered!";
+            header('Location: ' . BASEURL . '/auth/forgot');
+            exit;
+        }
+    }
+
+    public function btnResetPassword()
+    {
+        if (!isset($_SESSION['emailVerified']) || $_SESSION['emailVerified'] !== true) {
+            $_SESSION['error'] = "Unauthorized action!";
+            header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
+        }
+
+        $email = $_SESSION['verifiedEmail'];
+        $newPassword = $_POST['password'];
+        $confirmPassword = $_POST['confirm_password'];
+
+        if (empty($newPassword) || empty($confirmPassword)) {
+            $_SESSION['error'] = "All fields must be filled!";
+            header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error'] = "Passwords do not match!";
+            header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
+        }
+
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $newPassword)) {
+            $_SESSION['error'] = "Password must contain at least 8 characters, uppercase and lowercase letters, a number, and a symbol!";
+            header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
+        }
+
+        if ($this->CustomerModel->resetPassword($email, $newPassword)) {
+            unset($_SESSION['error'], $_SESSION['emailVerified'], $_SESSION['verifiedEmail']);
+            $_SESSION['success'] = "Password successfully reset! You can log in with the new password.";
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        } else {
+            $_SESSION['error'] = "Failed to reset password, please try again!";
+            header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
         }
     }
 }

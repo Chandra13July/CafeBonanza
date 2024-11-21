@@ -9,6 +9,13 @@ class CustomerModel
         $this->db = new Database();
     }
 
+    public function findUserById($id)
+    {
+        $this->db->query('SELECT * FROM customer WHERE CustomerId = :CustomerId');
+        $this->db->bind(':CustomerId', $id);
+        return $this->db->single();
+    }
+
     public function findUserByEmail($email)
     {
         $this->db->query('SELECT * FROM customer WHERE Email = :email');
@@ -16,11 +23,12 @@ class CustomerModel
         return $this->db->single();
     }
 
-    public function findUserById($id)
+    public function resetPassword($email, $newPassword)
     {
-        $this->db->query('SELECT * FROM customer WHERE CustomerId = :CustomerId');
-        $this->db->bind(':CustomerId', $id);
-        return $this->db->single();
+        $this->db->query('UPDATE customer SET Password = :password WHERE Email = :email');
+        $this->db->bind(':password', password_hash($newPassword, PASSWORD_DEFAULT));
+        $this->db->bind(':email', $email);
+        return $this->db->execute();
     }
 
     public function getAllCustomer()

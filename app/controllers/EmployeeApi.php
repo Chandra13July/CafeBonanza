@@ -1,6 +1,5 @@
 <?php
 
-// Mengimpor file konfigurasi dan koneksi database
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../core/Database.php';
 
@@ -38,101 +37,25 @@ class EmployeeApi
 
                 echo json_encode([
                     "status" => "success",
-                    "message" => "Login successful",
-                    "EmployeeId" => $employee['EmployeeId'],
-                    "Username" => $employee['Username'],
-                    "Email" => $employee['Email'],
-                    "Role" => $employee['Role']
+                    "message" => "Login successful. Welcome, " . $employee['Username'] . " (" . $employee['Role'] . ")!",
+                    "user" => [
+                        "EmployeeId" => $employee['EmployeeId'],
+                        "Username" => $employee['Username'],
+                        "Email" => $employee['Email'],
+                        "Role" => $employee['Role'],
+                        "Phone" => $employee['Phone'],
+                "Gender" => $employee['Gender'],
+                "DateOfBirth" => $employee['DateOfBirth'],
+                "Address" => $employee['Address'],
+                "ImageUrl" => $employee['ImageUrl'] ? BASEURL . '/' . $employee['ImageUrl'] : null,
+                    ]
                 ]);
             } else {
-                echo json_encode(["status" => "error", "message" => "Incorrect password"]);
+                echo json_encode(["status" => "error", "message" => "Incorrect password. Please try again."]);
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "Email not registered"]);
+            echo json_encode(["status" => "error", "message" => "Email not registered. Please check your email or sign up."]);
         }
-    }
-
-    public function signup($data)
-    {
-        $data = [
-            'username' => trim($data['username']),
-            'email' => trim($data['email']),
-            'password' => $data['password'],
-            'confirm_password' => $data['confirm_password']
-        ];
-
-        if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
-            echo json_encode(["status" => "error", "message" => "All fields are required!"]);
-            return;
-        }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(["status" => "error", "message" => "Invalid email format!"]);
-            return;
-        }
-
-        if (strlen($data['username']) < 3 || strlen($data['username']) > 20) {
-            echo json_encode(["status" => "error", "message" => "Username must be between 3 and 20 characters!"]);
-            return;
-        }
-
-        $passwordError = $this->validatePassword($data['password']);
-        if ($passwordError) {
-            echo json_encode(["status" => "error", "message" => $passwordError]);
-            return;
-        }
-
-        if ($data['password'] !== $data['confirm_password']) {
-            echo json_encode(["status" => "error", "message" => "Passwords do not match!"]);
-            return;
-        }
-
-        $this->db->query("SELECT * FROM employee WHERE Email = :email");
-        $this->db->bind(':email', $data['email']);
-        if ($this->db->single()) {
-            echo json_encode(["status" => "error", "message" => "Email is already registered!"]);
-            return;
-        }
-
-        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-
-        $this->db->query("INSERT INTO employee (Username, Email, Password) VALUES (:username, :email, :password)");
-        $this->db->bind(':username', $data['username']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':password', $hashedPassword);
-
-        if ($this->db->execute()) {
-            echo json_encode(["status" => "success", "message" => "Registration successful!"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Registration failed, please try again."]);
-        }
-    }
-
-    /**
-     * Function to validate password security
-     *
-     * @param string $password
-     * @return string|null
-     */
-    private function validatePassword($password)
-    {
-        if (strlen($password) < 8 || strlen($password) > 16) {
-            return "Password must be between 8 and 16 characters!";
-        }
-
-        if (!preg_match('/[A-Z]/', $password)) {
-            return "Password must contain at least one uppercase letter!";
-        }
-
-        if (!preg_match('/[a-z]/', $password)) {
-            return "Password must contain at least one lowercase letter!";
-        }
-
-        if (!preg_match('/\d/', $password)) {
-            return "Password must contain at least one number!";
-        }
-
-        return null;
     }
 
     public function getAllEmployees()
@@ -241,9 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['action']) && $_GET['action'] == 'login') {
         $data = json_decode(file_get_contents("php://input"), true);
         $employeeApi->login($data);
-    } elseif (isset($_GET['action']) && $_GET['action'] == 'signup') {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $employeeApi->signup($data);
     } else {
         $data = json_decode(file_get_contents("php://input"), true);
         $employeeApi->addEmployee($data);

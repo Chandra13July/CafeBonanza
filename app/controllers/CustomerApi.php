@@ -1,6 +1,5 @@
 <?php
 
-// Mengimpor file konfigurasi dan koneksi database
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../core/Database.php';
 
@@ -10,11 +9,61 @@ class CustomerApi
 
     public function __construct()
     {
-        // Membuat instance database
         $this->db = new Database();
     }
 
-    // Mendapatkan semua data customer
+    public function login()
+    {
+        // Ambil data dari request JSON
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        // Cek apakah email dan password ada dalam data
+        if (empty($data['email']) || empty($data['password'])) {
+            echo json_encode(["message" => "Email and password must be filled!"]);
+            return;
+        }
+
+        $email = trim($data['email']);
+        $password = $data['password'];
+
+        // Cari user berdasarkan email
+        $this->db->query("SELECT * FROM customer WHERE Email = :email");
+        $this->db->bind(':email', $email);
+        $user = $this->db->single();
+
+        // Jika user tidak ditemukan
+        if (!$user) {
+            echo json_encode(["message" => "Email is not registered!"]);
+            return;
+        }
+
+        // Verifikasi password
+        if (!password_verify($password, $user['Password'])) {
+            echo json_encode(["message" => "Incorrect password!"]);
+            return;
+        }
+
+        // Set session atau data login untuk customer
+        $_SESSION['user_id'] = $user['CustomerId'];
+        $_SESSION['username'] = $user['Username'];
+        $_SESSION['imageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
+
+        // Kirimkan response sukses
+        echo json_encode([
+            "message" => $user['Username'] . " logged in successfully!",
+            "user" => [
+                "CustomerId" => $user['CustomerId'],
+                "Username" => $user['Username'],
+                "Email" => $user['Email'],
+                "Phone" => $user['Phone'],
+                "Gender" => $user['Gender'],
+                "DateOfBirth" => $user['DateOfBirth'],
+                "Address" => $user['Address'],
+                "ImageUrl" => $user['ImageUrl'] ? BASEURL . '/' . $user['ImageUrl'] : null,
+            ]
+        ]);
+    }
+
     public function getAllCustomers()
     {
         $this->db->query("SELECT * FROM customer");
@@ -40,7 +89,6 @@ class CustomerApi
         echo json_encode($data);
     }
 
-    // Mendapatkan data customer berdasarkan ID
     public function getCustomerById($id)
     {
         $this->db->query("SELECT * FROM customer WHERE CustomerId = :id");
@@ -55,78 +103,101 @@ class CustomerApi
         }
     }
 
-    // Menambahkan data customer baru
     public function addCustomer($data)
     {
+        // Validasi input
+        if (empty($data['Username']) || empty($data['Email']) || empty($data['Password']) || empty($data['Gender'])) {
+            echo json_encode(["status" => "error", "message" => "All fields are required"]);
+            return;
+        }
+
+        // Hash password
+        $hashedPassword = password_hash($data['Password'], PASSWORD_BCRYPT);
+
+        // Query untuk menambah data customer
         $this->db->query("INSERT INTO customer (Username, Email, Phone, Password, Gender, DateOfBirth, Address, ImageUrl) 
                           VALUES (:username, :email, :phone, :password, :gender, :dob, :address, :imageUrl)");
+
         $this->db->bind(':username', $data['Username']);
         $this->db->bind(':email', $data['Email']);
         $this->db->bind(':phone', $data['Phone'] ?? null);
-        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_BCRYPT));
-        $this->db->bind(':gender', $data['Gender'] ?? null);
+        $this->db->bind(':password', $hashedPassword);
+        $this->db->bind(':gender', $data['Gender']);
         $this->db->bind(':dob', $data['DateOfBirth'] ?? null);
         $this->db->bind(':address', $data['Address'] ?? null);
         $this->db->bind(':imageUrl', $data['ImageUrl'] ?? null);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Customer added successfully"]);
+            echo json_encode(["status" => "success", "message" => "Customer added successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to add customer"]);
+            echo json_encode(["status" => "error", "message" => "Failed to add customer"]);
         }
     }
 
-    // Mengedit data customer berdasarkan ID
     public function updateCustomer($id, $data)
     {
-        $this->db->query("UPDATE customer SET Username = :username, Email = :email, Phone = :phone, 
-                          Password = :password, Gender = :gender, DateOfBirth = :dob, Address = :address, ImageUrl = :imageUrl 
+        // Validasi input
+        if (empty($data['Username']) || empty($data['Email'])) {
+            echo json_encode(["status" => "error", "message" => "Username and Email are required"]);
+            return;
+        }
+
+        // Hash password if provided
+        $hashedPassword = isset($data['Password']) ? password_hash($data['Password'], PASSWORD_BCRYPT) : null;
+
+        // Query untuk memperbarui data customer
+        $this->db->query("UPDATE customer SET 
+                          Username = :username, 
+                          Email = :email, 
+                          Phone = :phone, 
+                          Gender = :gender, 
+                          DateOfBirth = :dob, 
+                          Address = :address, 
+                          ImageUrl = :imageUrl, 
+                          Password = :password
                           WHERE CustomerId = :id");
+
         $this->db->bind(':id', $id);
         $this->db->bind(':username', $data['Username']);
         $this->db->bind(':email', $data['Email']);
         $this->db->bind(':phone', $data['Phone'] ?? null);
-        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_BCRYPT));
         $this->db->bind(':gender', $data['Gender'] ?? null);
         $this->db->bind(':dob', $data['DateOfBirth'] ?? null);
         $this->db->bind(':address', $data['Address'] ?? null);
         $this->db->bind(':imageUrl', $data['ImageUrl'] ?? null);
+        $this->db->bind(':password', $hashedPassword);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Customer updated successfully"]);
+            echo json_encode(["status" => "success", "message" => "Customer updated successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to update customer"]);
+            echo json_encode(["status" => "error", "message" => "Failed to update customer"]);
         }
     }
 
-    // Menghapus data customer berdasarkan ID
     public function deleteCustomer($id)
     {
         $this->db->query("DELETE FROM customer WHERE CustomerId = :id");
         $this->db->bind(':id', $id);
 
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Customer deleted successfully"]);
+            echo json_encode(["status" => "success", "message" => "Customer deleted successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to delete customer"]);
+            echo json_encode(["status" => "error", "message" => "Failed to delete customer"]);
         }
     }
 }
 
-// Menggunakan API dengan metode HTTP
 $customerApi = new CustomerApi();
 
 header("Content-Type: application/json");
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['id'])) {
-        $customerApi->getCustomerById($_GET['id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_GET['action']) && $_GET['action'] == 'login') {
+        $customerApi->login();
     } else {
-        $customerApi->getAllCustomers();
+        $data = json_decode(file_get_contents("php://input"), true);
+        $customerApi->addCustomer($data);
     }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $customerApi->addCustomer($data);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
     if (isset($_GET['id'])) {
@@ -137,5 +208,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $customerApi->deleteCustomer($_GET['id']);
     }
 } else {
-    echo json_encode(["message" => "Invalid request"]);
+    echo json_encode(["status" => "error", "message" => "Invalid request"]);
 }
