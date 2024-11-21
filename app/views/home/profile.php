@@ -1,12 +1,3 @@
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Profil Anda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -209,135 +200,157 @@
             color: white;
         }
     </style>
-</head>
+    </head>
 
-<body>
-    <div class="profile-container">
-        <!-- Informasi Profil -->
-        <div class="profile-info">
-            <h1>Profil Anda</h1>
-            <p>Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun.</p>
-            <?php
-            $username = !empty($data['username']) ? htmlspecialchars($data['username']) : 'Belum diisi';
-            $email = !empty($data['email']) ? htmlspecialchars($data['email']) : 'Belum diisi';
-            $phone = !empty($data['phone']) ? htmlspecialchars($data['phone']) : 'Belum diisi';
-            $gender = !empty($data['gender']) ? htmlspecialchars($data['gender']) : 'Belum diisi';
-            $dob = !empty($data['dob']) ? htmlspecialchars($data['dob']) : 'Belum diisi';
-            $address = !empty($data['address']) ? htmlspecialchars($data['address']) : 'Belum diisi';
-            ?>
-            <div class="profile-section">
-                <span class="profile-label">Username:</span>
-                <span class="profile-value"><?= $username; ?></span>
-            </div>
-            <div class="profile-section">
-                <span class="profile-label">Email:</span>
-                <span class="profile-value"><?= $email; ?></span>
-            </div>
-            <div class="profile-section">
-                <span class="profile-label">Phone:</span>
-                <span class="profile-value"><?= $phone; ?></span>
-            </div>
-            <div class="profile-section">
-                <span class="profile-label">Gender:</span>
-                <span class="profile-value"><?= $gender; ?></span>
-            </div>
-            <div class="profile-section">
-                <span class="profile-label">Date of Birth:</span>
-                <span class="profile-value"><?= $dob; ?></span>
-            </div>
-            <div class="profile-section">
-                <span class="profile-label">Address:</span>
-                <span class="profile-value"><?= $address; ?></span>
-            </div>
-            <div class="flex gap-4 mt-4">
-                <button class="bg-blue-500 text-white py-2 px-4 rounded" onclick="document.getElementById('editModal').style.display='block'">Edit Profil</button>
-                <button class="bg-red-500 text-white py-2 px-4 rounded" onclick="document.getElementById('deleteModal').style.display='block'">Hapus Akun</button>
-            </div>
-        </div>
-        <!-- Foto Profil -->
-        <div class="profile-picture" style="margin: auto; text-align: center;">
-            <?php
-            $imageUrl = !empty($_SESSION['ImageUrl']) ?  htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
-            ?>
-            <img alt="Profile picture" src="<?= $imageUrl; ?>" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;" />
-            <input id="fileInput" style="display: none;" type="file" accept=".jpg, .jpeg, .png" />
-            <button onclick="document.getElementById('fileInput').click();" style="margin-top: 10px;">Pilih Foto Profil</button>
-            <p style="font-size: 14px; color: gray;">Hanya file dengan format <strong>JPG, PNG, JPEG</strong><br />dan ukuran <strong>1:1</strong> diperbolehkan.</p>
-        </div>
-    </div>
-    <!-- Modal Edit Profil -->
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Profil</h2>
-                <span class="close" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="username">Username</label>
-                        <input id="username" name="username" type="text" value="<?= $username; ?>" />
-                    </div>
-                    <div>
-                        <label for="email">Email</label>
-                        <input id="email" name="email" type="email" value="<?= $email; ?>" />
-                    </div>
-                    <div>
-                        <label for="phone">Phone</label>
-                        <input id="phone" name="phone" type="text" value="<?= $phone; ?>" />
-                    </div>
-                    <div>
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender">
-                            <option value="male" <?= $gender == 'male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="female" <?= $gender == 'female' ? 'selected' : ''; ?>>Female</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="dob">Date of Birth</label>
-                        <input id="dob" name="dob" type="date" value="<?= $dob; ?>" />
-                    </div>
-                    <div>
-                        <label for="address">Address</label>
-                        <input id="address" name="address" type="text" value="<?= $address; ?>" />
-                    </div>
+    <body>
+        <div class="profile-container">
+            <div class="profile-info">
+                <h1>Profil Anda</h1>
+                <p>Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun.</p>
+                <?php
+                $username = !empty($data['username']) ? htmlspecialchars($data['username']) : 'Belum diisi';
+                $email = !empty($data['email']) ? htmlspecialchars($data['email']) : 'Belum diisi';
+                $phone = !empty($data['phone']) ? htmlspecialchars($data['phone']) : 'Belum diisi';
+                $gender = !empty($data['gender']) ? htmlspecialchars($data['gender']) : 'Belum diisi';
+                $dob = !empty($data['dob']) ? htmlspecialchars($data['dob']) : 'Belum diisi';
+                $address = !empty($data['address']) ? htmlspecialchars($data['address']) : 'Belum diisi';
+                $createdAt = !empty($data['CreatedAt']) ? date('d M Y', strtotime($data['CreatedAt'])) : 'Belum diisi';
+
+                // Masking email
+                if ($email != 'Belum diisi') {
+                    list($usernamePart, $domain) = explode('@', $email);
+                    $maskedEmail = substr($usernamePart, 0, 3) . '****' . '@' . $domain;
+                } else {
+                    $maskedEmail = 'Belum diisi';
+                }
+
+                // Masking phone: 4 digit pertama dan 4 digit terakhir, bagian tengah dihash
+                if ($phone != 'Belum diisi') {
+                    $maskedPhone = substr($phone, 0, 4) . '****' . substr($phone, -4); // Tampilkan 4 digit pertama dan 4 digit terakhir
+                } else {
+                    $maskedPhone = 'Belum diisi';
+                }
+                ?>
+                <div class="profile-section">
+                    <span class="profile-label">Username:</span>
+                    <span class="profile-value"><?= $username; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Email:</span>
+                    <span class="profile-value"><?= $maskedEmail; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Phone:</span>
+                    <span class="profile-value"><?= $maskedPhone; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Gender:</span>
+                    <span class="profile-value"><?= $gender; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Date of Birth:</span>
+                    <span class="profile-value"><?= $dob; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Address:</span>
+                    <span class="profile-value"><?= $address; ?></span>
+                </div>
+                <div class="profile-section">
+                    <span class="profile-label">Tanggal Registrasi:</span>
+                    <span class="profile-value"><?= $createdAt; ?></span>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded" onclick="document.getElementById('editModal').style.display='block'">Edit Profil</button>
+                    <button class="bg-red-500 text-white py-2 px-4 rounded" onclick="document.getElementById('deleteModal').style.display='block'">Hapus Akun</button>
                 </div>
             </div>
-            <div class="modal-footer mt-4">
-                <button class="cancel-btn" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
-                <button class="save-btn">Save</button>
+            <div class="profile-picture" style="margin: auto; text-align: center;">
+                <?php
+                if (!empty($_SESSION['ImageUrl'])) {
+                    if (strpos($_SESSION['ImageUrl'], 'http://localhost') !== false) {
+                        $imageUrl = htmlspecialchars($_SESSION['ImageUrl']);
+                    } else {
+                        $imageUrl = rtrim(BASEURL, '/') . '/' . htmlspecialchars($_SESSION['ImageUrl']);
+                    }
+                } else {
+                    $imageUrl = BASEURL . '/img/user.png';
+                }
+                ?>
+                <img alt="Profile picture" src="<?= $imageUrl; ?>" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;" />
+                <input id="fileInput" style="display: none;" type="file" accept=".jpg, .jpeg, .png" />
+                <button onclick="document.getElementById('fileInput').click();" style="margin-top: 10px;">Pilih Foto Profil</button>
+                <p style="font-size: 14px; color: gray;">Hanya file dengan format <strong>JPG, PNG, JPEG</strong><br/>
             </div>
         </div>
-    </div>
-    <!-- Modal Hapus Akun -->
-    <div class="modal" id="deleteModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Hapus Akun</h2>
-                <span class="close" onclick="document.getElementById('deleteModal').style.display='none'">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.</p>
-            </div>
-            <div class="modal-footer mt-4">
-                <button class="cancel-btn" onclick="document.getElementById('deleteModal').style.display='none'">Cancel</button>
-                <button class="delete-btn">Hapus</button>
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Profil</h2>
+                    <span class="close" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="username">Username</label>
+                            <input id="username" name="username" type="text" value="<?= $username; ?>" />
+                        </div>
+                        <div>
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" value="<?= $email; ?>" />
+                        </div>
+                        <div>
+                            <label for="phone">Phone</label>
+                            <input id="phone" name="phone" type="text" value="<?= $phone; ?>" />
+                        </div>
+                        <div>
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="male" <?= $gender == 'male' ? 'selected' : ''; ?>>Male</option>
+                                <option value="female" <?= $gender == 'female' ? 'selected' : ''; ?>>Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="dob">Date of Birth</label>
+                            <input id="dob" name="dob" type="date" value="<?= $dob; ?>" />
+                        </div>
+                        <div>
+                            <label for="address">Address</label>
+                            <input id="address" name="address" type="text" value="<?= $address; ?>" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer mt-4">
+                    <button class="cancel-btn" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
+                    <button class="save-btn">Save</button>
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            var editModal = document.getElementById('editModal');
-            var deleteModal = document.getElementById('deleteModal');
-            if (event.target == editModal) {
-                editModal.style.display = "none";
-            }
-            if (event.target == deleteModal) {
-                deleteModal.style.display = "none";
-            }
-        }
-    </script>
-</body>
+        <div class="modal" id="deleteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Hapus Akun</h2>
+                    <span class="close" onclick="document.getElementById('deleteModal').style.display='none'">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.</p>
+                </div>
+                <div class="modal-footer mt-4">
+                    <button class="cancel-btn" onclick="document.getElementById('deleteModal').style.display='none'">Cancel</button>
+                    <button class="delete-btn">Hapus</button>
+                </div>
+            </div>
+        </div>
 
-</html>
+        <script>
+            window.onclick = function(event) {
+                var editModal = document.getElementById('editModal');
+                var deleteModal = document.getElementById('deleteModal');
+                if (event.target == editModal) {
+                    editModal.style.display = "none";
+                }
+                if (event.target == deleteModal) {
+                    deleteModal.style.display = "none";
+                }
+            }
+        </script>
+    </body>

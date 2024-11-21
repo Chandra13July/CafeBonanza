@@ -31,9 +31,13 @@ class CustomerModel
 
     public function getUserByUsername($username)
     {
-        $this->db->query("SELECT username, email, phone, gender, DateOfBirth AS dob, Address AS address, ImageUrl FROM customer WHERE username = :username");
+        $this->db->query("SELECT username, email, phone, gender, DateOfBirth AS dob, Address AS address, ImageUrl, CreatedAt 
+                          FROM customer 
+                          WHERE username = :username");
         $this->db->bind(':username', $username);
-        return $this->db->single(); 
+        $result = $this->db->single();
+
+        return $result;
     }
 
     public function addCustomer($data)
@@ -79,7 +83,7 @@ class CustomerModel
         $this->db->bind(':dateOfBirth', $data['dateOfBirth']);
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
-        $this->db->bind(':CustomerId', $data['CustomerId']); 
+        $this->db->bind(':CustomerId', $data['CustomerId']);
 
         if (isset($data['password']) && !empty($data['password'])) {
             $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
