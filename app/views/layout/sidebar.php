@@ -5,9 +5,7 @@
 
     .no-scrollbar {
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
-        /* Firefox */
     }
 </style>
 
@@ -64,17 +62,13 @@
                 </a>
             </li>
         </ul>
-
-        <!-- Logout Button at Bottom -->
         <div class="mt-auto">
-            <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/auth/logoutAdmin" onclick="openLogoutModal()">
+            <button class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" onclick="openLogoutModal()">
                 <i class="fas fa-sign-out-alt mr-4"></i>
                 Logout
-            </a>
+            </button>
         </div>
     </aside>
-
-    <!-- Logout Modal -->
     <div id="logout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 w-96">
             <h2 class="text-lg font-semibold mb-4">Logout Confirmation</h2>
@@ -96,7 +90,8 @@
         }
 
         function confirmLogout() {
-            window.location.href = '<?= BASEURL; ?>/auth/logout';
+            // Redirect to the logout URL
+            window.location.href = '<?= BASEURL; ?>/auth/logoutAdmin';
         }
     </script>
 </body>

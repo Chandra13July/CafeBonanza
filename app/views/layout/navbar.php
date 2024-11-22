@@ -107,8 +107,10 @@
                             </div>
                         </div>
                     <?php else: ?>
-                        <a class="bg-gray-700 text-white px-8 py-2 rounded-full btn-effect flex items-center gap-2" href="<?= BASEURL; ?>/auth/login">
-                            <ion-icon name="log-in-outline"></ion-icon> Login
+                        <a
+                            class="bg-gray-700 text-white px-8 py-2 rounded-full btn-effect flex items-center gap-2 justify-center text-center w-[150px]"
+                            href="<?= BASEURL; ?>/auth/login">
+                            Login
                         </a>
                     <?php endif; ?>
                     <ion-icon class="text-3xl cursor-pointer md:hidden" name="menu" onclick="onToggleMenu(this)"></ion-icon>
@@ -171,7 +173,7 @@
                     setTimeout(() => {
                         container.removeChild(notification);
                     }, 300);
-                }, 3000);
+                }, 2000);
             }
 
             function openLogoutModal() {
