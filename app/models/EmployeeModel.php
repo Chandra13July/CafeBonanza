@@ -29,6 +29,14 @@ class EmployeeModel
         return $this->db->resultSet();
     }
 
+    public function resetPassword($email, $newPassword)
+    {
+        $this->db->query('UPDATE employee SET Password = :password WHERE Email = :email');
+        $this->db->bind(':password', password_hash($newPassword, PASSWORD_DEFAULT));
+        $this->db->bind(':email', $email);
+        return $this->db->execute();
+    }
+
     public function addEmployee($data)
     {
         $this->db->query("INSERT INTO employee (Username, Email, Phone, Password, Gender, DateOfBirth, Address, Role, ImageUrl) 

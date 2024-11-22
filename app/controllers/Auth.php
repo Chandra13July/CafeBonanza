@@ -35,6 +35,12 @@ class Auth extends Controller
         $this->view('auth/forgot');
     }
 
+    public function forgotAdmin()
+    {
+        $this->view('layout/header');
+        $this->view('auth/forgotAdmin');
+    }
+
     public function resetPassword()
     {
         if (!isset($_SESSION['emailVerified']) || $_SESSION['emailVerified'] !== true) {
@@ -44,6 +50,17 @@ class Auth extends Controller
         }
         $this->view('layout/header');
         $this->view('auth/reset');
+    }
+
+    public function resetPasswordAdmin()
+    {
+        if (!isset($_SESSION['emailVerified']) || $_SESSION['emailVerified'] !== true) {
+            $_SESSION['error'] = "Unauthorized action!";
+            header('Location: ' . BASEURL . '/auth/forgotAdmin');
+            exit;
+        }
+        $this->view('layout/header');
+        $this->view('auth/resetAdmin');
     }
 
     public function logoutAdmin()
@@ -265,6 +282,74 @@ class Auth extends Controller
         } else {
             $_SESSION['error'] = "Failed to reset password, please try again!";
             header('Location: ' . BASEURL . '/auth/resetPassword');
+            exit;
+        }
+    }
+
+    public function btnVerifyEmailAdmin()
+    {
+        $email = trim($_POST['reset_email']);
+
+        if (empty($email)) {
+            $_SESSION['error'] = "Email must be filled!";
+            header('Location: ' . BASEURL . '/auth/forgotAdmin');
+            exit;
+        }
+
+        $user = $this->EmployeeModel->findUserByEmail($email);
+
+        if ($user) {
+            unset($_SESSION['error']);
+            $_SESSION['emailVerified'] = true;
+            $_SESSION['verifiedEmail'] = $email;
+            $_SESSION['success'] = "Email successfully verified! Please reset your password.";
+            header('Location: ' . BASEURL . '/auth/forgotAdmin#reset-password-form');
+            exit;
+        } else {
+            $_SESSION['error'] = "Email not registered!";
+            header('Location: ' . BASEURL . '/auth/forgotAdmin');
+            exit;
+        }
+    }
+
+    public function btnResetPasswordAdmin()
+    {
+        if (!isset($_SESSION['emailVerified']) || $_SESSION['emailVerified'] !== true) {
+            $_SESSION['error'] = "Unauthorized action!";
+            header('Location: ' . BASEURL . '/auth/resetPasswordAdmin');
+            exit;
+        }
+
+        $email = $_SESSION['verifiedEmail'];
+        $newPassword = $_POST['password'];
+        $confirmPassword = $_POST['confirm_password'];
+
+        if (empty($newPassword) || empty($confirmPassword)) {
+            $_SESSION['error'] = "All fields must be filled!";
+            header('Location: ' . BASEURL . '/auth/resetPasswordAdmin');
+            exit;
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error'] = "Passwords do not match!";
+            header('Location: ' . BASEURL . '/auth/resetPasswordAdmin');
+            exit;
+        }
+
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $newPassword)) {
+            $_SESSION['error'] = "Password must contain at least 8 characters, uppercase and lowercase letters, a number, and a symbol!";
+            header('Location: ' . BASEURL . '/auth/resetPasswordAdmin');
+            exit;
+        }
+
+        if ($this->EmployeeModel->resetPassword($email, $newPassword)) {
+            unset($_SESSION['error'], $_SESSION['emailVerified'], $_SESSION['verifiedEmail']);
+            $_SESSION['success'] = "Password successfully reset! You can log in with the new password.";
+            header('Location: ' . BASEURL . '/auth/loginAdmin');
+            exit;
+        } else {
+            $_SESSION['error'] = "Failed to reset password, please try again!";
+            header('Location: ' . BASEURL . '/auth/resetPasswordAdmin');
             exit;
         }
     }
