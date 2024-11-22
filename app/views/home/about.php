@@ -3,7 +3,6 @@
         font-family: 'Alexandria', sans-serif;
     }
 
-    /* Custom styles for mobile */
     @media (max-width: 640px) {
         .about-section h1 {
             font-size: 2rem;
@@ -25,26 +24,23 @@
         }
     }
 
-    /* Styles for larger screens */
     .about-section img {
         max-width: 80%;
         height: auto;
         margin-left: auto;
     }
 </style>
-</head>
 
 <body class="bg-gray-100 text-gray-800">
-    <!-- Section 1 -->
     <section class="bg-white py-16 about-section">
         <div class="container mx-auto flex flex-col md:flex-row items-center px-4 md:px-16">
             <div class="md:w-1/2">
                 <div class="mb-4">
                     <span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-base md:text-lg">Cafe Bonanza</span>
                 </div>
-                <h1 class="text-5xl md:text-6xl font-bold mb-4">Tentang Cafe Bonanza</h1>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">About Cafe Bonanza</h1>
                 <p class="text-base md:text-lg mb-6">
-                    Cafe Bonanza awalnya adalah garasi truk peninggalan kakek yang diubah oleh keluarga menjadi kafe yang hangat dan nyaman. Kini, Bonanza menggabungkan nuansa rustic dengan sentuhan modern, menyajikan kopi artisan dan hidangan lezat dalam suasana penuh sejarah keluarga.
+                    Cafe Bonanza started as an old truck garage inherited from our grandfather, which our family transformed into a cozy and warm café. Today, Bonanza blends rustic charm with modern touches, offering artisan coffee and delicious dishes in a setting rich with family history.
                 </p>
                 <a href="#service-section" class="bg-black text-white py-2 px-6 inline-block" id="view-more">View More</a>
             </div>
@@ -53,70 +49,66 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 2 -->
     <section id="service-section" class="bg-gray-100 py-16 service-section">
         <div class="container mx-auto text-center px-4 md:px-16">
             <div class="mb-8">
-                <span class="bg-white text-gray-600 py-1 px-3 text-sm">Servis Kami</span>
+                <span class="bg-white text-gray-600 py-1 px-3 text-sm">Our Services</span>
             </div>
-            <h2 class="text-3xl font-bold mb-12">Apa yg Kami Sediakan untuk Anda?</h2>
+            <h2 class="text-3xl font-bold mb-12">What Do We Offer You?</h2>
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="bg-white p-8 shadow-lg">
                     <i class="fas fa-utensils text-4xl text-gray-600 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Menu yg Beragam</h3>
+                    <h3 class="text-xl font-bold mb-2">Diverse Menu</h3>
                     <p>
-                        Cafe Bonanza menyajikan aneka kopi spesial, minuman segar, serta camilan seperti croissant dan sandwich. Semuanya dibuat dengan bahan berkualitas untuk pengalaman kuliner yang nikmat.
+                        Cafe Bonanza serves a variety of specialty coffees, refreshing beverages, and snacks like croissants and sandwiches. Everything is crafted with high-quality ingredients for a delightful dining experience.
                     </p>
                 </div>
                 <div class="bg-white p-8 shadow-lg">
                     <i class="fas fa-chair text-4xl text-gray-600 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Tempat yg Nyaman</h3>
+                    <h3 class="text-xl font-bold mb-2">Cozy Atmosphere</h3>
                     <p>
-                        Cafe Bonanza hadir dengan suasana hangat dan nyaman, menggabungkan sentuhan rustic dan modern. Cocok untuk bersantai atau berkumpul.
+                        Cafe Bonanza offers a warm and inviting ambiance, combining rustic charm and modern comfort. Perfect for relaxing or gathering with friends.
                     </p>
                 </div>
                 <div class="bg-white p-8 shadow-lg">
                     <i class="fas fa-wifi text-4xl text-gray-600 mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Free WiFi</h3>
                     <p>
-                        Nikmati akses internet gratis di Cafe Bonanza, sempurna untuk bekerja, belajar, atau sekadar bersantai sambil menikmati kopi favorit Anda.
+                        Enjoy free internet access at Cafe Bonanza, ideal for work, study, or simply relaxing with your favorite coffee.
                     </p>
                 </div>
                 <div class="bg-white p-8 shadow-lg">
                     <i class="fas fa-coffee text-4xl text-gray-600 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Kopi Berkualitas</h3>
+                    <h3 class="text-xl font-bold mb-2">Quality Coffee</h3>
                     <p>
-                        Kami menggunakan biji kopi pilihan untuk memberikan Anda rasa kopi terbaik. Setiap cangkir disiapkan dengan perhatian penuh, sempurna untuk pecinta kopi sejati.
+                        We use carefully selected coffee beans to provide you with the best coffee flavors. Each cup is prepared with utmost care, perfect for true coffee lovers.
                     </p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Section 3 -->
     <section class="bg-white py-16">
         <div class="container mx-auto px-4 md:px-16">
             <div class="text-left mb-8">
-                <span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-none text-sm md:text-lg">Misi Kami</span>
+                <span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-none text-sm md:text-lg">Our Mission</span>
             </div>
             <div class="flex flex-col md:flex-row justify-start space-y-8 md:space-y-0 md:space-x-8">
                 <div class="md:w-1/2 px-4">
-                    <h3 class="text-3xl font-bold mb-4">Apa yg Ingin Kami Gapai?</h3>
+                    <h3 class="text-3xl font-bold mb-4">What Are We Aiming For?</h3>
                     <p class="text-sm mb-6">
-                        Misi Cafe Bonanza adalah menciptakan sebuah tempat yang tidak hanya menyajikan kopi berkualitas dan hidangan lezat, tetapi juga memberikan pengalaman yang nyaman dan menyenangkan bagi setiap pengunjung. Kami berkomitmen untuk menjaga atmosfer yang hangat dan ramah, serta menyediakan suasana yang cocok untuk bersantai, berkumpul, atau bekerja.
+                        Cafe Bonanza's mission is to create a place that not only offers quality coffee and delicious dishes but also provides a comfortable and enjoyable experience for every guest. We are committed to maintaining a warm and welcoming atmosphere, suitable for relaxing, gathering, or working.
                     </p>
-                    <button class="bg-black text-white py-2 px-6 mt-4">Gabung Bersama Kami</button>
+                    <button class="bg-black text-white py-2 px-6 mt-4">Join Us</button>
                 </div>
                 <div class="md:w-1/2 px-4">
-                    <h3 class="text-xl font-bold mb-4">Apa yg Anda Persiapkan untuk Melayani Customer?</h3>
+                    <h3 class="text-xl font-bold mb-4">What Do We Prepare to Serve Customers?</h3>
                     <p class="mb-4">
-                        Di Cafe Bonanza, kami sangat menghargai setiap pelanggan yang datang, dan kami berkomitmen untuk memberikan pelayanan yang terbaik. Kami mempersiapkan berbagai hal dengan cermat dan penuh perhatian:
+                        At Cafe Bonanza, we deeply value every customer who visits, and we are committed to providing the best service. We carefully and attentively prepare various aspects:
                     </p>
                     <ul class="list-disc list-inside mb-4">
-                        <li>Suasana yang nyaman dan menyenangkan</li>
-                        <li>Kualitas bahan baku terbaik</li>
-                        <li>Kemudahan dan kecepatan</li>
+                        <li>A cozy and pleasant atmosphere</li>
+                        <li>The best quality ingredients</li>
+                        <li>Convenience and efficiency</li>
                     </ul>
                     <p class="font-bold">Niko Kurmawan</p>
                     <p>Owner</p>
@@ -124,12 +116,10 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 4 -->
     <section class="bg-gray-100 py-16">
         <div class="container mx-auto">
             <div class="text-center mb-8">
-                <span class="bg-gray-300 text-gray-600 py-1 px-3 rounded-full text-sm">Visi Kami</span>
+                <span class="bg-gray-300 text-gray-600 py-1 px-3 rounded-full text-sm">Our Vision</span>
             </div>
             <h2 class="text-3xl font-bold text-center mb-12"></h2>
             <div class="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8">
@@ -137,18 +127,19 @@
                     <img alt="Cafe Bonanza staff serving customers" class="rounded-lg shadow-lg" height="400" src="https://storage.googleapis.com/a1aa/image/xJ7RmleqftvhskwH1ZigfZqwp5SGCHR1fyoa2OC830oYFe5dC.jpg" width="600" />
                 </div>
                 <div class="md:w-1/2 px-8">
-                    <h3 class="text-4xl font-bold mb-4">Apa Tujuan Kami?</h3>
+                    <h3 class="text-4xl font-bold mb-4">What Is Our Goal?</h3>
                     <p>
-                        Menjadi kafe yang dikenal dan dihargai karena kualitas kopi terbaik, hidangan yang menakjubkan, dan atmosfer yang nyaman. Di mana setiap kunjungan menjadi momen berharga yang menyenangkan. Kami berusaha untuk memberikan komitmen untuk terus berinovasi, menjaga hubungan pelanggan yang baik, serta memberikan pelayanan yang ramah dan profesional. Cafe Bonanza menjadi tempat favorit yang selalu dinantikan oleh para pengunjung, baik untuk bersantai maupun berkumpul.
+                        To become a café known and valued for its premium coffee, delightful dishes, and cozy ambiance, where every visit becomes a memorable and enjoyable moment. We strive to innovate, maintain good customer relationships, and deliver friendly and professional service. Cafe Bonanza aims to be a favorite destination for relaxation and gathering.
                     </p>
-                    <button class="bg-black text-white py-2 px-6 mt-4">Gabung Bersama Kami</button>
+                    <button class="bg-black text-white py-2 px-6 mt-4">
+                        <a href="<?= BASEURL; ?>/auth/login" class="text-white">Join Us</a>
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        // Smooth scrolling for the "View More" button
         document.querySelector('#view-more').addEventListener('click', function(e) {
             e.preventDefault();
             document.querySelector(this.getAttribute('href')).scrollIntoView({
