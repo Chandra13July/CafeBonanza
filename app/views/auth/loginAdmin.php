@@ -39,10 +39,10 @@
                     </div>
                     <div class="mb-4 w-full relative">
                         <label class="block text-gray-700" for="password">Password</label>
-                        <div class="flex items-center border border-gray-300 rounded-md p-2 w-full">
+                        <div class="flex items-center border border-gray-300 rounded-md p-2 w-full relative">
                             <i class="fas fa-lock text-gray-400 mr-2"></i>
                             <input class="w-full outline-none text-base" id="password" name="password" placeholder="Password" required type="password" />
-                            <i class="fas fa-eye text-gray-400 absolute right-2 top-2 cursor-pointer" id="toggle-password"></i>
+                            <i class="fas fa-eye text-gray-400 absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer" id="toggle-password"></i>
                         </div>
                     </div>
                     <?php if (isset($_SESSION['error'])): ?>
