@@ -10,14 +10,13 @@ class CustomerApi
     public function __construct()
     {
         $this->db = new Database();
+        session_start();
     }
 
     public function login()
     {
-        // Ambil data dari request JSON
         $data = json_decode(file_get_contents("php://input"), true);
 
-        // Cek apakah email dan password ada dalam data
         if (empty($data['email']) || empty($data['password'])) {
             echo json_encode(["message" => "Email and password must be filled!"]);
             return;
@@ -26,29 +25,24 @@ class CustomerApi
         $email = trim($data['email']);
         $password = $data['password'];
 
-        // Cari user berdasarkan email
         $this->db->query("SELECT * FROM customer WHERE Email = :email");
         $this->db->bind(':email', $email);
         $user = $this->db->single();
 
-        // Jika user tidak ditemukan
         if (!$user) {
             echo json_encode(["message" => "Email is not registered!"]);
             return;
         }
 
-        // Verifikasi password
         if (!password_verify($password, $user['Password'])) {
             echo json_encode(["message" => "Incorrect password!"]);
             return;
         }
 
-        // Set session atau data login untuk customer
         $_SESSION['user_id'] = $user['CustomerId'];
         $_SESSION['username'] = $user['Username'];
         $_SESSION['imageUrl'] = $user['ImageUrl'] ?? BASEURL . '/img/user.png';
 
-        // Kirimkan response sukses
         echo json_encode([
             "message" => $user['Username'] . " logged in successfully!",
             "user" => [
@@ -82,10 +76,8 @@ class CustomerApi
                 "ImageUrl" => $customer["ImageUrl"] ? BASEURL . '/' . $customer["ImageUrl"] : null,
                 "CreatedAt" => $customer["CreatedAt"],
             ];
-
             array_push($data['data'], $data_customer);
         }
-
         echo json_encode($data);
     }
 
@@ -105,16 +97,13 @@ class CustomerApi
 
     public function addCustomer($data)
     {
-        // Validasi input
         if (empty($data['Username']) || empty($data['Email']) || empty($data['Password']) || empty($data['Gender'])) {
             echo json_encode(["status" => "error", "message" => "All fields are required"]);
             return;
         }
 
-        // Hash password
         $hashedPassword = password_hash($data['Password'], PASSWORD_BCRYPT);
 
-        // Query untuk menambah data customer
         $this->db->query("INSERT INTO customer (Username, Email, Phone, Password, Gender, DateOfBirth, Address, ImageUrl) 
                           VALUES (:username, :email, :phone, :password, :gender, :dob, :address, :imageUrl)");
 
@@ -136,16 +125,13 @@ class CustomerApi
 
     public function updateCustomer($id, $data)
     {
-        // Validasi input
         if (empty($data['Username']) || empty($data['Email'])) {
             echo json_encode(["status" => "error", "message" => "Username and Email are required"]);
             return;
         }
 
-        // Hash password if provided
         $hashedPassword = isset($data['Password']) ? password_hash($data['Password'], PASSWORD_BCRYPT) : null;
 
-        // Query untuk memperbarui data customer
         $this->db->query("UPDATE customer SET 
                           Username = :username, 
                           Email = :email, 
@@ -187,16 +173,26 @@ class CustomerApi
     }
 }
 
+
 $customerApi = new CustomerApi();
 
 header("Content-Type: application/json");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_GET['action']) && $_GET['action'] == 'login') {
-        $customerApi->login();
+    if (isset($_GET['action'])) {
+        switch ($_GET['action']) {
+            case 'login':
+                $customerApi->login();
+                break;
+
+            default:
+                $data = json_decode(file_get_contents("php://input"), true);
+                $customerApi->addCustomer($data);
+                break;
+        }
     } else {
         $data = json_decode(file_get_contents("php://input"), true);
-        $customerApi->addCustomer($data);
+        $customerApi->addCustomer($data); // Default: add customer
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);

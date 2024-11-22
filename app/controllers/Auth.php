@@ -37,6 +37,11 @@ class Auth extends Controller
 
     public function resetPassword()
     {
+        if (!isset($_SESSION['emailVerified']) || $_SESSION['emailVerified'] !== true) {
+            $_SESSION['error'] = "Unauthorized action!";
+            header('Location: ' . BASEURL . '/auth/forgot');
+            exit;
+        }
         $this->view('layout/header');
         $this->view('auth/reset');
     }
@@ -213,7 +218,7 @@ class Auth extends Controller
             $_SESSION['emailVerified'] = true;
             $_SESSION['verifiedEmail'] = $email;
             $_SESSION['success'] = "Email successfully verified! Please reset your password.";
-            header('Location: ' . BASEURL . '/auth/forgot#reset-password-form'); // Go directly to the reset password form
+            header('Location: ' . BASEURL . '/auth/forgot#reset-password-form'); 
             exit;
         } else {
             $_SESSION['error'] = "Email not registered!";

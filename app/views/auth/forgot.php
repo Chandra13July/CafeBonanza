@@ -19,15 +19,15 @@
                     <span class="ml-4 text-2xl font-semibold">Cafe Bonanza</span>
                 </div>
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold mb-2 text-gray-800">VERIFIKASI EMAIL</h1>
-                    <p class="text-gray-500">Masukkan email Anda untuk menerima tautan verifikasi.</p>
+                    <h1 class="text-3xl font-bold mb-2 text-gray-800">EMAIL VERIFICATION</h1>
+                    <p class="text-gray-500">Enter your email address to receive a verification link.</p>
                 </div>
                 <form id="forgot-password-form" action="<?= BASEURL; ?>/auth/btnVerifyEmail" method="POST" class="flex flex-col gap-4">
                     <div class="w-full">
                         <label class="block text-gray-700 font-medium mb-2" for="reset-email">Email</label>
                         <div class="flex items-center border border-gray-300 rounded-md p-2 w-full">
                             <i class="fas fa-envelope text-gray-400 mr-2"></i>
-                            <input type="email" name="reset_email" id="reset-email" placeholder="Masukkan email Anda" class="w-full outline-none text-base" required />
+                            <input type="email" name="reset_email" id="reset-email" placeholder="Enter your email" class="w-full outline-none text-base" required />
                         </div>
                     </div>
                     <?php if (isset($_SESSION['error'])): ?>
@@ -37,11 +37,11 @@
                         </div>
                     <?php endif; ?>
 
-                    <button type="submit" class="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition duration-300">VERIFIKASI EMAIL</button>
+                    <button type="submit" class="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition duration-300">VERIFY EMAIL</button>
                 </form>
                 <div class="text-center mt-6">
                     <p class="text-gray-500">
-                        Kembali ke <a href="<?= BASEURL; ?>/auth/login" class="text-blue-500 hover:underline">Login?</a>
+                        Back to <a href="<?= BASEURL; ?>/auth/login" class="text-blue-500 hover:underline">Login?</a>
                     </p>
                 </div>
             </div>

@@ -20,22 +20,22 @@
                 </div>
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold mb-2 text-gray-800">RESET PASSWORD</h1>
-                    <p class="text-gray-500">Masukkan password baru Anda.</p>
+                    <p class="text-gray-500">Enter your new password.</p>
                 </div>
-                <form id="reset-password-form" action="<?= BASEURL; ?>/auth/btnResetPassword" method="POST" class="flex flex-col gap-4">
-                    <div class="mb-4 w-full relative">
-                        <label class="block text-gray-700" for="password">Password Baru</label>
+                <form id="reset-password-form" action="<?= BASEURL; ?>/auth/btnResetPassword" method="POST" class="flex flex-col gap-2.5">
+                    <div class="mb-2.5 w-full relative">
+                        <label class="block text-gray-700" for="password">New Password</label>
                         <div class="flex items-center border border-gray-300 rounded-md p-2 w-full relative">
                             <i class="fas fa-lock text-gray-400 mr-2"></i>
-                            <input type="password" name="password" id="password" placeholder="Password Baru" class="w-full outline-none text-base" required />
+                            <input type="password" name="password" id="password" placeholder="New Password" class="w-full outline-none text-base" required />
                             <i id="toggle-password" class="fas fa-eye cursor-pointer text-gray-400 absolute right-2" onclick="togglePassword('password')"></i>
                         </div>
                     </div>
-                    <div class="mb-4 w-full relative">
-                        <label class="block text-gray-700" for="confirm-password">Konfirmasi Password</label>
+                    <div class="mt-1 mb-3 w-full relative">
+                        <label class="block text-gray-700" for="confirm-password">Confirm Password</label>
                         <div class="flex items-center border border-gray-300 rounded-md p-2 w-full relative">
                             <i class="fas fa-lock text-gray-400 mr-2"></i>
-                            <input type="password" name="confirm_password" id="confirm-password" placeholder="Konfirmasi Password" class="w-full outline-none text-base" required />
+                            <input type="password" name="confirm_password" id="confirm-password" placeholder="Confirm Password" class="w-full outline-none text-base" required />
                             <i id="toggle-confirm-password" class="fas fa-eye cursor-pointer text-gray-400 absolute right-2" onclick="togglePassword('confirm-password')"></i>
                         </div>
                         <?php if (isset($_SESSION['error'])): ?>
@@ -49,7 +49,7 @@
                 </form>
                 <div class="text-center mt-6">
                     <p class="text-gray-500">
-                        Kembali ke <a href="<?= BASEURL; ?>/auth/login" class="text-blue-500 hover:underline">Login?</a>
+                        Back to <a href="<?= BASEURL; ?>/auth/login" class="text-blue-500 hover:underline">Login?</a>
                     </p>
                 </div>
             </div>
