@@ -74,19 +74,32 @@ class Home extends Controller
 
     public function btnContact()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'name' => trim($_POST['name']),
-                'email' => trim($_POST['email']),
-                'type' => $_POST['type'],
-                'message' => trim($_POST['message']),
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'email' => htmlspecialchars(trim($_POST['email'])),
+                'type' => htmlspecialchars($_POST['type']),
+                'message' => htmlspecialchars(trim($_POST['message'])),
             ];
 
-            if ($this->contactModel->addContact($data)) {
-                $_SESSION['success'] = "Kontak berhasil ditambahkan!";
-            } else {
-                $_SESSION['error'] = "Penambahan kontak gagal, silakan coba lagi.";
+            if (empty($data['name']) || empty($data['email']) || empty($data['message'])) {
+                $_SESSION['error'] = "Please fill in all required fields.";
+                header("Location: " . BASEURL . "/home/contact");
+                exit();
             }
+
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['error'] = "Invalid email format.";
+                header("Location: " . BASEURL . "/home/contact");
+                exit();
+            }
+
+            if ($this->contactModel->addContact($data)) {
+                $_SESSION['success'] = "Contact has been successfully added!";
+            } else {
+                $_SESSION['error'] = "Failed to add contact, please try again.";
+            }
+
             header("Location: " . BASEURL . "/home/contact");
             exit();
         }
