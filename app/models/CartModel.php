@@ -9,11 +9,9 @@ class CartModel
         $this->db = new Database();
     }
 
-    // Menambahkan item ke keranjang
     public function addToCart($customerId, $menuId, $quantity)
     {
         try {
-            // Memeriksa apakah item sudah ada di keranjang
             $stmt = $this->db->prepare("SELECT Quantity FROM cart WHERE CustomerId = :CustomerId AND MenuId = :MenuId");
             $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
             $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
@@ -22,10 +20,8 @@ class CartModel
             $existingCartItem = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($existingCartItem) {
-                // Jika sudah ada, tambahkan jumlah item
                 $newQuantity = $existingCartItem['Quantity'] + $quantity;
 
-                // Mengupdate jumlah item dalam keranjang
                 $updateStmt = $this->db->prepare("
                     UPDATE cart 
                     SET Quantity = :Quantity 
@@ -36,7 +32,6 @@ class CartModel
                 $updateStmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
                 $updateStmt->execute();
             } else {
-                // Jika belum ada, tambahkan item baru
                 $insertStmt = $this->db->prepare("
                     INSERT INTO cart (CustomerId, MenuId, Quantity) 
                     VALUES (:CustomerId, :MenuId, :Quantity)

@@ -34,11 +34,17 @@ class MenuModel
         return $this->db->resultSet();
     }
 
+    public function getTotalMenu()
+    {
+        $this->db->query("SELECT COUNT(MenuId) AS totalMenu FROM menu");
+        return $this->db->single()['totalMenu'];
+    }
+
     public function getMenuById($menuId)
     {
         $this->db->query("SELECT * FROM menu WHERE MenuId = :menuId");
         $this->db->bind(':menuId', $menuId);
-        return $this->db->single(); 
+        return $this->db->single();
     }
 
     public function addMenu($data)

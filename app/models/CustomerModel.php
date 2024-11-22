@@ -37,6 +37,12 @@ class CustomerModel
         return $this->db->resultSet();
     }
 
+    public function getTotalCustomer()
+    {
+        $this->db->query("SELECT COUNT(CustomerId) AS totalCustomer FROM customer");
+        return $this->db->single()['totalCustomer'];
+    }
+
     public function getUserByUsername($username)
     {
         $this->db->query("SELECT username, email, phone, gender, DateOfBirth AS dob, Address AS address, ImageUrl, CreatedAt 
