@@ -44,6 +44,9 @@
                             <input class="w-full outline-none text-base" id="password" name="password" placeholder="Password" required type="password" />
                             <i class="fas fa-eye text-gray-400 absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer" id="toggle-password"></i>
                         </div>
+                        <div class="text-right mt-2">
+                            <a href="<?= BASEURL; ?>/auth/forgotAdmin" class="text-blue-500 text-sm hover:underline">Forgot Password?</a>
+                        </div>
                     </div>
                     <?php if (isset($_SESSION['error'])): ?>
                         <div class="text-left text-red-500 mb-4">
