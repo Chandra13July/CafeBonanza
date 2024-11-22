@@ -87,11 +87,11 @@ class Auth extends Controller
 
                 if ($role == 'Admin') {
                     $_SESSION['redirect_url'] = '/dashboard/index';
-                    header('Location: ' . BASEURL . '/dashboard/index');
                 } else {
                     $_SESSION['redirect_url'] = '/order/index';
-                    header('Location: ' . BASEURL . '/order/index');
                 }
+
+                header('Location: ' . BASEURL . '/auth/loginAdmin');
                 exit;
             } else {
                 $_SESSION['error'] = "Incorrect password!";
@@ -218,7 +218,7 @@ class Auth extends Controller
             $_SESSION['emailVerified'] = true;
             $_SESSION['verifiedEmail'] = $email;
             $_SESSION['success'] = "Email successfully verified! Please reset your password.";
-            header('Location: ' . BASEURL . '/auth/forgot#reset-password-form'); 
+            header('Location: ' . BASEURL . '/auth/forgot#reset-password-form');
             exit;
         } else {
             $_SESSION['error'] = "Email not registered!";

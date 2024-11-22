@@ -67,7 +67,7 @@
 
         <!-- Logout Button at Bottom -->
         <div class="mt-auto">
-            <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/auth/logout" onclick="openLogoutModal()">
+            <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/auth/logoutAdmin" onclick="openLogoutModal()">
                 <i class="fas fa-sign-out-alt mr-4"></i>
                 Logout
             </a>
