@@ -1,8 +1,7 @@
 <?php
 
-// Mengimpor file konfigurasi dan koneksi database
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../core/Database.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../core/Database.php';
 
 class MenuApi
 {
@@ -10,11 +9,9 @@ class MenuApi
 
     public function __construct()
     {
-        // Membuat instance database
         $this->db = new Database();
     }
 
-    // Mendapatkan semua data menu
     public function getAllMenus()
     {
         $this->db->query("SELECT * FROM menu");
@@ -39,7 +36,6 @@ class MenuApi
         echo json_encode($data);
     }
 
-    // Mendapatkan data menu berdasarkan ID
     public function getMenuById($id)
     {
         $this->db->query("SELECT * FROM menu WHERE MenuId = :id");
@@ -49,7 +45,6 @@ class MenuApi
         echo json_encode($menu);
     }
 
-    // Menambahkan data menu baru
     public function addMenu($data)
     {
         $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
@@ -68,20 +63,16 @@ class MenuApi
         }
     }
 
-    // Mengedit data menu berdasarkan ID
     public function updateMenu($id, $data)
     {
-        // Debugging untuk melihat data yang diterima
         if (empty($data)) {
             echo json_encode(["message" => "No data received"]);
             return;
         }
 
-        // Menyiapkan query update
         $this->db->query("UPDATE menu SET MenuName = :name, Description = :description, Price = :price, 
                           Stock = :stock, Category = :category, ImageUrl = :imageUrl WHERE MenuId = :id");
 
-        // Bind data ke query
         $this->db->bind(':id', $id);
         $this->db->bind(':name', $data['MenuName']);
         $this->db->bind(':description', $data['Description']);
@@ -90,7 +81,6 @@ class MenuApi
         $this->db->bind(':category', $data['Category']);
         $this->db->bind(':imageUrl', $data['ImageUrl']);
 
-        // Eksekusi query
         if ($this->db->execute()) {
             echo json_encode(["message" => "Menu updated successfully"]);
         } else {
@@ -98,7 +88,6 @@ class MenuApi
         }
     }
 
-    // Menghapus data menu berdasarkan ID
     public function deleteMenu($id)
     {
         $this->db->query("DELETE FROM menu WHERE MenuId = :id");
@@ -112,7 +101,6 @@ class MenuApi
     }
 }
 
-// Menggunakan API dengan metode HTTP
 $menuApi = new MenuApi();
 
 header("Content-Type: application/json");
@@ -128,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $menuApi->addMenu($data);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
-    // Debugging untuk memastikan data PUT diterima dengan benar
     if (isset($_GET['id']) && !empty($data)) {
         $menuApi->updateMenu($_GET['id'], $data);
     } else {
