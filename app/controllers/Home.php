@@ -32,7 +32,14 @@ class Home extends Controller
 
     public function menu($category = null)
     {
-        $MenuItems = $this->model('MenuModel')->getMenu($category);
+        $MenuModel = $this->model('MenuModel');
+
+        $validCategories = ['Food', 'Drink'];
+        if ($category && !in_array($category, $validCategories)) {
+            $category = null; 
+        }
+
+        $MenuItems = $MenuModel->getMenu($category);
 
         $data = [
             'MenuItems' => $MenuItems,
