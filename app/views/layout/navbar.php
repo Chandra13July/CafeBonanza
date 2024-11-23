@@ -98,8 +98,8 @@
                                 <a href="<?= BASEURL; ?>/home/cart" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
                                     <i class="fas fa-shopping-cart mr-2 text-gray-600 text-lg"></i> Cart
                                 </a>
-                                <a href="<?= BASEURL; ?>/home/wishlist" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
-                                    <i class="fas fa-heart mr-2 text-gray-600 text-lg"></i> Wishlist
+                                <a href="<?= BASEURL; ?>/home/history" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
+                                    <i class="fas fa-history mr-2 text-gray-600 text-lg"></i> History
                                 </a>
                                 <a href="#" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center" onclick="openLogoutModal()">
                                     <i class="fas fa-sign-out-alt mr-2 text-gray-600 text-lg"></i> Logout

@@ -2,7 +2,6 @@
 
 class Home extends Controller
 {
-
     private $contactModel;
     private $customerModel;
     private $cartModel;
@@ -138,20 +137,17 @@ class Home extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // Pastikan pengguna sudah login
             if (isset($_SESSION['user_id'])) {
                 $customerId = intval($_SESSION['user_id']);
                 $menuId = intval($_POST['menu_id']);
                 $quantity = intval($_POST['quantity']);
 
-                // Validasi input jumlah
                 if ($quantity <= 0) {
                     $_SESSION['error'] = "Jumlah harus lebih dari 0!";
                     header('Location: ' . BASEURL . '/home/menu');
                     exit();
                 }
 
-                // Cek ketersediaan stok menu
                 $menuModel = $this->model('MenuModel');
                 $menu = $menuModel->getMenuById($menuId);
 
@@ -167,7 +163,6 @@ class Home extends Controller
                     exit();
                 }
 
-                // Tambahkan ke keranjang
                 $cartModel = $this->model('CartModel');
                 if ($cartModel->addToCart($customerId, $menuId, $quantity)) {
                     $_SESSION['success'] = "Item berhasil ditambahkan ke keranjang!";
@@ -186,7 +181,6 @@ class Home extends Controller
     public function cart()
     {
         $this->view('layout/header');
-        $this->view('layout/sidebarprofil');
         $this->view('home/cart');
     }
 }
