@@ -33,10 +33,12 @@ class Home extends Controller
     {
         $MenuModel = $this->model('MenuModel');
 
-        $MenuItems = $MenuModel->getMenu(); 
+        $MenuItems = $MenuModel->getMenu();
+        $Categories = $MenuModel->getCategories(); // Dapatkan kategori dinamis
 
         $data = [
             'MenuItems' => $MenuItems,
+            'Categories' => $Categories,
             'Notification' => isset($_SESSION['notification']) ? $_SESSION['notification'] : null,
         ];
 

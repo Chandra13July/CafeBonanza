@@ -19,6 +19,25 @@
     <div class="text-center my-12">
         <h1 class="text-4xl font-bold mb-2">SPECIAL MENU OF THE DAY</h1>
         <p class="text-lg text-gray-600">Order delicious dishes and drinks!</p>
+        <div class="mt-4 flex justify-center items-center gap-4">
+            <input
+                id="searchInput"
+                type="text"
+                class="w-full max-w-md p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-yellow-400"
+                placeholder="Search menu by name or description..."
+                oninput="filterMenu()">
+
+            <select
+                id="sortDropdown"
+                class="p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-yellow-400"
+                onchange="sortMenu()">
+                <option>Select SortMenu</option>
+                <option value="az">A-Z</option>
+                <option value="za">Z-A</option>
+                <option value="price-low">Harga Paling Murah</option>
+                <option value="price-high">Harga Paling Mahal</option>
+            </select>
+        </div>
     </div>
 
     <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -83,7 +102,7 @@
             if (successNotification) {
                 setTimeout(() => {
                     successNotification.classList.add('hidden');
-                }, 2000); 
+                }, 2000);
             }
 
             const errorNotification = document.getElementById('error-notification');
@@ -97,7 +116,7 @@
         function openModal(menuid, imageUrl, title, description, price, stock) {
             if (stock <= 0) {
                 alert("Sorry, this item is out of stock.");
-                return; 
+                return;
             }
 
             document.getElementById('modalMenuId').value = menuid;
@@ -143,6 +162,67 @@
                 return false;
             }
             return true;
+        }
+
+        function sortMenu() {
+            const sortValue = document.getElementById('sortDropdown').value;
+            const menuGrid = document.getElementById('menuGrid');
+            const menuItems = Array.from(menuGrid.children); // Ambil semua elemen menu sebagai array
+
+            menuItems.sort((a, b) => {
+                const nameA = a.querySelector('h5').innerText.toLowerCase();
+                const nameB = b.querySelector('h5').innerText.toLowerCase();
+                const priceA = parseInt(a.querySelector('.text-lg.font-bold').innerText.replace('Rp ', '').replace(/\./g, ''));
+                const priceB = parseInt(b.querySelector('.text-lg.font-bold').innerText.replace('Rp ', '').replace(/\./g, ''));
+
+                if (sortValue === 'az') {
+                    return nameA.localeCompare(nameB); // Urutkan A-Z
+                } else if (sortValue === 'za') {
+                    return nameB.localeCompare(nameA); // Urutkan Z-A
+                } else if (sortValue === 'price-low') {
+                    return priceA - priceB; // Harga termurah
+                } else if (sortValue === 'price-high') {
+                    return priceB - priceA; // Harga termahal
+                }
+            });
+
+            // Hapus semua elemen di grid dan tambahkan kembali dalam urutan yang diurutkan
+            menuGrid.innerHTML = '';
+            menuItems.forEach(item => menuGrid.appendChild(item));
+        }
+
+        function filterMenu() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const menuItems = document.querySelectorAll('#menuGrid > div'); // Pilih semua item menu
+
+            menuItems.forEach(item => {
+                const title = item.querySelector('h5').innerText.toLowerCase();
+                const description = item.querySelector('p').innerText.toLowerCase();
+                if (title.includes(searchValue) || description.includes(searchValue)) {
+                    item.style.display = ''; // Tampilkan item
+                } else {
+                    item.style.display = 'none'; // Sembunyikan item
+                }
+            });
+        }
+
+        function filterByCategory() {
+            const category = document.getElementById('categoryDropdown').value;
+            console.log("Selected Category:", category);
+
+            const menuItems = document.querySelectorAll('#menuGrid > div');
+            menuItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                console.log("Item Category:", itemCategory);
+
+                if (category === 'all' || itemCategory === category) {
+                    console.log("Show Item:", itemCategory);
+                    item.style.display = '';
+                } else {
+                    console.log("Hide Item:", itemCategory);
+                    item.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
