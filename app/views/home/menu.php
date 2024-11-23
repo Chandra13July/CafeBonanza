@@ -1,9 +1,5 @@
-<head>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
 <body class="bg-gray-100 text-gray-800">
+    <!-- Success Notification -->
     <?php if (isset($_SESSION['success'])): ?>
         <div id="success-notification" class="bg-green-500 text-white p-2 rounded shadow-lg fixed top-4 right-4 text-sm z-50">
             <?= $_SESSION['success']; ?>
@@ -24,31 +20,6 @@
         <h1 class="text-4xl font-bold mb-2">SPECIAL MENU OF THE DAY</h1>
         <p class="text-lg text-gray-600">Order delicious dishes and drinks!</p>
     </div>
-
-    <div class="flex flex-wrap gap-4 justify-center items-center">
-        <div class="flex items-center space-x-2">
-            <input type="text" id="searchInput" placeholder="Search menu..." class="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-200">
-        </div>
-        <div>
-            <select id="categoryFilter" class="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-200" onchange="filterByCategory()">
-                <option value="all">Select Category</option>
-                <option value="all">All Menu</option>
-                <option value="food">Food</option>
-                <option value="drink">Drink</option>
-            </select>
-        </div>
-        <div>
-            <select id="priceFilter" class="px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-200" onchange="filterMenu()">
-                <option value="default">Sort by</option>
-                <option value="low-high">Price: Low to High</option>
-                <option value="high-low">Price: High to Low</option>
-                <option value="a-z">A to Z</option>
-                <option value="z-a">Z to A</option>
-            </select>
-        </div>
-    </div>
-
-    <br>
 
     <div id="menuGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
         <?php if (!empty($data['MenuItems'])): ?>
@@ -112,7 +83,7 @@
             if (successNotification) {
                 setTimeout(() => {
                     successNotification.classList.add('hidden');
-                }, 2000);
+                }, 2000); 
             }
 
             const errorNotification = document.getElementById('error-notification');
@@ -124,6 +95,11 @@
         };
 
         function openModal(menuid, imageUrl, title, description, price, stock) {
+            if (stock <= 0) {
+                alert("Sorry, this item is out of stock.");
+                return; 
+            }
+
             document.getElementById('modalMenuId').value = menuid;
             document.getElementById('modalImage').src = "<?= BASEURL; ?>/" + imageUrl;
             document.getElementById('modalTitle').innerText = title;
@@ -138,7 +114,7 @@
 
             document.getElementById('modal').style.display = "flex";
             document.body.classList.add('modal-open');
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal(event) {
@@ -149,24 +125,21 @@
             }
         }
 
-        function updateQuantity(change) {
+        function updateQuantity(amount) {
             const quantityInput = document.getElementById('quantityInput');
+            let quantity = parseInt(quantityInput.value);
             const stock = parseInt(document.getElementById('modalStock').innerText.replace('Stock: ', ''));
-            let currentQuantity = parseInt(quantityInput.value);
-
-            currentQuantity += change;
-
-            if (currentQuantity < 1) currentQuantity = 1;
-            if (currentQuantity > stock) currentQuantity = stock;
-
-            quantityInput.value = currentQuantity;
-            document.getElementById('modalQuantity').value = currentQuantity;
+            quantity += amount;
+            if (quantity <= 0) quantity = 1;
+            if (quantity > stock) quantity = stock;
+            quantityInput.value = quantity;
+            document.getElementById('modalQuantity').value = quantity;
         }
 
         function addToCart() {
-            const quantity = document.getElementById('modalQuantity').value;
-            if (quantity < 1) {
-                alert('Please choose at least 1 item');
+            const quantity = parseInt(document.getElementById('modalQuantity').value);
+            if (quantity <= 0) {
+                alert("Please select a valid quantity.");
                 return false;
             }
             return true;

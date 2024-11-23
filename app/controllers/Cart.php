@@ -24,26 +24,8 @@ class Cart extends Controller
                 $menuId = intval($_POST['menu_id']);
                 $quantity = intval($_POST['quantity']);
 
-                if ($quantity <= 0) {
-                    $_SESSION['error'] = "Jumlah harus lebih dari 0!";
-                    header('Location: ' . BASEURL . '/home/menu');
-                    exit();
-                }
-
                 $menuModel = $this->model('MenuModel');
                 $menu = $menuModel->getMenuById($menuId);
-
-                if (!$menu) {
-                    $_SESSION['error'] = "Menu tidak ditemukan.";
-                    header('Location: ' . BASEURL . '/home/menu');
-                    exit();
-                }
-
-                if ($menu['Stock'] < $quantity) {
-                    $_SESSION['error'] = "Jumlah melebihi stok yang tersedia.";
-                    header('Location: ' . BASEURL . '/home/menu');
-                    exit();
-                }
 
                 $cartModel = $this->model('CartModel');
                 if ($cartModel->addToCart($customerId, $menuId, $quantity)) {
