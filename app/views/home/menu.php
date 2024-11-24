@@ -88,9 +88,6 @@
                             Add to Cart
                         </button>
                     </form>
-                    <a id="buyNowLink" href="#" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 text-center flex items-center justify-center">
-                        Buy Now
-                    </a>
                 </div>
             </div>
         </div>
@@ -127,9 +124,6 @@
             document.getElementById('modalStock').innerText = "Stock: " + stock;
             document.getElementById('quantityInput').value = stock > 0 ? 1 : 0;
             document.getElementById('modalQuantity').value = stock > 0 ? 1 : 0;
-
-            const buyNowLink = document.getElementById('buyNowLink');
-            buyNowLink.href = `<?= BASEURL; ?>/checkout?menu_id=${title}&quantity=1`;
 
             document.getElementById('modal').style.display = "flex";
             document.body.classList.add('modal-open');
@@ -176,32 +170,31 @@
                 const priceB = parseInt(b.querySelector('.text-lg.font-bold').innerText.replace('Rp ', '').replace(/\./g, ''));
 
                 if (sortValue === 'az') {
-                    return nameA.localeCompare(nameB); // Urutkan A-Z
+                    return nameA.localeCompare(nameB); 
                 } else if (sortValue === 'za') {
-                    return nameB.localeCompare(nameA); // Urutkan Z-A
+                    return nameB.localeCompare(nameA); 
                 } else if (sortValue === 'price-low') {
-                    return priceA - priceB; // Harga termurah
+                    return priceA - priceB; 
                 } else if (sortValue === 'price-high') {
-                    return priceB - priceA; // Harga termahal
+                    return priceB - priceA; 
                 }
             });
 
-            // Hapus semua elemen di grid dan tambahkan kembali dalam urutan yang diurutkan
             menuGrid.innerHTML = '';
             menuItems.forEach(item => menuGrid.appendChild(item));
         }
 
         function filterMenu() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
-            const menuItems = document.querySelectorAll('#menuGrid > div'); // Pilih semua item menu
+            const menuItems = document.querySelectorAll('#menuGrid > div'); 
 
             menuItems.forEach(item => {
                 const title = item.querySelector('h5').innerText.toLowerCase();
                 const description = item.querySelector('p').innerText.toLowerCase();
                 if (title.includes(searchValue) || description.includes(searchValue)) {
-                    item.style.display = ''; // Tampilkan item
+                    item.style.display = ''; 
                 } else {
-                    item.style.display = 'none'; // Sembunyikan item
+                    item.style.display = 'none'; 
                 }
             });
         }

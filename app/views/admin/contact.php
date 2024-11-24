@@ -16,7 +16,6 @@
     <div class="flex-1 ml-64 p-4">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="p-4">
-                <input class="w-1/3 p-2 border border-gray-300 rounded" placeholder="Search..." type="text" />
             </div>
 
             <div class="overflow-x-auto">

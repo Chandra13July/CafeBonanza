@@ -17,7 +17,6 @@
     <div class="flex-1 ml-64 p-4">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="flex justify-between items-center p-4">
-                <input class="w-1/3 p-2 border border-gray-300 rounded" placeholder="Search..." type="text" />
                 <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="openAddModal()">Add Gallery</button>
             </div>
 

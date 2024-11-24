@@ -1,3 +1,41 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <style>
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            border-radius: 0.375rem;
+            background: #4A5568;
+            color: white;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #2D3748;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #CBD5E0;
+        }
+        .dataTables_wrapper .dataTables_length select {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #CBD5E0;
+        }
+        .dataTables_wrapper .dataTables_info {
+            padding: 0.5rem;
+        }
+        .dataTables_wrapper .dataTables_paginate {
+            padding: 0.5rem;
+        }
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_length {
+            padding: 0.5rem;
+        }
+    </style>
+</head>
 <body class="bg-gray-100 flex">
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -15,14 +53,14 @@
     <?php endif; ?>
 
     <div class="flex-1 ml-64 p-4">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="flex justify-between items-center p-4">
-                <input class="w-1/3 p-2 border border-gray-300 rounded" placeholder="Search..." type="text" />
+        <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">Customer Table</h2>
                 <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="openAddModal()">Add Customer</button>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white table-auto">
+            <div class="overflow-x-auto p-4">
+                <table id="employeeTable" class="min-w-full bg-white table-auto">
                     <thead>
                         <tr class="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
                             <th class="py-3 px-4 font-thin text-center">No</th>
@@ -200,9 +238,12 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script>
-        let table = new DataTable('table');
+        $(document).ready(function() {
+            $('#employeeTable').DataTable();
+        });
+
         const deleteModal = document.getElementById('deleteModal');
         const addModal = document.getElementById('addModal');
         const editModal = document.getElementById('editModal');
@@ -250,7 +291,6 @@
                 setTimeout(() => {
                     successNotification.style.display = 'none';
                 }, 2000);
-                s
             }
 
             const errorNotification = document.getElementById('error-notification');
@@ -262,5 +302,4 @@
         }
     </script>
 </body>
-
 </html>

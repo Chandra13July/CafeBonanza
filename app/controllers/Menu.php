@@ -27,10 +27,8 @@ class Menu extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            // Panggil fungsi uploadImage dan ambil hasil path gambar
             $imagePath = $this->uploadImage();
 
-            // Jika ada error saat upload, redirect dan hentikan eksekusi
             if ($imagePath === false) {
                 header("Location: " . BASEURL . "/menu/index");
                 exit();
@@ -42,7 +40,7 @@ class Menu extends Controller
                 'price' => trim($_POST['price']),
                 'stock' => trim($_POST['stock']),
                 'category' => trim($_POST['category']),
-                'imageUrl' => $imagePath // Tambahkan path gambar ke data
+                'imageUrl' => $imagePath 
             ];
 
             if ($this->menuModel->addMenu($data)) {
@@ -66,12 +64,12 @@ class Menu extends Controller
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (in_array($imageExt, $allowed)) {
-                if ($imageSize < 5000000) { // Batas ukuran 5MB
+                if ($imageSize < 5000000) {
                     $newImageName = uniqid('', true) . '.' . $imageExt;
                     $imageUploadPath = 'upload/menu/' . $newImageName;
 
                     if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $imageUploadPath; // Berhasil upload, return path
+                        return $imageUploadPath;
                     } else {
                         $_SESSION['error'] = "Gagal mengunggah gambar.";
                         return false;
@@ -85,17 +83,16 @@ class Menu extends Controller
                 return false;
             }
         }
-        return null; // Jika tidak ada gambar yang diunggah
+        return null; 
     }
 
     public function btnEditMenu()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Mengambil data menu yang akan diedit
-            $menu = $this->menuModel->findMenuById($_POST['MenuId']); // Pastikan ini mengambil menu, bukan user
+            $menu = $this->menuModel->findMenuById($_POST['MenuId']); 
 
             $data = [
-                'MenuId' => $_POST['MenuId'], // Sesuaikan dengan nama kolom di database
+                'MenuId' => $_POST['MenuId'], 
                 'menuName' => trim($_POST['menuName']),
                 'description' => trim($_POST['description']),
                 'price' => trim($_POST['price']),
@@ -103,21 +100,18 @@ class Menu extends Controller
                 'category' => trim($_POST['category']),
             ];
 
-            // Periksa apakah ada file gambar baru yang diunggah
             if (!empty($_FILES['imageUrl']['name'])) {
-                $data['imageUrl'] = $this->uploadImage(); // Metode untuk mengupload gambar
+                $data['imageUrl'] = $this->uploadImage(); 
             } else {
                 $data['imageUrl'] = $menu['ImageUrl'];
             }
 
-            // Panggil metode untuk memperbarui data menu
             if ($this->menuModel->editMenu($data)) {
                 $_SESSION['success'] = "Menu berhasil diperbarui!";
             } else {
                 $_SESSION['error'] = "Pembaharuan menu gagal.";
             }
 
-            // Redirect ke halaman menu
             header("Location: " . BASEURL . "/menu/index");
             exit();
         }
