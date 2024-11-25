@@ -24,7 +24,7 @@
                 id="searchInput"
                 type="text"
                 class="w-full max-w-md p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-yellow-400"
-                placeholder="Search menu by name or description..."
+                placeholder="Search..."
                 oninput="filterMenu()">
 
             <select

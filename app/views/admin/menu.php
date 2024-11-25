@@ -88,7 +88,7 @@
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Stock']) ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($menu['Category']) ?></td>
                                     <td class="py-3 px-4 text-center">
-                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="Menu Image" class="w-12 h-12 object-cover mx-auto">
+                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="Image of <?= htmlspecialchars($menu['MenuName']) ?>" class="w-12 h-12 object-cover mx-auto">
                                     </td>
                                     <td class="py-3 px-4 text-center">
                                         <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200" onclick="openEditModal(<?= htmlspecialchars(json_encode($menu), ENT_QUOTES, 'UTF-8'); ?>)">
@@ -193,7 +193,7 @@
                 </div>
                 <div class="mb-4">
                     <label for="imageUrl" class="block text-gray-700">Image</label>
-                    <img id="editImagePreview" src="<?= isset($menu['ImageUrl']) ? BASEURL . '/' . $menu['ImageUrl'] : ''; ?>" alt="Menu Image" class="w-20 h-20 rounded-full mx-auto mb-2">
+                    <img id="editImagePreview" src="<?= isset($menu['ImageUrl']) ? BASEURL . '/' . $menu['ImageUrl'] : ''; ?>" alt="Image of <?= isset($menu['MenuName']) ? htmlspecialchars($menu['MenuName']) : 'menu item'; ?>" class="w-20 h-20 rounded-full mx-auto mb-2">
                     <input type="file" name="imageUrl" class="w-full p-2 border border-gray-300 rounded">
                 </div>
                 <div class="flex justify-end col-span-2">
