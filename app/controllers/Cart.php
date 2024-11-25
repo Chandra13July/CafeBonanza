@@ -9,9 +9,8 @@ class Cart extends Controller
         $this->cartModel = $this->model('CartModel');
 
         if (!isset($_SESSION['user_id'])) {
-            $_SESSION['flash_message'] = 'You must log in first!';
-            header('Location: ' . BASEURL . '/auth/login');
-            exit;
+            $_SESSION['flash_message'] = 'Anda harus login terlebih dahulu!';
+            header('Location: ' . BASEURL . '/auth/loginAdmin');
         }
     }
 
@@ -45,6 +44,48 @@ class Cart extends Controller
             }
 
             header('Location: ' . BASEURL . '/home/menu');
+            exit();
+        }
+    }
+
+    public function deleteAll()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_SESSION['user_id'])) {
+                $customerId = intval($_SESSION['user_id']);
+                $cartModel = $this->model('CartModel');
+
+                if ($cartModel->deleteAllItems($customerId)) {
+                    $_SESSION['success'] = "Semua item berhasil dihapus dari keranjang!";
+                } else {
+                    $_SESSION['error'] = "Gagal menghapus item dari keranjang, silakan coba lagi.";
+                }
+            } else {
+                $_SESSION['error'] = "Anda harus login untuk menghapus item.";
+            }
+
+            header('Location: ' . BASEURL . '/cart/index');
+            exit();
+        }
+    }
+
+    public function deleteItem($cartId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_SESSION['user_id'])) {
+                $customerId = intval($_SESSION['user_id']);
+                $cartModel = $this->model('CartModel');
+
+                if ($cartModel->deleteItem($customerId, $cartId)) {
+                    $_SESSION['success'] = "Item berhasil dihapus dari keranjang!";
+                } else {
+                    $_SESSION['error'] = "Gagal menghapus item dari keranjang, silakan coba lagi.";
+                }
+            } else {
+                $_SESSION['error'] = "Anda harus login untuk menghapus item.";
+            }
+
+            header('Location: ' . BASEURL . '/cart/index');
             exit();
         }
     }

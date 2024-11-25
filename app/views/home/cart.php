@@ -11,18 +11,28 @@
             const qtyElements = document.querySelectorAll('.qty');
             const totalElement = document.getElementById('total');
             const buyButton = document.getElementById('buy-button');
-            const price = 22500;
             const selectAllCheckbox = document.getElementById('select-all');
             const itemCheckboxes = document.querySelectorAll('.item-checkbox');
             const selectAllLabel = document.getElementById('select-all-label');
 
             const updateTotal = () => {
                 let totalQty = 0;
+                let totalPrice = 0;
+
+                // Loop through checked checkboxes to calculate total quantity and price
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-                    const qtyElement = checkbox.closest('.item').querySelector('.qty');
-                    totalQty += parseInt(qtyElement.innerText);
+                    const itemElement = checkbox.closest('.item');
+                    const qtyElement = itemElement.querySelector('.qty');
+                    const priceElement = itemElement.querySelector('.item-price'); // Assuming you add a class item-price for the price span
+
+                    const qty = parseInt(qtyElement.innerText);
+                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, '')); // Remove "Rp" and format number
+
+                    totalQty += qty;
+                    totalPrice += qty * price;
                 });
-                totalElement.innerText = totalQty > 0 ? 'Rp' + (totalQty * price).toLocaleString('id-ID') : '-';
+
+                totalElement.innerText = totalQty > 0 ? 'Rp' + totalPrice.toLocaleString('id-ID') : '-';
                 buyButton.innerText = totalQty > 0 ? 'Beli (' + totalQty + ')' : 'Beli';
             };
 
@@ -114,17 +124,35 @@
     </style>
 </head>
 
+<?php if (isset($_SESSION['success'])): ?>
+    <div id="success-notification" class="bg-green-500 text-white p-2 rounded shadow-lg fixed top-4 right-4 text-sm z-50">
+        <?= $_SESSION['success']; ?>
+        <?php unset($_SESSION['success']); ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div id="error-notification" class="bg-red-500 text-white p-2 rounded shadow-lg fixed top-16 right-4 text-sm z-50">
+        <?= $_SESSION['error']; ?>
+        <?php unset($_SESSION['error']); ?>
+    </div>
+<?php endif; ?>
+
 <body class="bg-gray-100">
     <div class="max-w-7xl mx-auto p-6 flex flex-col lg:flex-row">
         <div class="w-full lg:w-3/4 bg-white p-8 rounded-lg shadow-md mb-6 lg:mb-0 lg:mr-6">
             <h1 class="text-3xl font-bold mb-6">Keranjang</h1>
             <div class="border-b pb-6 mb-6">
-                <div class="flex items-center">
-                    <input class="mr-2" id="select-all" type="checkbox" />
-                    <span id="select-all-label" class="font-semibold text-lg">
-                        Pilih Semua (<?= isset($cartItems) ? count($cartItems) : 0 ?>)
-                    </span>
-                    <a class="ml-auto text-green-500 cursor-pointer text-lg" id="delete-all">Hapus</a>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input class="mr-2" id="select-all" type="checkbox" />
+                        <span id="select-all-label" class="font-semibold text-lg">
+                            Pilih Semua (<?= isset($cartItems) ? count($cartItems) : 0 ?>)
+                        </span>
+                    </div>
+                    <form action="<?= BASEURL; ?>/cart/deleteAll" method="POST">
+                        <button type="submit" class="text-red-500 cursor-pointer text-lg">Hapus Semua</button>
+                    </form>
                 </div>
             </div>
             <div id="cartItems">
@@ -143,15 +171,24 @@
                                 <div class="flex-grow">
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="ml-2 text-lg"><?= htmlspecialchars($item['MenuName']) ?></span>
-                                        <span class="text-xl font-bold text-gray-800">Rp<?= number_format($item['Price'], 0, ',', '.') ?></span>
+                                        <span class="text-xl font-bold text-gray-800 item-price">Rp<?= number_format($item['Price'], 0, ',', '.') ?></span>
                                     </div>
                                     <p class="ml-2 text-gray-600 truncate-2-lines"><?= htmlspecialchars($item['Description']) ?></p>
                                     <div class="flex items-center justify-between mt-2">
                                         <p class="ml-2 text-gray-600 stock">Stok: <?= htmlspecialchars($item['Stock']) ?></p>
                                         <div class="flex items-center">
+                                            <!-- Wishlist Icon -->
                                             <i class="fas fa-heart text-gray-500 mr-4 wishlist-item cursor-pointer"></i>
-                                            <i class="fas fa-trash text-gray-500 mr-4 delete-item cursor-pointer"></i>
-                                            <div class="flex items-center border rounded">
+
+                                            <!-- Delete Item Button -->
+                                            <form action="<?= BASEURL; ?>/cart/deleteItem/<?= $item['CartId']; ?>" method="POST">
+                                                <button type="submit" class="ml-4 text-gray-500 cursor-pointer">
+                                                    <i class="fas fa-trash"></i> <!-- Trash bin icon -->
+                                                </button>
+                                            </form>
+
+                                            <!-- Quantity Control Buttons -->
+                                            <div class="flex items-center ml-4 border rounded">
                                                 <button class="px-2 decrease">-</button>
                                                 <span class="px-2 qty"><?= htmlspecialchars($item['Quantity']) ?></span>
                                                 <button class="px-2 increase">+</button>

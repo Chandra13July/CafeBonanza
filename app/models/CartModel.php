@@ -49,6 +49,33 @@ class CartModel
         }
     }
 
+    public function deleteAllItems($customerId)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM cart WHERE CustomerId = :CustomerId");
+            $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error in deleteAllItems: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteItem($customerId, $cartId)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM cart WHERE CustomerId = :CustomerId AND CartId = :CartId");
+            $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+            $stmt->bindParam(':CartId', $cartId, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error in deleteItem: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getMenuById($menuId)
     {
         $stmt = $this->db->prepare("SELECT * FROM menu WHERE MenuId = :MenuId");
