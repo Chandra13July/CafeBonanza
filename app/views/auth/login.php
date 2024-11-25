@@ -5,6 +5,13 @@
     </div>
 <?php endif; ?>
 
+<?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="bg-yellow-500 text-white p-2 rounded shadow-lg absolute top-4 right-4 text-sm z-50" id="flash-notification">
+        <?= $_SESSION['flash_message']; ?>
+        <?php unset($_SESSION['flash_message']); ?>
+    </div>
+<?php endif; ?>
+
 <body class="bg-white flex items-center justify-center h-screen">
     <div class="container relative">
         <div class="flex flex-col md:flex-row w-full h-full">
@@ -65,6 +72,13 @@
                     window.location.href = "<?= BASEURL; ?>/home";
                 }, 2000);
             }
+
+        const flashNotification = document.getElementById('flash-notification');
+        if (flashNotification) {
+            setTimeout(() => {
+                flashNotification.classList.add('hidden');
+            }, 2000);
+        }
         };
 
         const togglePassword = document.getElementById('toggle-password');

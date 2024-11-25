@@ -128,9 +128,4 @@ class Home extends Controller
         }
     }
 
-    public function cart()
-    {
-        $this->view('layout/header');
-        $this->view('home/cart');
-    }
 }

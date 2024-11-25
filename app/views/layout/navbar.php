@@ -95,7 +95,7 @@
                                 <a href="<?= BASEURL; ?>/home/profile" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
                                     <i class="fas fa-user-circle mr-2 text-gray-600 text-lg"></i> Profile
                                 </a>
-                                <a href="<?= BASEURL; ?>/home/cart" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
+                                <a href="<?= BASEURL; ?>/cart/index" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
                                     <i class="fas fa-shopping-cart mr-2 text-gray-600 text-lg"></i> Cart
                                 </a>
                                 <a href="<?= BASEURL; ?>/home/history" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">

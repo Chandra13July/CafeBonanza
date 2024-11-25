@@ -7,11 +7,18 @@ class Cart extends Controller
     public function __construct()
     {
         $this->cartModel = $this->model('CartModel');
+
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['flash_message'] = 'You must log in first!';
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        }
     }
 
     public function index()
     {
         $this->view('layout/header');
+        $this->view('layout/navbar');
         $this->view('home/cart');
     }
 
@@ -42,4 +49,3 @@ class Cart extends Controller
         }
     }
 }
-?>
