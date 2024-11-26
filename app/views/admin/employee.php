@@ -15,62 +15,61 @@
     <?php endif; ?>
 
     <div class="flex-1 ml-64 p-4">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="flex justify-between items-center p-4">
-                <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="openAddModal()">Add Employee</button>
-            </div>
+    <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-700">Employee Table</h2>
+            <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="openAddModal()">Add Employee</button>
+        </div>
 
-            <div class="overflow-x-auto bg-gray-50 border border-gray-300 shadow-md rounded-lg">
-                <table class="min-w-full bg-white table-auto border-collapse border-spacing-0">
-                    <thead>
-                        <tr class="bg-gray-200 text-left text-gray-600 uppercase text-sm font-semibold">
-                            <th class="py-3 px-4 text-center border-b border-gray-300">No</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Username</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Email</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Phone</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Role</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Gender</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Date of Birth</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Address</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Image</th>
-                            <th class="py-3 px-4 text-center border-b border-gray-300">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($data['employee'])): ?>
-                            <?php foreach ($data['employee'] as $index => $employee): ?>
-                                <tr class="text-sm text-gray-600 hover:bg-gray-100 transition duration-200 ease-in-out">
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= $index + 1 ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Username']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Email']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Phone']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Role']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Gender']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300">
-                                        <?= !empty($employee['DateOfBirth']) ? date("d F Y", strtotime($employee['DateOfBirth'])) : 'N/A' ?>
-                                    </td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300"><?= htmlspecialchars($employee['Address']) ?></td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300">
-                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($employee['ImageUrl']) ?>" alt="Employee Image" class="w-10 h-10 rounded-full mx-auto">
-                                    </td>
-                                    <td class="py-3 px-4 text-center border-b border-gray-300">
-                                        <button class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-200" onclick="openEditModal(<?= htmlspecialchars(json_encode($employee), ENT_QUOTES, 'UTF-8'); ?>)">
-                                            <i class="fas fa-pen"></i>
-                                        </button>
-                                        <button class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200 ml-2" onclick="openDeleteModal(<?= $employee['EmployeeId']; ?>)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="10" class="py-3 px-4 text-center text-gray-500">No employee data available</td>
+        <div class="overflow-x-auto p-4">
+            <table id="employeeTable" class="min-w-full bg-white table-auto">
+                <thead>
+                    <tr class="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-4 font-thin text-center">No</th>
+                        <th class="py-3 px-4 font-thin text-center">Username</th>
+                        <th class="py-3 px-4 font-thin text-center">Email</th>
+                        <th class="py-3 px-4 font-thin text-center">Phone</th>
+                        <th class="py-3 px-4 font-thin text-center">Gender</th>
+                        <th class="py-3 px-4 font-thin text-center">Date of Birth</th>
+                        <th class="py-3 px-4 font-thin text-center">Address</th>
+                        <th class="py-3 px-4 font-thin text-center">Image</th>
+                        <th class="py-3 px-4 font-thin text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($data['employee'])): ?>
+                        <?php foreach ($data['employee'] as $index => $employee): ?>
+                            <tr class="text-sm text-gray-600">
+                                <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Username'] ?? '') ?></td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Email'] ?? '') ?></td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Phone'] ?? 'N/A') ?></td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Gender'] ?? 'N/A') ?></td>
+                                <td class="py-3 px-4 text-center">
+                                    <?= !empty($employee['DateOfBirth']) ? date("d F Y", strtotime($employee['DateOfBirth'])) : 'N/A' ?>
+                                </td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Address'] ?? 'N/A') ?></td>
+                                <td class="py-3 px-4 text-center">
+                                    <img src="<?= BASEURL; ?>/<?= htmlspecialchars($employee['ImageUrl'] ?? '/img/user.png') ?>" alt="Employee Image" class="w-12 h-12 rounded-full mx-auto">
+                                </td>
+                                <td class="py-3 px-4 text-center">
+                                    <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200" onclick="openEditModal(<?= htmlspecialchars(json_encode($employee), ENT_QUOTES, 'UTF-8'); ?>)">
+                                        <i class="fas fa-pen text-base"></i>
+                                    </button>
+                                    <button class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-700 transition duration-200 ml-2" onclick="openDeleteModal(<?= $employee['EmployeeId']; ?>)">
+                                        <i class="fas fa-trash text-base"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="9" class="py-3 px-4 text-center text-gray-500">No employee data available</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 
             <!-- Add Employee Modal Form -->
             <div id="addModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
