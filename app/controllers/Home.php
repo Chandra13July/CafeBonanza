@@ -15,16 +15,28 @@ class Home extends Controller
 
     public function index()
     {
+        $totalCartItems = $this->getItemCountCart();
+
+        $data = [
+            'totalCartItems' => $totalCartItems
+        ];
+
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/home');
         $this->view('layout/footer');
     }
 
     public function about()
     {
+        $totalCartItems = $this->getItemCountCart();
+
+        $data = [
+            'totalCartItems' => $totalCartItems
+        ];
+
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/about');
         $this->view('layout/footer');
     }
@@ -32,14 +44,13 @@ class Home extends Controller
     public function menu()
     {
         $MenuModel = $this->model('MenuModel');
-
         $MenuItems = $MenuModel->getMenu();
-        $Categories = $MenuModel->getCategories(); // Dapatkan kategori dinamis
+        $totalCartItems = $this->getItemCountCart();
 
         $data = [
             'MenuItems' => $MenuItems,
-            'Categories' => $Categories,
             'Notification' => isset($_SESSION['notification']) ? $_SESSION['notification'] : null,
+            'totalCartItems' => $totalCartItems
         ];
 
         if (isset($_SESSION['notification'])) {
@@ -47,7 +58,7 @@ class Home extends Controller
         }
 
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/menu', $data);
         $this->view('layout/footer');
     }
@@ -55,21 +66,29 @@ class Home extends Controller
     public function gallery()
     {
         $galleryItems = $this->model('GalleryModel')->getAllGallery();
+        $totalCartItems = $this->getItemCountCart();
 
         $data = [
-            'galleryItems' => $galleryItems
+            'galleryItems' => $galleryItems,
+            'totalCartItems' => $totalCartItems
         ];
 
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/gallery', $data);
         $this->view('layout/footer');
     }
 
     public function contact()
     {
+        $totalCartItems = $this->getItemCountCart();
+
+        $data = [
+            'totalCartItems' => $totalCartItems
+        ];
+
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/contact');
         $this->view('layout/footer');
     }
@@ -128,4 +147,17 @@ class Home extends Controller
         }
     }
 
+    public function getItemCountCart()
+    {
+        if (isset($_SESSION['user_id'])) {
+            $customerId = $_SESSION['user_id'];
+            $itemCount = $this->cartModel->getItemCountInCart($customerId);
+
+            error_log("Customer ID: {$customerId}, Total Items in Cart: {$itemCount}");
+
+            return $itemCount;
+        }
+
+        return 0;
+    }
 }

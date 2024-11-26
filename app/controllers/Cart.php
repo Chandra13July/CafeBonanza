@@ -16,8 +16,14 @@ class Cart extends Controller
 
     public function index()
     {
+        $totalCartItems = $this->getItemCountCart();
+
+        $data = [
+            'totalCartItems' => $totalCartItems
+        ];
+
         $this->view('layout/header');
-        $this->view('layout/navbar');
+        $this->view('layout/navbar', $data);
         $this->view('home/cart');
     }
 
@@ -88,5 +94,19 @@ class Cart extends Controller
             header('Location: ' . BASEURL . '/cart/index');
             exit();
         }
+    }
+
+    public function getItemCountCart()
+    {
+        if (isset($_SESSION['user_id'])) {
+            $customerId = $_SESSION['user_id'];
+            $itemCount = $this->cartModel->getItemCountInCart($customerId);
+
+            error_log("Customer ID: {$customerId}, Total Items in Cart: {$itemCount}");
+
+            return $itemCount;
+        }
+
+        return 0;
     }
 }

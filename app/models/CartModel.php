@@ -108,4 +108,25 @@ class CartModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getItemCountInCart($customerId)
+    {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT SUM(Quantity) AS TotalItems
+                FROM cart
+                WHERE CustomerId = :CustomerId
+            ");
+
+            $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($result['TotalItems']) ? (int)$result['TotalItems'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error in getItemCountInCart: " . $e->getMessage());
+            return 0;
+        }
+    }
 }

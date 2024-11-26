@@ -22,29 +22,35 @@ class MenuModel
         return $this->db->resultSet();
     }
 
-    public function getMenu($category = null)
+    public function getMenu()
     {
-        if ($category) {
-            $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu WHERE Category = :category');
-            $this->db->bind(':category', $category);
-        } else {
-            $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu');
-        }
+        $this->db->query('
+            SELECT 
+                m.MenuId, 
+                m.MenuName, 
+                m.Description, 
+                m.Price, 
+                m.Stock, 
+                m.Category, 
+                m.ImageUrl, 
+                COALESCE(SUM(od.Quantity), 0) AS TotalSold
+            FROM 
+                menu m
+            LEFT JOIN 
+                OrderDetails od ON m.MenuId = od.MenuId
+            GROUP BY 
+                m.MenuId, m.MenuName, m.Description, m.Price, m.Stock, m.Category, m.ImageUrl
+        ');
 
         return $this->db->resultSet();
     }
+
 
     public function getMenuById($menuId)
     {
         $this->db->query("SELECT * FROM menu WHERE MenuId = :menuId");
         $this->db->bind(':menuId', $menuId);
         return $this->db->single();
-    }
-
-    public function getCategories()
-    {
-        $this->db->query('SELECT DISTINCT Category FROM menu WHERE Category IN ("Food", "Drinks")');
-        return $this->db->resultSet();
     }
 
     public function getTotalMenu()
