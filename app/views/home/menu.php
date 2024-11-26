@@ -1,27 +1,37 @@
 <html>
+
 <head>
     <title>Special Menu of the Day</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
         }
-        .wishlist-icon {
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: transparent;
-            -webkit-text-stroke: 1px black;
+
+        .zoom-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 12rem;
         }
-        .wishlist-icon.active {
-            color: red;
-            -webkit-text-stroke: 1px red;
+
+        .zoom-image {
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            cursor: zoom-in;
+        }
+
+        .zoom-container:hover .zoom-image {
+            transform: scale(1.5);
+            cursor: zoom-in;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 text-gray-800 p-4 sm:p-6 md:p-8 lg:p-10">
-    <!-- Success Notification -->
     <?php if (isset($_SESSION['success'])): ?>
         <div id="success-notification" class="bg-green-500 text-white p-2 rounded shadow-lg fixed top-4 right-4 text-sm z-50">
             <?= $_SESSION['success']; ?>
@@ -53,11 +63,11 @@
                 id="sortDropdown"
                 class="p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-yellow-400"
                 onchange="sortMenu()">
-                <option>Select SortMenu</option>
+                <option>Select Sort Option</option>
                 <option value="az">A-Z</option>
                 <option value="za">Z-A</option>
-                <option value="price-low">Harga Paling Murah</option>
-                <option value="price-high">Harga Paling Mahal</option>
+                <option value="price-low">Lowest Price</option>
+                <option value="price-high">Highest Price</option>
             </select>
         </div>
     </div>
@@ -67,24 +77,30 @@
             <?php foreach ($data['MenuItems'] as $item): ?>
                 <div class="bg-white rounded-lg shadow-md text-center flex flex-col">
                     <!-- Display Image -->
-                    <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']) ? htmlspecialchars($item['ImageUrl']) : 'default_image.jpg'; ?>"
-                        alt="<?= htmlspecialchars($item['MenuName']); ?>"
-                        class="w-full h-48 object-cover cursor-pointer rounded-t-lg m-0 p-0">
+                    <div class="zoom-container relative overflow-hidden rounded-t-lg">
+                        <img
+                            src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']) ? htmlspecialchars($item['ImageUrl']) : 'default_image.jpg'; ?>"
+                            alt="<?= htmlspecialchars($item['MenuName']); ?>"
+                            class="zoom-image w-full h-48 object-cover m-0 p-0 rounded-t-lg">
+                    </div>
 
-                    <div class="p-4 flex flex-col items-start">
-                        <div class="flex justify-between items-center w-full">
-                            <h5 class="text-lg font-semibold mb-2"><?= htmlspecialchars($item['MenuName']); ?></h5>
-                            <i class="fas fa-heart wishlist-icon ml-2" onclick="toggleWishlist(this)"></i>
-                        </div>
+                    <div class="p-4 flex flex-col items-start rounded-b-lg">
+                        <h5 class="text-lg font-semibold mb-2"><?= htmlspecialchars($item['MenuName']); ?></h5>
                         <p class="text-sm text-gray-600 mt-2 line-clamp-2 text-left"><?= htmlspecialchars($item['Description']); ?></p>
 
                         <div class="flex justify-between items-center mt-2 w-full">
                             <span class="text-lg font-bold">Rp <?= number_format($item['Price'], 0, ',', '.'); ?></span>
-                            <span class="text-sm text-gray-600 ml-4">Stock: <?= $item['Stock']; ?></span>
+                            <?php if ($item['Stock'] > 0): ?>
+                                <span class="text-sm text-gray-600 ml-4">Stock: <?= $item['Stock']; ?></span>
+                            <?php else: ?>
+                                <span class="text-sm text-red-500 ml-4">Out of Stock</span>
+                            <?php endif; ?>
                         </div>
+
                         <!-- Display Total Sold -->
                         <div class="flex justify-between items-center mt-2 w-full">
                             <span class="text-sm text-gray-600">Sold: <?= $item['TotalSold']; ?> items</span>
+
                             <!-- Quantity Input with + and - buttons -->
                             <div class="flex items-center space-x-2">
                                 <button class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="decreaseQuantity(<?= $item['MenuId']; ?>)">-</button>
@@ -96,9 +112,17 @@
 
                         <!-- Add to Cart -->
                         <div class="quantity-controls flex items-center justify-center space-x-2 mt-4 w-full">
-                            <button class="w-full bg-yellow-400 text-white py-2 px-4 rounded hover:bg-yellow-500" onclick="addToCart(<?= $item['MenuId']; ?>)">
-                                Add to Cart
-                            </button>
+                            <?php if ($item['Stock'] > 0): ?>
+                                <button
+                                    class="w-full py-2 px-4 rounded bg-yellow-400 text-white hover:bg-yellow-500"
+                                    onclick="addToCart(<?= $item['MenuId']; ?>)">
+                                    Add to Cart
+                                </button>
+                            <?php else: ?>
+                                <span class="w-full py-2 px-4 rounded bg-gray-300 text-gray-500 text-center cursor-not-allowed">
+                                    Out of Stock
+                                </span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -124,6 +148,27 @@
                 }, 2000);
             }
         };
+
+        document.querySelectorAll('.zoom-container').forEach(container => {
+            const image = container.querySelector('.zoom-image');
+
+            container.addEventListener('mousemove', (e) => {
+                const {
+                    left,
+                    top,
+                    width,
+                    height
+                } = container.getBoundingClientRect();
+                const x = ((e.clientX - left) / width) * 100;
+                const y = ((e.clientY - top) / height) * 100;
+
+                image.style.transformOrigin = `${x}% ${y}%`; // Menentukan titik zoom
+            });
+
+            container.addEventListener('mouseleave', () => {
+                image.style.transformOrigin = 'center center'; // Reset ke posisi awal
+            });
+        });
 
         function addToCart(menuId) {
             const quantity = parseInt(document.getElementById('quantity-' + menuId).value);
@@ -152,10 +197,6 @@
 
             document.body.appendChild(form);
             form.submit();
-        }
-
-        function toggleWishlist(element) {
-            element.classList.toggle('active');
         }
 
         function updateCartQuantity(menuId) {
@@ -202,34 +243,42 @@
         }
 
         function sortMenu() {
-            const sortValue = document.getElementById('sortDropdown').value;
+            const sortValue = document.getElementById('sortDropdown').value; 
             const menuGrid = document.getElementById('menuGrid');
-            const menuItems = Array.from(menuGrid.children); // Ambil semua elemen menu sebagai array
+            const menuItems = Array.from(menuGrid.children); 
+
+            console.log("Sort Value: ", sortValue);
 
             menuItems.sort((a, b) => {
                 const nameA = a.querySelector('h5').innerText.toLowerCase();
                 const nameB = b.querySelector('h5').innerText.toLowerCase();
                 const priceA = parseInt(a.querySelector('.text-lg.font-bold').innerText.replace('Rp ', '').replace(/\./g, ''));
                 const priceB = parseInt(b.querySelector('.text-lg.font-bold').innerText.replace('Rp ', '').replace(/\./g, ''));
+                console.log("Price A: ", priceA, "Price B: ", priceB);
 
-                if (sortValue === 'az') {
-                    return nameA.localeCompare(nameB);
-                } else if (sortValue === 'za') {
-                    return nameB.localeCompare(nameA);
-                } else if (sortValue === 'price-low') {
-                    return priceA - priceB;
-                } else if (sortValue === 'price-high') {
-                    return priceB - priceA;
+                switch (sortValue) {
+                    case 'az':
+                        return nameA.localeCompare(nameB); 
+                    case 'za':
+                        return nameB.localeCompare(nameA);
+                    case 'price-low':
+                        return priceA - priceB;
+                    case 'price-high':
+                        return priceB - priceA; 
+                    default:
+                        return 0; 
                 }
             });
 
-            menuGrid.innerHTML = '';
-            menuItems.forEach(item => menuGrid.appendChild(item));
+            menuGrid.innerHTML = ''; 
+            menuItems.forEach(item => menuGrid.appendChild(item)); 
         }
 
         function filterMenu() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
             const menuItems = document.querySelectorAll('#menuGrid > div');
+
+            console.log("Search Value: ", searchValue);
 
             menuItems.forEach(item => {
                 const title = item.querySelector('h5').innerText.toLowerCase();
@@ -243,4 +292,5 @@
         }
     </script>
 </body>
+
 </html>
