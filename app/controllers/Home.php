@@ -136,7 +136,6 @@ class Home extends Controller
 
             if ($customerData) {
                 $this->view('layout/header');
-                $this->view('layout/sidebarprofil');
                 $this->view('home/profile', $customerData);
             } else {
                 echo "Data pengguna tidak ditemukan!";
