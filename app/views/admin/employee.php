@@ -32,6 +32,7 @@
                         <th class="py-3 px-4 font-thin text-center">Gender</th>
                         <th class="py-3 px-4 font-thin text-center">Date of Birth</th>
                         <th class="py-3 px-4 font-thin text-center">Address</th>
+                        <th class="py-3 px-4 font-thin text-center">Role</th>
                         <th class="py-3 px-4 font-thin text-center">Image</th>
                         <th class="py-3 px-4 font-thin text-center">Action</th>
                     </tr>
@@ -49,6 +50,7 @@
                                     <?= !empty($employee['DateOfBirth']) ? date("d F Y", strtotime($employee['DateOfBirth'])) : 'N/A' ?>
                                 </td>
                                 <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Address'] ?? 'N/A') ?></td>
+                                <td class="py-3 px-4 text-center"><?= htmlspecialchars($employee['Role'] ?? 'N/A') ?></td>
                                 <td class="py-3 px-4 text-center">
                                     <img src="<?= BASEURL; ?>/<?= htmlspecialchars($employee['ImageUrl'] ?? '/img/user.png') ?>" alt="Employee Image" class="w-12 h-12 rounded-full mx-auto">
                                 </td>

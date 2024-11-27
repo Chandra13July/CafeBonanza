@@ -33,7 +33,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-dollar-sign text-gray-500"></i>
-                                <p class="text-gray-500">Keuntungan Bulan Ini</p>
+                                <p class="text-gray-500">This Month's Profit</p>
                             </div>
                             <p class="text-sm text-gray-500"><?= intval($data['profitPercentage']); ?>%</p>
                         </div>
@@ -48,7 +48,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-user text-gray-500"></i>
-                                <p class="text-gray-500">Total Customer</p>
+                                <p class="text-gray-500">Customer</p>
                             </div>
                             <p class="text-sm text-gray-500"><?= intval($data['customerPercentage']); ?>%</p>
                         </div>
@@ -63,7 +63,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-shopping-bag text-gray-500"></i>
-                                <p class="text-gray-500">Total Menu</p>
+                                <p class="text-gray-500">Menu</p>
                             </div>
                             <p class="text-sm text-gray-500"><?= intval($data['menuPercentage']); ?>%</p>
                         </div>
@@ -78,7 +78,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-box text-gray-500"></i>
-                                <p class="text-gray-500">Orders</p>
+                                <p class="text-gray-500">Order</p>
                             </div>
                             <p class="text-sm text-gray-500"><?= intval($data['orderPercentage']); ?>%</p>
                         </div>
