@@ -106,6 +106,40 @@ class CustomerModel
         return $this->db->execute();
     }
 
+    public function editProfile($data)
+    {
+        $this->db->query("UPDATE customer SET 
+                        Username = :username, 
+                        Email = :email, 
+                        Phone = :phone, 
+                        Gender = :gender, 
+                        DateOfBirth = :dateOfBirth, 
+                        Address = :address 
+                      WHERE CustomerId = :CustomerId");
+
+        $this->db->bind(':username', $data['username']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':phone', $data['phone']);
+        $this->db->bind(':gender', $data['gender']);
+        $this->db->bind(':dateOfBirth', $data['dateOfBirth']);
+        $this->db->bind(':address', $data['address']);
+        $this->db->bind(':CustomerId', $data['CustomerId']);
+
+        return $this->db->execute();
+    }
+
+    public function editPhoto($data)
+    {
+        $this->db->query("UPDATE customer SET 
+                        ImageUrl = :imageUrl 
+                      WHERE CustomerId = :CustomerId");
+
+        $this->db->bind(':imageUrl', $data['imageUrl']);
+        $this->db->bind(':CustomerId', $data['CustomerId']);
+
+        return $this->db->execute();
+    }
+
     public function deleteCustomer($customerid)
     {
         $this->db->query("DELETE FROM customer WHERE CustomerId = :CustomerId");

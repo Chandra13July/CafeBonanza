@@ -54,6 +54,31 @@ class Cart extends Controller
         }
     }
 
+    public function updateQuantity()
+    {
+        $cartId = $_POST['cartId'] ?? null;
+        $quantity = $_POST['quantity'] ?? null;
+
+        if ($cartId && $quantity) {
+            $cartModel = new CartModel();
+            $success = $cartModel->updateQuantity($_SESSION['user_id'], $cartId, $quantity);
+
+            if ($success) {
+                $_SESSION['status'] = 'Quantity updated successfully!';
+                $_SESSION['status_type'] = 'success';  
+            } else {
+                $_SESSION['status'] = 'Failed to update quantity.';
+                $_SESSION['status_type'] = 'error'; 
+            }
+        } else {
+            $_SESSION['status'] = 'Invalid input data.';
+            $_SESSION['status_type'] = 'error';
+        }
+
+        header("Location: " . BASEURL . "/cart");
+        exit();
+    }
+
     public function deleteAll()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

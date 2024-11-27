@@ -19,14 +19,12 @@
                 let totalQty = 0;
                 let totalPrice = 0;
 
-                // Loop through checked checkboxes to calculate total quantity and price
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
                     const itemElement = checkbox.closest('.item');
                     const qtyElement = itemElement.querySelector('.qty');
-                    const priceElement = itemElement.querySelector('.item-price'); // Assuming you add a class item-price for the price span
-
+                    const priceElement = itemElement.querySelector('.item-price');
                     const qty = parseInt(qtyElement.innerText);
-                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, '')); // Remove "Rp" and format number
+                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''));
 
                     totalQty += qty;
                     totalPrice += qty * price;
@@ -42,28 +40,42 @@
             };
 
             document.querySelectorAll('.decrease').forEach(button => {
-                button.addEventListener('click', () => {
-                    const qtyElement = button.nextElementSibling;
-                    let qty = parseInt(qtyElement.innerText);
-                    if (qty > 1) {
-                        qtyElement.innerText = --qty;
-                        updateTotal();
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const cartId = this.getAttribute('data-cart-id');
+                    const quantityElement = document.querySelector(`#quantity-${cartId}`);
+                    let quantity = parseInt(quantityElement.value);
+
+                    if (quantity > 1) {
+                        quantity--;
+                        quantityElement.value = quantity;
+
+                        const form = this.closest('form');
+                        form.submit();
                     }
                 });
             });
 
             document.querySelectorAll('.increase').forEach(button => {
-                button.addEventListener('click', () => {
-                    const qtyElement = button.previousElementSibling;
-                    const stockElement = button.closest('.item').querySelector('.stock');
-                    const stock = parseInt(stockElement.innerText.split(': ')[1]);
-                    let qty = parseInt(qtyElement.innerText);
-                    if (qty < stock) {
-                        qtyElement.innerText = ++qty;
-                        updateTotal();
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const cartId = this.getAttribute('data-cart-id');
+                    const quantityElement = document.querySelector(`#quantity-${cartId}`);
+                    let quantity = parseInt(quantityElement.value);
+                    const stock = parseInt(this.closest('.item').querySelector('.stock').innerText.split(': ')[1]);
+
+                    if (quantity < stock) {
+                        quantity++;
+                        quantityElement.value = quantity;
+
+                        const form = this.closest('form');
+                        form.submit();
                     }
                 });
             });
+
             updateTotal();
 
             selectAllCheckbox.addEventListener('change', function() {
@@ -102,13 +114,6 @@
                 });
                 updateTotal();
                 updateSelectAllLabel();
-            });
-
-            document.querySelectorAll('.wishlist-item').forEach(button => {
-                button.addEventListener('click', () => {
-                    button.classList.toggle('text-red-500');
-                    button.classList.toggle('text-gray-500');
-                });
             });
         });
     </script>
@@ -163,7 +168,7 @@
 
                 foreach ($cartItems as $item) :
                 ?>
-                    <div class="item flex items-start mb-6">
+                    <div class="item flex items-start mb-6" data-cart-id="<?= $item['CartId']; ?>">
                         <input class="mr-2 mt-2 item-checkbox" type="checkbox" />
                         <div class="flex-grow">
                             <div class="flex items-start">
@@ -177,22 +182,18 @@
                                     <div class="flex items-center justify-between mt-2">
                                         <p class="ml-2 text-gray-600 stock">Stok: <?= htmlspecialchars($item['Stock']) ?></p>
                                         <div class="flex items-center">
-                                            <!-- Wishlist Icon -->
-                                            <i class="fas fa-heart text-gray-500 mr-4 wishlist-item cursor-pointer"></i>
-
-                                            <!-- Delete Item Button -->
                                             <form action="<?= BASEURL; ?>/cart/deleteItem/<?= $item['CartId']; ?>" method="POST">
                                                 <button type="submit" class="ml-4 text-gray-500 cursor-pointer">
-                                                    <i class="fas fa-trash"></i> <!-- Trash bin icon -->
+                                                    <i class="fas fa-trash"></i> 
                                                 </button>
                                             </form>
-
-                                            <!-- Quantity Control Buttons -->
-                                            <div class="flex items-center ml-4 border rounded">
-                                                <button class="px-2 decrease">-</button>
-                                                <span class="px-2 qty"><?= htmlspecialchars($item['Quantity']) ?></span>
-                                                <button class="px-2 increase">+</button>
-                                            </div>
+                                            <form action="<?= BASEURL; ?>/cart/updateQuantity" method="POST" class="flex items-center ml-4 border rounded">
+                                                <input type="hidden" name="cartId" value="<?= $item['CartId']; ?>" />
+                                                <input type="hidden" name="quantity" value="<?= $item['Quantity']; ?>" id="quantity-<?= $item['CartId']; ?>" />
+                                                <button type="submit" class="px-3 py-1 text-lg decrease" data-cart-id="<?= $item['CartId']; ?>">-</button>
+                                                <span class="px-3 text-lg qty"><?= $item['Quantity'] ?></span>
+                                                <button type="submit" class="px-3 py-1 text-lg increase" data-cart-id="<?= $item['CartId']; ?>">+</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

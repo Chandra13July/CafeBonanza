@@ -41,13 +41,13 @@ class OrderModel
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result['completedProfit'] ?? 0; // Jika tidak ada hasil, kembalikan 0
+        return $result['completedProfit'] ?? 0; 
     }
 
     public function getCurrentMonthCompletedProfit()
     {
-        $currentMonth = date('n'); // Bulan saat ini (1–12)
-        $currentYear = date('Y'); // Tahun saat ini
+        $currentMonth = date('n'); 
+        $currentYear = date('Y'); 
 
         return $this->getMonthlyCompletedProfit($currentMonth, $currentYear);
     }

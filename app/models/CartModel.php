@@ -49,6 +49,27 @@ class CartModel
         }
     }
 
+    public function updateQuantity($customerId, $cartId, $quantity)
+    {
+        try {
+            $stmt = $this->db->prepare("
+                UPDATE cart 
+                SET Quantity = :quantity 
+                WHERE CartId = :cartId AND CustomerId = :customerId
+            ");
+            $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+            $stmt->bindParam(':cartId', $cartId, PDO::PARAM_INT);
+            $stmt->bindParam(':customerId', $customerId, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error in updateQuantity: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function deleteAllItems($customerId)
     {
         try {
