@@ -15,6 +15,7 @@
             const itemCheckboxes = document.querySelectorAll('.item-checkbox');
             const selectAllLabel = document.getElementById('select-all-label');
 
+            // Fungsi untuk mengupdate total harga dan kuantitas
             const updateTotal = () => {
                 let totalQty = 0;
                 let totalPrice = 0;
@@ -34,11 +35,13 @@
                 buyButton.innerText = totalQty > 0 ? 'Beli (' + totalQty + ')' : 'Beli';
             };
 
+            // Fungsi untuk mengupdate label "Pilih Semua"
             const updateSelectAllLabel = () => {
                 const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
                 selectAllLabel.innerText = `Pilih Semua (${checkedCount})`;
             };
 
+            // Fungsi untuk mengurangi jumlah barang
             document.querySelectorAll('.decrease').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -51,12 +54,14 @@
                         quantity--;
                         quantityElement.value = quantity;
 
+                        // Kirim form untuk memperbarui jumlah barang
                         const form = this.closest('form');
                         form.submit();
                     }
                 });
             });
 
+            // Fungsi untuk menambah jumlah barang
             document.querySelectorAll('.increase').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -70,22 +75,36 @@
                         quantity++;
                         quantityElement.value = quantity;
 
+                        // Kirim form untuk memperbarui jumlah barang
                         const form = this.closest('form');
                         form.submit();
                     }
                 });
             });
 
-            updateTotal();
+            updateTotal(); // Update total pertama kali saat halaman dimuat
 
+            // Event untuk checkbox "Pilih Semua"
             selectAllCheckbox.addEventListener('change', function() {
                 itemCheckboxes.forEach(checkbox => {
                     checkbox.checked = selectAllCheckbox.checked;
+                    var value = checkbox.value;
+                    const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
+                    const formDeleteAll = document.querySelector("#deleteAll");
+                    const exist = formDeleteAll.querySelector(`#selected${value}`);
+                    console.log(formDeleteAll);
+
+                    if (exist) {
+                        exist.remove()
+                    } else if (checkbox.checked) {
+                        formDeleteAll.innerHTML += html;
+                    }
                 });
                 updateTotal();
                 updateSelectAllLabel();
             });
 
+            // Event untuk setiap checkbox item
             itemCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     if (!checkbox.checked) {
@@ -98,6 +117,7 @@
                 });
             });
 
+            // Event untuk menghapus item dari keranjang
             document.querySelectorAll('.delete-item').forEach(button => {
                 button.addEventListener('click', () => {
                     const item = button.closest('.item');
@@ -107,14 +127,43 @@
                 });
             });
 
-            document.getElementById('delete-all').addEventListener('click', () => {
+            // Event untuk menghapus semua item yang terpilih
+            document.getElementById('select-all').addEventListener('click', () => {
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
+                    var value = checkbox.value;
+                    const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
+                    const formDeleteAll = document.querySelector("#deleteAll");
+                    const exist = formDeleteAll.querySelector(`#selected${value}`);
+                    console.log(formDeleteAll);
+
+                    if (exist) {
+                        exist.remove()
+                    } else {
+                        formDeleteAll.innerHTML += html;
+                    }
                     const item = checkbox.closest('.item');
                     item.remove();
                 });
                 updateTotal();
                 updateSelectAllLabel();
             });
+
+            itemCheckboxes.forEach((e) => {
+                e.addEventListener("change", function() {
+                    var value = e.value;
+                    const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
+                    const formDeleteAll = document.querySelector("#deleteAll");
+                    const exist = formDeleteAll.querySelector(`#selected${value}`);
+                    console.log(formDeleteAll);
+
+                    if (exist) {
+                        exist.remove()
+                    } else if (e.checked) {
+                        formDeleteAll.innerHTML += html;
+                    }
+
+                })
+            })
         });
     </script>
     <style>
@@ -155,8 +204,8 @@
                             Pilih Semua (<?= isset($cartItems) ? count($cartItems) : 0 ?>)
                         </span>
                     </div>
-                    <form action="<?= BASEURL; ?>/cart/deleteAll" method="POST">
-                        <button type="submit" class="text-red-500 cursor-pointer text-lg">Hapus Semua</button>
+                    <form id="deleteAll" action="<?= BASEURL; ?>/cart/deleteSelected" method="POST">
+                        <button type="submit" class="text-red-500 cursor-pointer text-lg">Hapus</button>
                     </form>
                 </div>
             </div>
@@ -169,7 +218,7 @@
                 foreach ($cartItems as $item) :
                 ?>
                     <div class="item flex items-start mb-6" data-cart-id="<?= $item['CartId']; ?>">
-                        <input class="mr-2 mt-2 item-checkbox" type="checkbox" />
+                        <input class="mr-2 mt-2 item-checkbox checkbox-all" value="<?= $item['CartId'] ?>" name="checkboxAll[]" type="checkbox" />
                         <div class="flex-grow">
                             <div class="flex items-start">
                                 <img alt="<?= htmlspecialchars($item['MenuName']); ?>" class="w-24 h-24 rounded-lg mr-6" src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl'] ?? 'img/user.png'); ?>" />
@@ -184,7 +233,7 @@
                                         <div class="flex items-center">
                                             <form action="<?= BASEURL; ?>/cart/deleteItem/<?= $item['CartId']; ?>" method="POST">
                                                 <button type="submit" class="ml-4 text-gray-500 cursor-pointer">
-                                                    <i class="fas fa-trash"></i> 
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
                                             <form action="<?= BASEURL; ?>/cart/updateQuantity" method="POST" class="flex items-center ml-4 border rounded">

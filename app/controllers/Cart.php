@@ -65,10 +65,10 @@ class Cart extends Controller
 
             if ($success) {
                 $_SESSION['status'] = 'Quantity updated successfully!';
-                $_SESSION['status_type'] = 'success';  
+                $_SESSION['status_type'] = 'success';
             } else {
                 $_SESSION['status'] = 'Failed to update quantity.';
-                $_SESSION['status_type'] = 'error'; 
+                $_SESSION['status_type'] = 'error';
             }
         } else {
             $_SESSION['status'] = 'Invalid input data.';
@@ -79,20 +79,30 @@ class Cart extends Controller
         exit();
     }
 
-    public function deleteAll()
+    public function deleteSelected()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_SESSION['user_id'])) {
+            if (isset($_SESSION['user_id']) && isset($_POST['selected_items']) && !empty($_POST['selected_items'])) {
                 $customerId = intval($_SESSION['user_id']);
+                $selectedItems = $_POST['selected_items'];
+
                 $cartModel = $this->model('CartModel');
 
-                if ($cartModel->deleteAllItems($customerId)) {
-                    $_SESSION['success'] = "Semua item berhasil dihapus dari keranjang!";
+                $success = true;
+                foreach ($selectedItems as $cartId) {
+                    if (!$cartModel->deleteItem($customerId, $cartId)) {
+                        $success = false;
+                        break;
+                    }
+                }
+
+                if ($success) {
+                    $_SESSION['success'] = "Item terpilih berhasil dihapus dari keranjang!";
                 } else {
-                    $_SESSION['error'] = "Gagal menghapus item dari keranjang, silakan coba lagi.";
+                    $_SESSION['error'] = "Gagal menghapus item terpilih, silakan coba lagi.";
                 }
             } else {
-                $_SESSION['error'] = "Anda harus login untuk menghapus item.";
+                $_SESSION['error'] = "Anda harus login dan memilih item untuk dihapus.";
             }
 
             header('Location: ' . BASEURL . '/cart/index');
