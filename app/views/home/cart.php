@@ -253,12 +253,21 @@
             </div>
         </div>
         <div class="w-full lg:w-1/4 bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-6">Ringkasan belanja</h2>
-            <div class="flex justify-between mb-6">
-                <span class="font-semibold text-lg">Total</span>
-                <span class="font-semibold text-lg" id="total">-</span>
-            </div>
-            <button class="bg-green-500 text-white font-bold py-3 px-6 rounded w-full text-lg" id="buy-button">Beli</button>
+            <form action="<?= BASEURL; ?>/order/checkout" method="POST">
+                <h2 class="text-2xl font-bold mb-6">Ringkasan belanja</h2>
+                <div class="flex justify-between mb-6">
+                    <span class="font-semibold text-lg">Total</span>
+                    <span class="font-semibold text-lg" id="total">-</span>
+                </div>
+                <div class="mb-6">
+                    <label for="payment-method" class="block text-lg font-semibold mb-2">Metode Pembayaran</label>
+                    <select id="payment-method" name="payment-method" class="w-full p-3 border rounded-md text-lg">
+                        <option value="Cash">Cash</option>
+                        <option value="E-Wallet">Dompet Digital</option>
+                    </select>
+                </div>
+                <button class="bg-green-500 text-white font-bold py-3 px-6 rounded w-full text-lg" id="buy-button">Beli</button>
+            </form>
         </div>
     </div>
 </body>
