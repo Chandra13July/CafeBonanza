@@ -7,163 +7,149 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <script>
+        // Menunggu hingga DOM sepenuhnya dimuat sebelum menjalankan script
         document.addEventListener('DOMContentLoaded', function() {
-            const qtyElements = document.querySelectorAll('.qty');
-            const totalElement = document.getElementById('total');
-            const buyButton = document.getElementById('buy-button');
-            const selectAllCheckbox = document.getElementById('select-all');
-            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-            const selectAllLabel = document.getElementById('select-all-label');
+            // Mengambil elemen-elemen penting dari DOM
+            const qtyElements = document.querySelectorAll('.qty'); // Elemen jumlah item
+            const totalElement = document.getElementById('total'); // Elemen untuk menampilkan total harga
+            const buyButton = document.getElementById('buy-button'); // Tombol beli
+            const selectAllCheckbox = document.getElementById('select-all'); // Checkbox untuk memilih semua item
+            const itemCheckboxes = document.querySelectorAll('.item-checkbox'); // Semua checkbox item
+            const selectAllLabel = document.getElementById('select-all-label'); // Label untuk checkbox "Pilih Semua"
 
-            // Fungsi untuk mengupdate total harga dan kuantitas
+            // Fungsi untuk menghitung total kuantitas dan harga
             const updateTotal = () => {
-                let totalQty = 0;
-                let totalPrice = 0;
+                let totalQty = 0; // Total kuantitas item yang dipilih
+                let totalPrice = 0; // Total harga item yang dipilih
 
+                // Mengiterasi semua checkbox item yang tercentang
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-                    const itemElement = checkbox.closest('.item');
-                    const qtyElement = itemElement.querySelector('.qty');
-                    const priceElement = itemElement.querySelector('.item-price');
-                    const qty = parseInt(qtyElement.innerText);
-                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''));
+                    const itemElement = checkbox.closest('.item'); // Elemen item terkait checkbox
+                    const qtyElement = itemElement.querySelector('.qty'); // Elemen kuantitas
+                    const priceElement = itemElement.querySelector('.item-price'); // Elemen harga
 
-                    totalQty += qty;
-                    totalPrice += qty * price;
+                    const qty = parseInt(qtyElement.innerText); // Mendapatkan jumlah item
+                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, '')); // Mendapatkan harga item
+
+                    totalQty += qty; // Menambahkan jumlah ke total kuantitas
+                    totalPrice += qty * price; // Menghitung total harga
                 });
 
+                // Memperbarui elemen total dan tombol beli
                 totalElement.innerText = totalQty > 0 ? 'Rp' + totalPrice.toLocaleString('id-ID') : '-';
                 buyButton.innerText = totalQty > 0 ? 'Beli (' + totalQty + ')' : 'Beli';
             };
 
-            // Fungsi untuk mengupdate label "Pilih Semua"
+            // Fungsi untuk memperbarui label "Pilih Semua" dengan jumlah item yang dipilih
             const updateSelectAllLabel = () => {
-                const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+                const checkedCount = document.querySelectorAll('.item-checkbox:checked').length; // Menghitung jumlah item yang dipilih
                 selectAllLabel.innerText = `Pilih Semua (${checkedCount})`;
             };
 
-            // Fungsi untuk mengurangi jumlah barang
+            // Menangani klik tombol pengurangan kuantitas
             document.querySelectorAll('.decrease').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault();
+                    e.preventDefault(); // Mencegah default action
 
-                    const cartId = this.getAttribute('data-cart-id');
-                    const quantityElement = document.querySelector(`#quantity-${cartId}`);
+                    const cartId = this.getAttribute('data-cart-id'); // Mendapatkan ID keranjang
+                    const quantityElement = document.querySelector(`#quantity-${cartId}`); // Elemen kuantitas item
                     let quantity = parseInt(quantityElement.value);
 
+                    // Jika jumlah lebih dari 1, kurangi kuantitas
                     if (quantity > 1) {
                         quantity--;
                         quantityElement.value = quantity;
 
-                        // Kirim form untuk memperbarui jumlah barang
-                        const form = this.closest('form');
-                        form.submit();
+                        const form = this.closest('form'); // Form terkait item
+                        form.submit(); // Submit form untuk memperbarui kuantitas di server
                     }
                 });
             });
 
-            // Fungsi untuk menambah jumlah barang
+            // Menangani klik tombol penambahan kuantitas
             document.querySelectorAll('.increase').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault();
+                    e.preventDefault(); // Mencegah default action
 
-                    const cartId = this.getAttribute('data-cart-id');
-                    const quantityElement = document.querySelector(`#quantity-${cartId}`);
+                    const cartId = this.getAttribute('data-cart-id'); // Mendapatkan ID keranjang
+                    const quantityElement = document.querySelector(`#quantity-${cartId}`); // Elemen kuantitas item
                     let quantity = parseInt(quantityElement.value);
-                    const stock = parseInt(this.closest('.item').querySelector('.stock').innerText.split(': ')[1]);
+                    const stock = parseInt(this.closest('.item').querySelector('.stock').innerText.split(': ')[1]); // Mendapatkan stok item
 
+                    // Jika jumlah kurang dari stok, tambah kuantitas
                     if (quantity < stock) {
                         quantity++;
                         quantityElement.value = quantity;
 
-                        // Kirim form untuk memperbarui jumlah barang
-                        const form = this.closest('form');
-                        form.submit();
+                        const form = this.closest('form'); // Form terkait item
+                        form.submit(); // Submit form untuk memperbarui kuantitas di server
                     }
                 });
             });
 
-            updateTotal(); // Update total pertama kali saat halaman dimuat
+            // Memperbarui total dan label pada awal script
+            updateTotal();
 
-            // Event untuk checkbox "Pilih Semua"
+            // Menangani perubahan status checkbox "Pilih Semua"
             selectAllCheckbox.addEventListener('change', function() {
                 itemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked;
+                    checkbox.checked = selectAllCheckbox.checked; // Menyetel status semua checkbox item
+
+                    // Menambahkan atau menghapus input tersembunyi untuk item terpilih
                     var value = checkbox.value;
                     const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
                     const formDeleteAll = document.querySelector("#deleteAll");
                     const exist = formDeleteAll.querySelector(`#selected${value}`);
-                    console.log(formDeleteAll);
 
                     if (exist) {
-                        exist.remove()
+                        exist.remove();
                     } else if (checkbox.checked) {
                         formDeleteAll.innerHTML += html;
                     }
                 });
-                updateTotal();
-                updateSelectAllLabel();
+
+                updateTotal(); // Memperbarui total
+                updateSelectAllLabel(); // Memperbarui label "Pilih Semua"
             });
 
-            // Event untuk setiap checkbox item
+            // Menangani perubahan status checkbox item
             itemCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     if (!checkbox.checked) {
-                        selectAllCheckbox.checked = false;
+                        selectAllCheckbox.checked = false; // Hapus centang "Pilih Semua" jika salah satu item tidak dipilih
                     } else if (document.querySelectorAll('.item-checkbox:checked').length === itemCheckboxes.length) {
-                        selectAllCheckbox.checked = true;
+                        selectAllCheckbox.checked = true; // Centang "Pilih Semua" jika semua item dipilih
                     }
-                    updateTotal();
-                    updateSelectAllLabel();
+                    updateTotal(); // Memperbarui total
+                    updateSelectAllLabel(); // Memperbarui label "Pilih Semua"
                 });
             });
 
-            // Event untuk menghapus item dari keranjang
+            // Menangani klik tombol hapus item
             document.querySelectorAll('.delete-item').forEach(button => {
                 button.addEventListener('click', () => {
-                    const item = button.closest('.item');
-                    item.remove();
-                    updateTotal();
-                    updateSelectAllLabel();
+                    const item = button.closest('.item'); // Elemen item terkait
+                    item.remove(); // Hapus item dari DOM
+                    updateTotal(); // Memperbarui total
+                    updateSelectAllLabel(); // Memperbarui label "Pilih Semua"
                 });
             });
 
-            // Event untuk menghapus semua item yang terpilih
-            document.getElementById('select-all').addEventListener('click', () => {
-                document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-                    var value = checkbox.value;
-                    const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
-                    const formDeleteAll = document.querySelector("#deleteAll");
-                    const exist = formDeleteAll.querySelector(`#selected${value}`);
-                    console.log(formDeleteAll);
-
-                    if (exist) {
-                        exist.remove()
-                    } else {
-                        formDeleteAll.innerHTML += html;
-                    }
-                    const item = checkbox.closest('.item');
-                    item.remove();
-                });
-                updateTotal();
-                updateSelectAllLabel();
-            });
-
+            // Menangani perubahan checkbox item untuk input tersembunyi
             itemCheckboxes.forEach((e) => {
                 e.addEventListener("change", function() {
                     var value = e.value;
                     const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
                     const formDeleteAll = document.querySelector("#deleteAll");
                     const exist = formDeleteAll.querySelector(`#selected${value}`);
-                    console.log(formDeleteAll);
 
                     if (exist) {
-                        exist.remove()
+                        exist.remove();
                     } else if (e.checked) {
                         formDeleteAll.innerHTML += html;
                     }
-
-                })
-            })
+                });
+            });
         });
     </script>
     <style>
