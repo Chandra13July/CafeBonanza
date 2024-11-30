@@ -1,204 +1,209 @@
 <?php
 
-require_once __DIR__ . '/../../config/config.php'; // Memuat konfigurasi aplikasi
-require_once __DIR__ . '/../../core/Database.php'; // Memuat class Database
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../core/Database.php';
 
-class MenuApi
+class EmployeeApi
 {
     private $db;
 
     public function __construct()
     {
-        $this->db = new Database(); // Membuat instance dari Database
+        $this->db = new Database();
     }
 
-    /**
-     * Mengambil semua menu dari database
-     * dan mengembalikannya dalam format JSON.
-     */
-    public function getAllMenus()
+    public function login()
     {
-        $this->db->query("SELECT * FROM menu"); // Query untuk mendapatkan semua menu
-        $menus = $this->db->resultSet(); // Menyimpan hasil query
+        // Ambil data dari $_POST jika menggunakan Content-Type: application/x-www-form-urlencoded
+        $data = [
+            'Email' => $_POST['Email'] ?? null,
+            'Password' => $_POST['Password'] ?? null,
+        ];
 
-        $data = ["data" => []]; // Array untuk menyimpan data menu
-        foreach ($menus as $menus) {
-            $data_menu = [
-                "MenuId" => $menus["MenuId"],
-                "MenuName" => $menus["MenuName"],
-                "Description" => $menus["Description"],
-                "Price" => $menus["Price"],
-                "Stock" => $menus["Stock"],
-                "Category" => $menus["Category"],
-                "ImageUrl" => BASEURL . '/' . $menus["ImageUrl"], // URL lengkap gambar
-                "CreatedAt" => $menus["CreatedAt"],
+        // Validasi data
+        if (empty($data['Email']) || empty($data['Password'])) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Email and password are required"
+            ]);
+            return;
+        }
+
+        if (!filter_var($data['Email'], FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Invalid email format"
+            ]);
+            return;
+        }
+
+        // Query database untuk mendapatkan data karyawan
+        $this->db->query("SELECT * FROM employee WHERE Email = :email");
+        $this->db->bind(':email', $data['Email']);
+        $employee = $this->db->single();
+
+        // Validasi hasil query
+        if ($employee) {
+            // Verifikasi password
+            if (password_verify($data['Password'], $employee['Password'])) {
+                // Simpan data user ke session
+                $_SESSION['employee_id'] = $employee['EmployeeId'];
+                $_SESSION['username'] = $employee['Username'];
+                $_SESSION['email'] = $employee['Email'];
+                $_SESSION['role'] = $employee['Role'];
+
+                // Kirim response JSON untuk login berhasil
+                echo json_encode([
+                    "status" => "success",
+                    "message" => "Login successful. Welcome, " . $employee['Username'] . " (" . $employee['Role'] . ")!",
+                    "user" => [
+                        "EmployeeId" => $employee['EmployeeId'],
+                        "Username" => $employee['Username'],
+                        "Email" => $employee['Email'],
+                        "Role" => $employee['Role'],
+                        "Phone" => $employee['Phone'],
+                        "Gender" => $employee['Gender'],
+                        "DateOfBirth" => $employee['DateOfBirth'],
+                        "Address" => $employee['Address'],
+                        "ImageUrl" => $employee['ImageUrl'] ? BASEURL . '/' . $employee['ImageUrl'] : null,
+                    ]
+                ]);
+            } else {
+                // Password salah
+                echo json_encode([
+                    "status" => "error",
+                    "message" => "Incorrect password. Please try again."
+                ]);
+            }
+        } else {
+            // Email tidak ditemukan
+            echo json_encode([
+                "status" => "error",
+                "message" => "Email not registered. Please check your email or sign up."
+            ]);
+        }
+    }
+
+
+    public function getAllEmployees()
+    {
+        $this->db->query("SELECT * FROM employee");
+        $employees = $this->db->resultSet();
+
+        $data = ["data" => []];
+        foreach ($employees as $employee) {
+            $data_employee = [
+                "EmployeeId" => $employee["EmployeeId"],
+                "Username" => $employee["Username"],
+                "Email" => $employee["Email"],
+                "Phone" => $employee["Phone"],
+                "Role" => $employee["Role"],
+                "Gender" => $employee["Gender"],
+                "DateOfBirth" => $employee["DateOfBirth"],
+                "Address" => $employee["Address"],
+                "ImageUrl" => BASEURL . '/' . $employee["ImageUrl"],
+                "CreatedAt" => $employee["CreatedAt"],
             ];
 
-            array_push($data['data'], $data_menu); // Menambahkan data menu ke array data
+            array_push($data['data'], $data_employee);
         }
 
-        echo json_encode($data); // Mengembalikan data dalam format JSON
+        echo json_encode($data);
     }
 
-    /**
-     * Mengambil menu berdasarkan ID tertentu.
-     */
-    public function getMenuById($id)
+    public function getEmployeeById($id)
     {
-        $this->db->query("SELECT * FROM menu WHERE MenuId = :id"); // Query untuk mengambil menu berdasarkan ID
-        $this->db->bind(':id', $id); // Binding parameter ID
-        $menu = $this->db->single(); // Mendapatkan satu data menu
-
-        echo json_encode($menu); // Mengembalikan data menu dalam format JSON
-    }
-
-    /**
-     * Menambahkan menu baru ke database.
-     */
-    public function addMenu($data)
-    {
-        $uploadedImagePath = $this->uploadImage(); // Mengunggah gambar dan mendapatkan path-nya
-
-        if ($uploadedImagePath === false) {
-            echo json_encode(["message" => "Failed to upload image"]); // Jika gagal upload, kirim pesan error
-            return;
-        }
-
-        $data['ImageUrl'] = $uploadedImagePath ?? null; // Menambahkan URL gambar ke data menu
-
-        // Query untuk menambahkan menu ke database
-        $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
-                      VALUES (:name, :description, :price, :stock, :category, :imageUrl)");
-        $this->db->bind(':name', $data['MenuName']);
-        $this->db->bind(':description', $data['Description']);
-        $this->db->bind(':price', $data['Price']);
-        $this->db->bind(':stock', $data['Stock']);
-        $this->db->bind(':category', $data['Category']);
-        $this->db->bind(':imageUrl', $data['ImageUrl']);
-
-        // Menjalankan query dan mengembalikan pesan berdasarkan hasilnya
-        if ($this->db->execute()) {
-            echo json_encode(["message" => "Menu added successfully"]);
-        } else {
-            echo json_encode(["message" => "Failed to add menu"]);
-        }
-    }
-
-    /**
-     * Mengunggah gambar menu ke direktori server.
-     */
-    private function uploadImage()
-    {
-        if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
-            $imageName = $_FILES['imageUrl']['name']; // Nama file gambar
-            $imageTmpName = $_FILES['imageUrl']['tmp_name']; // Path sementara file gambar
-            $imageSize = $_FILES['imageUrl']['size']; // Ukuran file gambar
-            $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION)); // Ekstensi file gambar
-
-            $allowed = ['jpg', 'jpeg', 'png', 'gif']; // Jenis file yang diperbolehkan
-
-            if (in_array($imageExt, $allowed)) { // Periksa apakah file termasuk jenis yang diperbolehkan
-                if ($imageSize < 5000000) { // Periksa apakah ukuran file di bawah 5MB
-                    $newImageName = uniqid('', true) . '.' . $imageExt; // Nama baru file gambar
-                    $imageUploadPath = 'upload/menu/' . $newImageName; // Path untuk mengunggah file
-
-                    // Buat direktori jika belum ada
-                    if (!is_dir('upload/menu/')) {
-                        mkdir('upload/menu/', 0755, true);
-                    }
-
-                    // Pindahkan file gambar ke direktori tujuan
-                    if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $imageUploadPath; // Kembalikan path file yang diunggah
-                    } else {
-                        $_SESSION['error'] = "Gagal mengunggah gambar.";
-                        return false; // Gagal mengunggah
-                    }
-                } else {
-                    $_SESSION['error'] = "Ukuran gambar terlalu besar.";
-                    return false; // Ukuran file terlalu besar
-                }
-            } else {
-                $_SESSION['error'] = "Jenis file gambar tidak valid.";
-                return false; // Jenis file tidak valid
-            }
-        }
-        return null; // Tidak ada gambar yang diunggah
-    }
-
-    /**
-     * Memperbarui menu berdasarkan ID tertentu.
-     */
-    public function updateMenu($id, $data)
-    {
-        if (empty($data)) { // Periksa jika data kosong
-            echo json_encode(["message" => "No data received"]);
-            return;
-        }
-
-        // Query untuk memperbarui data menu
-        $this->db->query("UPDATE menu SET MenuName = :name, Description = :description, Price = :price, 
-                          Stock = :stock, Category = :category, ImageUrl = :imageUrl WHERE MenuId = :id");
-
+        $this->db->query("SELECT * FROM employee WHERE EmployeeId = :id");
         $this->db->bind(':id', $id);
-        $this->db->bind(':name', $data['MenuName']);
-        $this->db->bind(':description', $data['Description']);
-        $this->db->bind(':price', $data['Price']);
-        $this->db->bind(':stock', $data['Stock']);
-        $this->db->bind(':category', $data['Category']);
+        $employee = $this->db->single();
+
+        echo json_encode($employee);
+    }
+
+    public function addEmployee($data)
+    {
+        $this->db->query("INSERT INTO employee (Username, Email, Phone, Role, Password, Gender, DateOfBirth, Address, ImageUrl) 
+                          VALUES (:username, :email, :phone, :role, :password, :gender, :dob, :address, :imageUrl)");
+        $this->db->bind(':username', $data['Username']);
+        $this->db->bind(':email', $data['Email']);
+        $this->db->bind(':phone', $data['Phone']);
+        $this->db->bind(':role', $data['Role']);
+        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT));
+        $this->db->bind(':gender', $data['Gender']);
+        $this->db->bind(':dob', $data['DateOfBirth']);
+        $this->db->bind(':address', $data['Address']);
         $this->db->bind(':imageUrl', $data['ImageUrl']);
 
-        // Jalankan query dan kirim pesan berdasarkan hasil
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Menu updated successfully"]);
+            echo json_encode(["status" => "success", "message" => "Employee added successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to update menu"]);
+            echo json_encode(["status" => "error", "message" => "Failed to add employee"]);
         }
     }
 
-    /**
-     * Menghapus menu berdasarkan ID.
-     */
-    public function deleteMenu($id)
+    public function updateEmployee($id, $data)
     {
-        $this->db->query("DELETE FROM menu WHERE MenuId = :id"); // Query untuk menghapus menu
-        $this->db->bind(':id', $id); // Binding parameter ID
+        $this->db->query("UPDATE employee SET Username = :username, Email = :email, Phone = :phone, Role = :role, 
+                          Password = :password, Gender = :gender, DateOfBirth = :dob, Address = :address, ImageUrl = :imageUrl 
+                          WHERE EmployeeId = :id");
+        $this->db->bind(':id', $id);
+        $this->db->bind(':username', $data['Username']);
+        $this->db->bind(':email', $data['Email']);
+        $this->db->bind(':phone', $data['Phone']);
+        $this->db->bind(':role', $data['Role']);
+        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT));
+        $this->db->bind(':gender', $data['Gender']);
+        $this->db->bind(':dob', $data['DateOfBirth']);
+        $this->db->bind(':address', $data['Address']);
+        $this->db->bind(':imageUrl', $data['ImageUrl']);
 
-        // Jalankan query dan kirim pesan berdasarkan hasil
         if ($this->db->execute()) {
-            echo json_encode(["message" => "Menu deleted successfully"]);
+            echo json_encode(["status" => "success", "message" => "Employee updated successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to delete menu"]);
+            echo json_encode(["status" => "error", "message" => "Failed to update employee"]);
+        }
+    }
+
+    public function deleteEmployee($id)
+    {
+        $this->db->query("DELETE FROM employee WHERE EmployeeId = :id");
+        $this->db->bind(':id', $id);
+
+        if ($this->db->execute()) {
+            echo json_encode(["status" => "success", "message" => "Employee deleted successfully"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Failed to delete employee"]);
         }
     }
 }
 
-$menuApi = new MenuApi();
+$employeeApi = new EmployeeApi();
 
-header("Content-Type: application/json"); // Menyetel header untuk JSON
+header("Content-Type: application/json");
 
-// Menangani permintaan HTTP
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['id'])) {
-        $menuApi->getMenuById($_GET['id']); // Ambil menu berdasarkan ID
+        $employeeApi->getEmployeeById($_GET['id']);
     } else {
-        $menuApi->getAllMenus(); // Ambil semua menu
+        $employeeApi->getAllEmployees();
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = [
-        'MenuName' => $_POST['MenuName'] ?? '',
-        'Description' => $_POST['Description'] ?? '',
-        'Price' => $_POST['Price'] ?? '',
-        'Stock' => $_POST['Stock'] ?? '',
-        'Category' => $_POST['Category'] ?? ''
-    ];
-
-    $menuApi->addMenu($data); // Tambah menu
+    if (isset($_GET['action']) && $_GET['action'] == 'login') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $employeeApi->login($data);
+    } else {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $employeeApi->addEmployee($data);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    if (isset($_GET['id'])) {
+        $employeeApi->updateEmployee($_GET['id'], $data);
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if (isset($_GET['id'])) {
-        $menuApi->deleteMenu($_GET['id']); // Hapus menu berdasarkan ID
+        $employeeApi->deleteEmployee($_GET['id']);
     }
 } else {
-    echo json_encode(["message" => "Invalid request"]); // Tanggapan untuk permintaan tidak valid
+    echo json_encode(["status" => "error", "message" => "Invalid request"]);
 }
-?>

@@ -25,7 +25,7 @@ class OrderModel
     public function getMonthlyCompletedProfit($month, $year)
     {
         $query = "
-            SELECT SUM(TotalAmount) as completedProfit
+            SELECT SUM(Total) as completedProfit
             FROM `order`
             WHERE MONTH(CreatedAt) = :month 
               AND YEAR(CreatedAt) = :year 

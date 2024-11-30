@@ -12,29 +12,47 @@ class EmployeeApi
         $this->db = new Database();
     }
 
-    public function login($data)
+    public function login()
     {
+        // Ambil data dari $_POST jika menggunakan Content-Type: application/x-www-form-urlencoded
+        $data = [
+            'Email' => $_POST['Email'] ?? null,
+            'Password' => $_POST['Password'] ?? null,
+        ];
+    
+        // Validasi data
         if (empty($data['Email']) || empty($data['Password'])) {
-            echo json_encode(["status" => "error", "message" => "Email and password are required"]);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Email and password are required"
+            ]);
             return;
         }
-
+    
         if (!filter_var($data['Email'], FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(["status" => "error", "message" => "Invalid email format"]);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Invalid email format"
+            ]);
             return;
         }
-
+    
+        // Query database untuk mendapatkan data karyawan
         $this->db->query("SELECT * FROM employee WHERE Email = :email");
         $this->db->bind(':email', $data['Email']);
         $employee = $this->db->single();
-
+    
+        // Validasi hasil query
         if ($employee) {
+            // Verifikasi password
             if (password_verify($data['Password'], $employee['Password'])) {
+                // Simpan data user ke session
                 $_SESSION['employee_id'] = $employee['EmployeeId'];
                 $_SESSION['username'] = $employee['Username'];
                 $_SESSION['email'] = $employee['Email'];
                 $_SESSION['role'] = $employee['Role'];
-
+    
+                // Kirim response JSON untuk login berhasil
                 echo json_encode([
                     "status" => "success",
                     "message" => "Login successful. Welcome, " . $employee['Username'] . " (" . $employee['Role'] . ")!",
@@ -44,19 +62,28 @@ class EmployeeApi
                         "Email" => $employee['Email'],
                         "Role" => $employee['Role'],
                         "Phone" => $employee['Phone'],
-                "Gender" => $employee['Gender'],
-                "DateOfBirth" => $employee['DateOfBirth'],
-                "Address" => $employee['Address'],
-                "ImageUrl" => $employee['ImageUrl'] ? BASEURL . '/' . $employee['ImageUrl'] : null,
+                        "Gender" => $employee['Gender'],
+                        "DateOfBirth" => $employee['DateOfBirth'],
+                        "Address" => $employee['Address'],
+                        "ImageUrl" => $employee['ImageUrl'] ? BASEURL . '/' . $employee['ImageUrl'] : null,
                     ]
                 ]);
             } else {
-                echo json_encode(["status" => "error", "message" => "Incorrect password. Please try again."]);
+                // Password salah
+                echo json_encode([
+                    "status" => "error",
+                    "message" => "Incorrect password. Please try again."
+                ]);
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "Email not registered. Please check your email or sign up."]);
+            // Email tidak ditemukan
+            echo json_encode([
+                "status" => "error",
+                "message" => "Email not registered. Please check your email or sign up."
+            ]);
         }
     }
+    
 
     public function getAllEmployees()
     {

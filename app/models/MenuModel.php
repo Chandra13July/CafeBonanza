@@ -37,7 +37,7 @@ class MenuModel
             FROM 
                 menu m
             LEFT JOIN 
-                OrderDetails od ON m.MenuId = od.MenuId
+                OrderDetail od ON m.MenuId = od.MenuId
             GROUP BY 
                 m.MenuId, m.MenuName, m.Description, m.Price, m.Stock, m.Category, m.ImageUrl
         ');
