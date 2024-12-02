@@ -25,12 +25,12 @@ class OrderModel
     public function getMonthlyCompletedProfit($month, $year)
     {
         $query = "
-            SELECT SUM(Total) as completedProfit
-            FROM `order`
-            WHERE MONTH(CreatedAt) = :month 
-              AND YEAR(CreatedAt) = :year 
-              AND Status = 'Completed'
-        ";
+        SELECT SUM(Total) as completedProfit
+        FROM `order`
+        WHERE MONTH(CreatedAt) = :month 
+          AND YEAR(CreatedAt) = :year 
+          AND Status = 'Completed'
+    ";
 
         $stmt = $this->db->prepare($query);
 
@@ -90,5 +90,68 @@ class OrderModel
 
         // Return the results as an associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderReceipt($orderId)
+    {
+        // Query untuk mendapatkan data pesanan
+        $queryOrder = "
+    SELECT 
+        o.OrderId,
+        c.Username AS Customer,
+        o.Total,
+        o.Paid,
+        o.Change,
+        o.PaymentMethod,
+        o.Status,
+        o.CreatedAt
+    FROM `order` o
+    JOIN `customer` c ON o.CustomerId = c.CustomerId
+    WHERE o.OrderId = :orderId
+    ";
+
+        // Query untuk mendapatkan detail item dalam pesanan
+        $queryOrderDetails = "
+    SELECT 
+        d.MenuId,
+        m.MenuName,
+        d.Quantity,
+        d.Price,
+        d.Subtotal
+    FROM `orderdetails` d
+    JOIN `menu` m ON d.MenuId = m.MenuId
+    WHERE d.OrderId = :orderId
+    ";
+
+        // Ambil data pesanan
+        $stmtOrder = $this->db->prepare($queryOrder);
+        $stmtOrder->bindValue(':orderId', $orderId, PDO::PARAM_INT);
+        $stmtOrder->execute();
+        $order = $stmtOrder->fetch(PDO::FETCH_ASSOC);
+
+        if (!$order) {
+            throw new Exception("Order dengan ID $orderId tidak ditemukan.");
+        }
+
+        // Ambil data detail pesanan
+        $stmtOrderDetails = $this->db->prepare($queryOrderDetails);
+        $stmtOrderDetails->bindValue(':orderId', $orderId, PDO::PARAM_INT);
+        $stmtOrderDetails->execute();
+        $orderDetails = $stmtOrderDetails->fetchAll(PDO::FETCH_ASSOC);
+
+        // Format data untuk struk
+        $receipt = [
+            'OrderId' => $order['OrderId'],
+            'Customer' => $order['Customer'],
+            'Total' => $order['Total'],
+            'Paid' => $order['Paid'],
+            'Change' => $order['Change'],
+            'PaymentMethod' => $order['PaymentMethod'],
+            'Status' => $order['Status'],
+            'CreatedAt' => $order['CreatedAt'],
+            'Items' => $orderDetails
+        ];
+
+        return $receipt;
     }
 }

@@ -26,7 +26,7 @@ class Employee extends Controller
     public function btnAddEmployee()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+            // Ambil data dari form
             $data = [
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
@@ -39,6 +39,49 @@ class Employee extends Controller
                 'imageUrl' => $this->uploadImage()
             ];
 
+            $errors = [];
+
+            // Validasi Role: Hanya boleh ada satu admin
+            if ($data['role'] === 'Admin' && $this->employeeModel->isAdminExists()) {
+                $errors['role'] = "Hanya boleh ada satu admin dalam sistem.";
+            }
+
+            // Validasi lainnya
+            if (empty($data['username'])) {
+                $errors['username'] = "Username tidak boleh kosong.";
+            }
+            if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = "Email tidak valid.";
+            }
+            if (empty($data['password']) || strlen($data['password']) < 6) {
+                $errors['password'] = "Password harus terdiri dari minimal 6 karakter.";
+            }
+            if (empty($data['phone']) || !preg_match('/^[0-9]{10,15}$/', $data['phone'])) {
+                $errors['phone'] = "Nomor telepon harus berupa angka dan terdiri dari 10-15 digit.";
+            }
+            if (empty($data['gender']) || !in_array($data['gender'], ['Male', 'Female'])) {
+                $errors['gender'] = "Jenis kelamin tidak valid.";
+            }
+            if (empty($data['dateOfBirth'])) {
+                $errors['dateOfBirth'] = "Tanggal lahir tidak boleh kosong.";
+            }
+            if (empty($data['address'])) {
+                $errors['address'] = "Alamat tidak boleh kosong.";
+            }
+            if (empty($data['role'])) {
+                $errors['role'] = "Role tidak boleh kosong.";
+            }
+            if (!$data['imageUrl']) {
+                $errors['imageUrl'] = "Gagal mengunggah gambar.";
+            }
+            // Jika ada error, kembalikan ke halaman form
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: " . BASEURL . "/employee/add");
+                exit();
+            }
+
+            // Tambahkan employee jika validasi lolos
             if ($this->employeeModel->addEmployee($data)) {
                 $_SESSION['success'] = "Employee berhasil ditambahkan!";
             } else {
@@ -48,7 +91,7 @@ class Employee extends Controller
             exit();
         }
     }
-
+ 
     private function uploadImage()
     {
         if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {

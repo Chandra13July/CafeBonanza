@@ -37,21 +37,39 @@ class EmployeeModel
         return $this->db->execute();
     }
 
+    public function isAdminExists()
+    {
+        $this->db->query("SELECT COUNT(*) as total FROM employees WHERE LOWER(role) = LOWER(:role)");
+        $this->db->bind(':role', 'Admin');
+        $result = $this->db->single();
+
+        return $result['total'] > 0; // True jika sudah ada admin
+    }
+
+    // Tambahkan employee baru
     public function addEmployee($data)
     {
-        $this->db->query("INSERT INTO employee (Username, Email, Phone, Password, Gender, DateOfBirth, Address, Role, ImageUrl) 
-                            VALUES (:username, :email, :phone, :password, :gender, :dateOfBirth, :address, :role, :imageUrl)");
+        // Periksa apakah admin sudah ada sebelum menambahkan
+        if ($data['role'] === 'Admin' && $this->isAdminExists()) {
+            return false; // Gagal jika admin sudah ada
+        }
 
+        // Query untuk menambahkan data employee
+        $this->db->query("INSERT INTO employees (Username, Email, Phone, Password, Gender, DateOfBirth, Address, Role, ImageUrl) 
+                          VALUES (:username, :email, :phone, :password, :gender, :dateOfBirth, :address, :role, :imageUrl)");
+
+        // Bind parameter
         $this->db->bind(':username', $data['username']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':phone', $data['phone']);
-        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT)); // Enkripsi password
         $this->db->bind(':gender', $data['gender']);
         $this->db->bind(':dateOfBirth', $data['dateOfBirth']);
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':role', $data['role']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
 
+        // Eksekusi query
         return $this->db->execute();
     }
 
@@ -83,7 +101,7 @@ class EmployeeModel
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':role', $data['role']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
-        $this->db->bind(':EmployeeId', $data['EmployeeId']); 
+        $this->db->bind(':EmployeeId', $data['EmployeeId']);
 
         if (isset($data['password']) && !empty($data['password'])) {
             $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));

@@ -62,7 +62,7 @@
                                 <tr class="text-sm text-gray-600">
                                     <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['Customer'] ?? 'N/A') ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars(number_format($order['Total'] ?? 0, 2)) ?></td>
+                                    <td class="py-3 px-4 text-center"><?= 'Rp ' . number_format($order['Total'] ?? 0, 0, ',', '.') ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['PaymentMethod'] ?? 'N/A') ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['Status'] ?? 'N/A') ?></td>
                                     <td class="py-3 px-4 text-center">
@@ -70,9 +70,9 @@
                                     </td>
                                     <td class="py-3 px-4 text-center">
                                         <!-- Tombol Show dengan Ikon Mata -->
-                                        <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200" onclick="window.location.href='<?= BASEURL; ?>/report/show/<?= $order['OrderId']; ?>'">
+                                        <a href="<?= BASEURL; ?>/report/orderReceipt/<?= $order['OrderId']; ?>" class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200">
                                             <i class="fas fa-eye text-base"></i> <!-- Ikon Mata (Show) -->
-                                        </button>
+                                        </a>
 
                                         <!-- Tombol Edit dengan Ikon Pensil -->
                                         <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200 ml-2" onclick="openEditModal(<?= htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8'); ?>)">
@@ -98,14 +98,82 @@
         <script>
             // Fungsi untuk mencetak laporan
             document.getElementById('printButton').addEventListener('click', function() {
-                var printContent = document.getElementById('reportTable').outerHTML; // Ambil konten tabel laporan
+                // Ambil tabel asli
+                var originalTable = document.getElementById('reportTable');
+                // Salin tabel baru tanpa kolom action
+                var tempTable = document.createElement('table');
+                tempTable.innerHTML = originalTable.outerHTML;
+
+                // Hapus kolom action (misalnya kolom terakhir)
+                var rows = tempTable.querySelectorAll('tr');
+                rows.forEach(row => {
+                    // Hapus sel terakhir (kolom action)
+                    if (row.lastElementChild) {
+                        row.removeChild(row.lastElementChild);
+                    }
+                });
+
+                var printContent = tempTable.outerHTML; // Ambil konten tabel modifikasi
                 var printWindow = window.open('', '', 'height=800,width=1200'); // Buka jendela baru untuk print
-                printWindow.document.write('<html><head><title>Order Report</title>');
-                printWindow.document.write('<style>body{font-family: Arial, sans-serif; margin: 20px; font-size: 12px;} table{width: 100%; border-collapse: collapse;} th, td{border: 1px solid #ddd; padding: 8px; text-align: center;} th{background-color: #f2f2f2;}</style>'); // Tambahkan styling sederhana untuk cetak
-                printWindow.document.write('</head><body>');
-                printWindow.document.write('<h2>Order Report</h2>');
-                printWindow.document.write(printContent); // Masukkan konten tabel
-                printWindow.document.write('</body></html>');
+                printWindow.document.write(`
+        <html>
+        <head>
+            <title>Order Report</title>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    margin: 20px;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    color: #555;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    text-align: center;
+                }
+                th {
+                    background-color: #f2f2f2;
+                    color: #333;
+                    font-weight: bold;
+                }
+                td {
+                    background-color: #fff;
+                }
+                tr:nth-child(even) td {
+                    background-color: #f9f9f9;
+                }
+                @media print {
+                    body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                    table {
+                        page-break-inside: auto;
+                    }
+                    tr {
+                        page-break-inside: avoid;
+                        page-break-after: auto;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Order Report</h2>
+            ${printContent} <!-- Masukkan konten tabel -->
+        </body>
+        </html>
+    `);
                 printWindow.document.close(); // Tutup dokumen jendela
                 printWindow.print(); // Cetak
             });
