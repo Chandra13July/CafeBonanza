@@ -1,7 +1,9 @@
 <html>
+
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
     <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <style>
         .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -11,31 +13,38 @@
             background: #4A5568;
             color: white;
         }
+
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
             background: #2D3748;
         }
+
         .dataTables_wrapper .dataTables_filter input {
             padding: 0.5rem;
             border-radius: 0.375rem;
             border: 1px solid #CBD5E0;
         }
+
         .dataTables_wrapper .dataTables_length select {
             padding: 0.5rem;
             border-radius: 0.375rem;
             border: 1px solid #CBD5E0;
         }
+
         .dataTables_wrapper .dataTables_info {
             padding: 0.5rem;
         }
+
         .dataTables_wrapper .dataTables_paginate {
             padding: 0.5rem;
         }
+
         .dataTables_wrapper .dataTables_filter,
         .dataTables_wrapper .dataTables_length {
             padding: 0.5rem;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 flex">
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -110,8 +119,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Add Customer Modal Form -->
     <div id="addModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Customer</h2>
@@ -134,7 +141,12 @@
 
                     <div class="mb-4">
                         <label for="password" class="block text-gray-700">Password</label>
-                        <input type="password" id="password" name="password" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password" required>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password" required>
+                            <button type="button" id="togglePassword" class="absolute right-3 top-3 text-gray-600">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -170,8 +182,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Edit Customer Modal Form -->
     <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Customer</h2>
@@ -221,8 +231,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Modal Hapus Customer -->
     <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Hapus Customer</h2>
@@ -272,6 +280,21 @@
             editModal.classList.remove('hidden');
         }
 
+        document.getElementById('togglePassword').addEventListener('click', function(e) {
+            const passwordField = document.getElementById('password');
+            const passwordFieldType = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = passwordFieldType;
+
+            const icon = this.querySelector('i');
+            if (passwordFieldType === 'password') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+
         function closeEditModal() {
             editModal.classList.add('hidden');
         }
@@ -302,4 +325,5 @@
         }
     </script>
 </body>
+
 </html>

@@ -1,11 +1,4 @@
 <html>
-
-<head>
-    <title>Special Menu of the Day</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    </link>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -76,7 +69,6 @@
         <?php if (!empty($data['MenuItems'])): ?>
             <?php foreach ($data['MenuItems'] as $item): ?>
                 <div class="bg-white rounded-lg shadow-md text-center flex flex-col">
-                    <!-- Display Image -->
                     <div class="zoom-container relative overflow-hidden rounded-t-lg">
                         <img
                             src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']) ? htmlspecialchars($item['ImageUrl']) : 'default_image.jpg'; ?>"
@@ -96,12 +88,8 @@
                                 <span class="text-sm text-red-500 ml-4">Out of Stock</span>
                             <?php endif; ?>
                         </div>
-
-                        <!-- Display Total Sold -->
                         <div class="flex justify-between items-center mt-2 w-full">
                             <span class="text-sm text-gray-600">Sold: <?= $item['TotalSold']; ?> items</span>
-
-                            <!-- Quantity Input with + and - buttons -->
                             <div class="flex items-center space-x-2">
                                 <button class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="decreaseQuantity(<?= $item['MenuId']; ?>)">-</button>
                                 <input id="quantity-<?= $item['MenuId']; ?>" type="number" min="1" max="<?= $item['Stock']; ?>" value="1" class="w-12 text-center font-medium border border-gray-300 rounded" onchange="updateCartQuantity(<?= $item['MenuId']; ?>)" style="display: none;">
@@ -109,8 +97,6 @@
                                 <button class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="increaseQuantity(<?= $item['MenuId']; ?>)">+</button>
                             </div>
                         </div>
-
-                        <!-- Add to Cart -->
                         <div class="quantity-controls flex items-center justify-center space-x-2 mt-4 w-full">
                             <?php if ($item['Stock'] > 0): ?>
                                 <button
@@ -292,5 +278,3 @@
         }
     </script>
 </body>
-
-</html>

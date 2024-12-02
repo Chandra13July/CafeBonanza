@@ -3,10 +3,12 @@
 class Cart extends Controller
 {
     private $cartModel;
+    private $orderModel;
 
     public function __construct()
     {
         $this->cartModel = $this->model('CartModel');
+        $this->orderModel = $this->model('OrderModel');
 
         if (!isset($_SESSION['user_id'])) {
             $_SESSION['flash_message'] = 'Anda harus login terlebih dahulu!';
@@ -50,6 +52,57 @@ class Cart extends Controller
             }
 
             header('Location: ' . BASEURL . '/home/menu');
+            exit();
+        }
+    }
+
+    public function btnCheckout()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_SESSION['user_id'])) {
+                $customerId = intval($_SESSION['user_id']);
+                $paymentMethod = $_POST['payment-method'] ?? null;
+                $selectedItems = $_POST['selected_items'] ?? null;
+                $orderDetails = $_POST['cartItems'] ?? null;  // This could be NULL if not set
+
+                // Check if orderDetails is valid
+                if (is_array($selectedItems)  && $paymentMethod) {
+                    $cartModel = $this->model('CartModel');
+                    $orderModel = $this->model('OrderModel'); // Assuming you have an OrderModel for order handling
+
+
+
+                    // Call the checkout method with valid order details
+                    $orderId = $orderModel->checkout($customerId,  $paymentMethod, $selectedItems);
+
+                    // Validasi jika items dan metode pembayaran telah dipilih
+                    if (empty($selectedItems) || empty($paymentMethod)) {
+                        $_SESSION['error'] = "Anda harus memilih item dan metode pembayaran.";
+                        header('Location: ' . BASEURL . '/cart');
+                        exit();
+                    }
+
+                    // If the order is created successfully, delete the items from the cart
+                    if ($orderId) {
+                        // Delete items from the cart after successful order creation
+                        foreach ($selectedItems as $cartId) {
+                            $cartModel->deleteItem($customerId, $cartId);
+                        }
+
+                        $_SESSION['success'] = "Pesanan berhasil dibuat! ID Pesanan: " . $orderId;
+                        header('Location: ' . BASEURL . '/order/details/' . $orderId); // Redirect to order details page
+                    } else {
+                        $_SESSION['error'] = "Gagal membuat pesanan, silakan coba lagi.";
+                        header('Location: ' . BASEURL . '/cart');
+                    }
+                } else {
+                    $_SESSION['error'] = "Anda harus memilih item dan metode pembayaran.";
+                    header('Location: ' . BASEURL . '/cart');
+                }
+            } else {
+                $_SESSION['error'] = "Anda harus login terlebih dahulu.";
+                header('Location: ' . BASEURL . '/auth/login');
+            }
             exit();
         }
     }

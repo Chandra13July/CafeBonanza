@@ -60,8 +60,6 @@ class OrderModel
             o.OrderId,
             c.Username AS Customer,
             o.Total,
-            o.Paid,
-            o.Change,
             o.PaymentMethod,
             o.Status,
             o.CreatedAt
@@ -120,7 +118,7 @@ class OrderModel
         d.Quantity,
         d.Price,
         d.Subtotal
-    FROM `orderdetail` d
+    FROM `orderdetails` d
     JOIN `menu` m ON d.MenuId = m.MenuId
     WHERE d.OrderId = :orderId
     ";
@@ -155,5 +153,76 @@ class OrderModel
         ];
 
         return $receipt;
+    }
+
+    public function checkout($customerId, $paymentMethod, $orderDetails)
+    {
+        // Ensure that $orderDetails is an array and not null
+        if (!is_array($orderDetails) || empty($orderDetails)) {
+            throw new Exception("Order details are missing or invalid");
+        }
+
+        // Start a transaction to ensure that both the order and its details are inserted successfully
+        $this->db->beginTransaction();
+
+        try {
+            // Define the status of the order (e.g., 'pending')
+            $status = 'pending';  // You can update this based on your logic
+
+            // Insert the order into the `order` table
+            $queryOrder = "
+                INSERT INTO `order` (CustomerId, Total, PaymentMethod, Status)
+                VALUES (:customerId, :total, :paymentMethod, :status)
+            ";
+
+            $stmtOrder = $this->db->prepare($queryOrder);
+            $stmtOrder->bindValue(':customerId', $customerId, PDO::PARAM_INT);
+            $stmtOrder->bindValue(':total', 0, PDO::PARAM_STR);
+            $stmtOrder->bindValue(':paymentMethod', $paymentMethod, PDO::PARAM_STR);
+            $stmtOrder->bindValue(':status', $status, PDO::PARAM_STR);  // Bind status
+
+            $stmtOrder->execute();
+
+            // Get the last inserted OrderId
+            $orderId = $this->db->lastInsertId();
+
+            // Insert order details into the `orderdetail` table
+            $queryOrderDetails = "
+                INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal)
+                VALUES (:orderId, :menuId, :quantity, :price, :subtotal)
+            ";
+
+
+            $total = 0;
+            foreach ($orderDetails as $item) {
+                $cart = $this->db->prepare("SELECT * FROM cart JOIN 
+            menu m ON cart.MenuId = m.MenuId WHERE CartId = $item");
+                $cart->execute();
+                $data = $cart->fetch();
+                $subTotal = $data['Quantity'] *  $data['Price'];
+                $total += $subTotal;
+                $stmtOrderDetails = $this->db->prepare($queryOrderDetails);
+                $stmtOrderDetails->bindValue(':orderId', $orderId, PDO::PARAM_INT);
+                $stmtOrderDetails->bindValue(':menuId', $data['MenuId'], PDO::PARAM_INT);
+                $stmtOrderDetails->bindValue(':quantity', $data['Quantity'], PDO::PARAM_INT);
+                $stmtOrderDetails->bindValue(':price', $data['Price'], PDO::PARAM_STR);
+                $stmtOrderDetails->bindValue(':subtotal', $subTotal, PDO::PARAM_STR);
+                $stmtOrderDetails->execute();
+            }
+
+            $query = "UPDATE `order` SET total = '$total' WHERE OrderId = $orderId";
+            $cart = $this->db->prepare($query);
+            $cart->execute();
+
+            // Commit the transaction
+            $this->db->commit();
+
+            // Return the OrderId of the newly created order
+            return $orderId;
+        } catch (Exception $e) {
+            // Rollback the transaction in case of an error
+            $this->db->rollBack();
+            throw new Exception("Checkout failed: " . $e->getMessage());
+        }
     }
 }

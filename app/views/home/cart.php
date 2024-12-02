@@ -141,6 +141,15 @@
                     var value = e.value;
                     const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
                     const formDeleteAll = document.querySelector("#deleteAll");
+                    const formBeli = document.querySelector("#formBeli");
+
+                    const exist2 = formBeli.querySelector(`#selected${value}`);
+
+                    if (exist2) {
+                        exist2.remove();
+                    } else if (e.checked) {
+                        formBeli.innerHTML += html;
+                    }
                     const exist = formDeleteAll.querySelector(`#selected${value}`);
 
                     if (exist) {
@@ -239,7 +248,7 @@
             </div>
         </div>
         <div class="w-full lg:w-1/4 bg-white p-8 rounded-lg shadow-md">
-            <form action="<?= BASEURL; ?>/order/checkout" method="POST">
+            <form id="formBeli" action="<?= BASEURL; ?>/cart/btnCheckout" method="POST">
                 <h2 class="text-2xl font-bold mb-6">Ringkasan belanja</h2>
                 <div class="flex justify-between mb-6">
                     <span class="font-semibold text-lg">Total</span>
@@ -252,9 +261,15 @@
                         <option value="E-Wallet">Dompet Digital</option>
                     </select>
                 </div>
+
+                <!-- Pastikan selected_items mengirimkan item yang dipilih -->
+                <input type="hidden" name="selected_items" value="<?= json_encode($selectedItems); ?>">
+
                 <button class="bg-green-500 text-white font-bold py-3 px-6 rounded w-full text-lg" id="buy-button">Beli</button>
             </form>
+
         </div>
+
     </div>
 </body>
 

@@ -1,6 +1,7 @@
 <?php
 
-class Database {
+class Database
+{
     private $host = DB_HOST;
     private $user = DB_USER;
     private $pass = DB_PASS;
@@ -21,7 +22,7 @@ class Database {
 
         try {
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $option);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             die("Connection failed: " . $e->getMessage());
         }
     }
@@ -33,9 +34,11 @@ class Database {
         return $this->stmt;
     }
 
+    // Corrected query method that now executes the query and returns the result set
     public function query($query)
     {
         $this->stmt = $this->dbh->prepare($query);
+        $this->execute();
     }
 
     public function bind($param, $value, $type = null)
@@ -85,5 +88,26 @@ class Database {
     public function rowCount()
     {
         return $this->stmt->rowCount();
+    }
+
+    // Adding transaction methods
+    public function beginTransaction()
+    {
+        $this->dbh->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->dbh->commit();
+    }
+
+    public function rollBack()
+    {
+        $this->dbh->rollBack();
+    }
+
+    public function lastInsertId()
+    {
+        return $this->dbh->lastInsertId();
     }
 }
