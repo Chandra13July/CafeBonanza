@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../core/Database.php';
 
-class EmployeeApi
+class MenuApi
 {
     private $db;
 
@@ -12,198 +12,242 @@ class EmployeeApi
         $this->db = new Database();
     }
 
-    public function login()
+    public function getAllMenus()
     {
-        // Ambil data dari $_POST jika menggunakan Content-Type: application/x-www-form-urlencoded
-        $data = [
-            'Email' => $_POST['Email'] ?? null,
-            'Password' => $_POST['Password'] ?? null,
-        ];
-
-        // Validasi data
-        if (empty($data['Email']) || empty($data['Password'])) {
-            echo json_encode([
-                "status" => "error",
-                "message" => "Email and password are required"
-            ]);
-            return;
-        }
-
-        if (!filter_var($data['Email'], FILTER_VALIDATE_EMAIL)) {
-            echo json_encode([
-                "status" => "error",
-                "message" => "Invalid email format"
-            ]);
-            return;
-        }
-
-        // Query database untuk mendapatkan data karyawan
-        $this->db->query("SELECT * FROM employee WHERE Email = :email");
-        $this->db->bind(':email', $data['Email']);
-        $employee = $this->db->single();
-
-        // Validasi hasil query
-        if ($employee) {
-            // Verifikasi password
-            if (password_verify($data['Password'], $employee['Password'])) {
-                // Simpan data user ke session
-                $_SESSION['employee_id'] = $employee['EmployeeId'];
-                $_SESSION['username'] = $employee['Username'];
-                $_SESSION['email'] = $employee['Email'];
-                $_SESSION['role'] = $employee['Role'];
-
-                // Kirim response JSON untuk login berhasil
-                echo json_encode([
-                    "status" => "success",
-                    "message" => "Login successful. Welcome, " . $employee['Username'] . " (" . $employee['Role'] . ")!",
-                    "user" => [
-                        "EmployeeId" => $employee['EmployeeId'],
-                        "Username" => $employee['Username'],
-                        "Email" => $employee['Email'],
-                        "Role" => $employee['Role'],
-                        "Phone" => $employee['Phone'],
-                        "Gender" => $employee['Gender'],
-                        "DateOfBirth" => $employee['DateOfBirth'],
-                        "Address" => $employee['Address'],
-                        "ImageUrl" => $employee['ImageUrl'] ? BASEURL . '/' . $employee['ImageUrl'] : null,
-                    ]
-                ]);
-            } else {
-                // Password salah
-                echo json_encode([
-                    "status" => "error",
-                    "message" => "Incorrect password. Please try again."
-                ]);
-            }
-        } else {
-            // Email tidak ditemukan
-            echo json_encode([
-                "status" => "error",
-                "message" => "Email not registered. Please check your email or sign up."
-            ]);
-        }
-    }
-
-
-    public function getAllEmployees()
-    {
-        $this->db->query("SELECT * FROM employee");
-        $employees = $this->db->resultSet();
+        $this->db->query("SELECT * FROM menu");
+        $menus = $this->db->resultSet();
 
         $data = ["data" => []];
-        foreach ($employees as $employee) {
-            $data_employee = [
-                "EmployeeId" => $employee["EmployeeId"],
-                "Username" => $employee["Username"],
-                "Email" => $employee["Email"],
-                "Phone" => $employee["Phone"],
-                "Role" => $employee["Role"],
-                "Gender" => $employee["Gender"],
-                "DateOfBirth" => $employee["DateOfBirth"],
-                "Address" => $employee["Address"],
-                "ImageUrl" => BASEURL . '/' . $employee["ImageUrl"],
-                "CreatedAt" => $employee["CreatedAt"],
+        foreach ($menus as $menu) {
+            $data_menu = [
+                "MenuId" => $menu["MenuId"],
+                "MenuName" => $menu["MenuName"],
+                "Description" => $menu["Description"],
+                "Price" => $menu["Price"],
+                "Stock" => $menu["Stock"],
+                "Category" => $menu["Category"],
+                "ImageUrl" => $menu["ImageUrl"], // URL sudah disimpan penuh di DB
+                "CreatedAt" => $menu["CreatedAt"],
             ];
 
-            array_push($data['data'], $data_employee);
+            array_push($data['data'], $data_menu);
         }
 
+        header('Content-Type: application/json');
         echo json_encode($data);
     }
 
-    public function getEmployeeById($id)
+    public function getMenuById($id)
     {
-        $this->db->query("SELECT * FROM employee WHERE EmployeeId = :id");
+        $this->db->query("SELECT * FROM menu WHERE MenuId = :id");
         $this->db->bind(':id', $id);
-        $employee = $this->db->single();
+        $menu = $this->db->single();
 
-        echo json_encode($employee);
+        header('Content-Type: application/json');
+        echo json_encode($menu);
     }
 
-    public function addEmployee($data)
+    public function addMenu()
     {
-        $this->db->query("INSERT INTO employee (Username, Email, Phone, Role, Password, Gender, DateOfBirth, Address, ImageUrl) 
-                          VALUES (:username, :email, :phone, :role, :password, :gender, :dob, :address, :imageUrl)");
-        $this->db->bind(':username', $data['Username']);
-        $this->db->bind(':email', $data['Email']);
-        $this->db->bind(':phone', $data['Phone']);
-        $this->db->bind(':role', $data['Role']);
-        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT));
-        $this->db->bind(':gender', $data['Gender']);
-        $this->db->bind(':dob', $data['DateOfBirth']);
-        $this->db->bind(':address', $data['Address']);
-        $this->db->bind(':imageUrl', $data['ImageUrl']);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_FILES['imageUrl'])) {
+            http_response_code(400);
+            echo json_encode(["message" => "Invalid request"]);
+            return;
+        }
 
-        if ($this->db->execute()) {
-            echo json_encode(["status" => "success", "message" => "Employee added successfully"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Failed to add employee"]);
+        $menuName = $_POST['MenuName'] ?? '';
+        $description = $_POST['Description'] ?? '';
+        $price = $_POST['Price'] ?? null;
+        $stock = $_POST['Stock'] ?? null;
+        $category = $_POST['Category'] ?? '';
+
+        $price = $price ?? 0;
+        $stock = $stock ?? 0;
+
+        if (!is_numeric($price) || !is_numeric($stock)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Price and Stock must be numeric."]);
+            return;
+        }
+
+        if (empty($menuName) || empty($description) || empty($category)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Required fields are missing."]);
+            return;
+        }
+
+        $uploadedImagePath = $this->uploadImage();
+
+        if ($uploadedImagePath === false) {
+            http_response_code(500);
+            echo json_encode(["message" => "Failed to upload image"]);
+            return;
+        }
+
+        $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
+                          VALUES (:name, :description, :price, :stock, :category, :imageUrl)");
+        $this->db->bind(':name', $menuName);
+        $this->db->bind(':description', $description);
+        $this->db->bind(':price', (int)$price);
+        $this->db->bind(':stock', (int)$stock);
+        $this->db->bind(':category', $category);
+        $this->db->bind(':imageUrl', $uploadedImagePath);
+
+        try {
+            $this->db->execute();
+            http_response_code(201);
+            echo json_encode(["message" => "Menu added successfully"]);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["message" => "Database error: " . $e->getMessage()]);
         }
     }
 
-    public function updateEmployee($id, $data)
+    private function uploadImage()
     {
-        $this->db->query("UPDATE employee SET Username = :username, Email = :email, Phone = :phone, Role = :role, 
-                          Password = :password, Gender = :gender, DateOfBirth = :dob, Address = :address, ImageUrl = :imageUrl 
-                          WHERE EmployeeId = :id");
-        $this->db->bind(':id', $id);
-        $this->db->bind(':username', $data['Username']);
-        $this->db->bind(':email', $data['Email']);
-        $this->db->bind(':phone', $data['Phone']);
-        $this->db->bind(':role', $data['Role']);
-        $this->db->bind(':password', password_hash($data['Password'], PASSWORD_DEFAULT));
-        $this->db->bind(':gender', $data['Gender']);
-        $this->db->bind(':dob', $data['DateOfBirth']);
-        $this->db->bind(':address', $data['Address']);
-        $this->db->bind(':imageUrl', $data['ImageUrl']);
+        if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
+            $imageName = $_FILES['imageUrl']['name'];
+            $imageTmpName = $_FILES['imageUrl']['tmp_name'];
+            $imageSize = $_FILES['imageUrl']['size'];
+            $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
 
-        if ($this->db->execute()) {
-            echo json_encode(["status" => "success", "message" => "Employee updated successfully"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Failed to update employee"]);
+            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+
+            if (in_array($imageExt, $allowed)) {
+                if ($imageSize < 5000000) {
+                    $newImageName = uniqid('', true) . '.' . $imageExt;
+                    $imageUploadPath = 'http://192.168.1.13/CafeBonanza/app/controllers/api/upload/menu/' . $newImageName;
+
+                    if (!is_dir('upload/menu/')) {
+                        mkdir('upload/menu/', 0755, true);
+                    }
+
+                    if (move_uploaded_file($imageTmpName, 'upload/menu/' . $newImageName)) {
+                        return $imageUploadPath;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public function updateMenu($id)
+    {
+        $method = $_SERVER['REQUEST_METHOD'];
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if ($id === null || empty($input)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'No ID or data provided']);
+            return;
+        }
+
+        $updateFields = [];
+        $bindParams = [];
+        $allowedFields = ['MenuName', 'Price', 'Stock', 'Description', 'Category'];
+
+        foreach ($allowedFields as $field) {
+            if (isset($input[$field])) {
+                $updateFields[] = "$field = :$field";
+                $bindParams[":$field"] = $input[$field];
+            }
+        }
+
+        if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
+            $uploadedImagePath = $this->uploadImage();
+
+            if ($uploadedImagePath === false) {
+                http_response_code(500);
+                echo json_encode(["message" => "Failed to upload image"]);
+                return;
+            }
+
+            $updateFields[] = "ImageUrl = :imageUrl";
+            $bindParams[':imageUrl'] = $uploadedImagePath;
+        }
+
+        if (empty($updateFields)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'No valid fields to update']);
+            return;
+        }
+
+        $query = "UPDATE menu SET " . implode(', ', $updateFields) . " WHERE MenuId = :id";
+        $bindParams[':id'] = $id;
+
+        $this->db->query($query);
+
+        foreach ($bindParams as $key => $value) {
+            $this->db->bind($key, $value);
+        }
+
+        try {
+            if ($this->db->execute()) {
+                http_response_code(200);
+                echo json_encode(["message" => "Menu updated successfully"]);
+            } else {
+                http_response_code(500);
+                echo json_encode(["message" => "Failed to update menu"]);
+            }
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["message" => "Database error: " . $e->getMessage()]);
         }
     }
 
-    public function deleteEmployee($id)
+    public function deleteMenu($id)
     {
-        $this->db->query("DELETE FROM employee WHERE EmployeeId = :id");
+        $this->db->query("DELETE FROM menu WHERE MenuId = :id");
         $this->db->bind(':id', $id);
 
-        if ($this->db->execute()) {
-            echo json_encode(["status" => "success", "message" => "Employee deleted successfully"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Failed to delete employee"]);
+        try {
+            if ($this->db->execute()) {
+                http_response_code(200);
+                echo json_encode(["message" => "Menu deleted successfully"]);
+            } else {
+                http_response_code(404);
+                echo json_encode(["message" => "Menu not found"]);
+            }
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["message" => "Failed to delete menu: " . $e->getMessage()]);
         }
     }
 }
 
-$employeeApi = new EmployeeApi();
+// Main router logic
+try {
+    $menuApi = new MenuApi();
+    $method = $_SERVER['REQUEST_METHOD'];
+    $id = $_GET['id'] ?? null;
 
-header("Content-Type: application/json");
+    header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['id'])) {
-        $employeeApi->getEmployeeById($_GET['id']);
-    } else {
-        $employeeApi->getAllEmployees();
+    switch ($method) {
+        case 'GET':
+            if ($id) $menuApi->getMenuById($id);
+            else $menuApi->getAllMenus();
+            break;
+        case 'POST':
+            $menuApi->addMenu();
+            break;
+        case 'PUT':
+        case 'PATCH':
+            if ($id) $menuApi->updateMenu($id);
+            else http_response_code(400);
+            break;
+        case 'DELETE':
+            if ($id) $menuApi->deleteMenu($id);
+            else http_response_code(400);
+            break;
+        default:
+            http_response_code(405);
+            echo json_encode(["message" => "Method not allowed"]);
+            break;
     }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_GET['action']) && $_GET['action'] == 'login') {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $employeeApi->login($data);
-    } else {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $employeeApi->addEmployee($data);
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    if (isset($_GET['id'])) {
-        $employeeApi->updateEmployee($_GET['id'], $data);
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    if (isset($_GET['id'])) {
-        $employeeApi->deleteEmployee($_GET['id']);
-    }
-} else {
-    echo json_encode(["status" => "error", "message" => "Invalid request"]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["message" => "Server error: " . $e->getMessage()]);
 }
