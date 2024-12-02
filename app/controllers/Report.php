@@ -42,6 +42,7 @@ class Report extends Controller
 
     public function orderReceipt($orderId)
     {
+
         // Cek jika orderId ada di URL
         if (empty($orderId)) {
             $_SESSION['flash_message'] = 'Order ID tidak ditemukan.';

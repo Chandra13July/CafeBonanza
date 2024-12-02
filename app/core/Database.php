@@ -1,45 +1,51 @@
 <?php
 
-class Database {
-    private $host = DB_HOST;
-    private $user = DB_USER;
-    private $pass = DB_PASS;
-    private $db_name = DB_NAME;
+class Database
+{
+    private $host = DB_HOST; // Host database
+    private $user = DB_USER; // Username database
+    private $pass = DB_PASS; // Password database
+    private $db_name = DB_NAME; // Nama database
 
-    private $dbh;
-    private $stmt;
+    private $dbh;  // Database handler
+    private $stmt; // Statement handler
 
     public function __construct()
     {
-        // Data source name
+        // Menyiapkan data source name (DSN)
         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->db_name;
 
+        // Opsi untuk koneksi PDO
         $option = [
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            PDO::ATTR_PERSISTENT => true, // Menggunakan koneksi yang persisten
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION // Mode error sebagai exception
         ];
 
         try {
+            // Membuat koneksi ke database menggunakan PDO
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $option);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
+            // Menangani error koneksi
             die("Connection failed: " . $e->getMessage());
         }
     }
 
-    // Adding the prepare method
     public function prepare($query)
     {
+        // Menyiapkan query SQL
         $this->stmt = $this->dbh->prepare($query);
         return $this->stmt;
     }
 
     public function query($query)
     {
+        // Menyiapkan query SQL
         $this->stmt = $this->dbh->prepare($query);
     }
 
     public function bind($param, $value, $type = null)
     {
+        // Mengikat parameter ke query dengan tipe data yang sesuai
         if (is_null($type)) {
             switch (true) {
                 case is_int($value):
@@ -55,12 +61,12 @@ class Database {
                     $type = PDO::PARAM_STR;
             }
         }
-
         $this->stmt->bindValue($param, $value, $type);
     }
 
     public function execute()
     {
+        // Menjalankan query yang telah disiapkan
         try {
             $this->stmt->execute();
             return true;
@@ -72,18 +78,21 @@ class Database {
 
     public function resultSet()
     {
+        // Mendapatkan semua hasil dari query dalam bentuk array asosiatif
         $this->execute();
         return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function single()
     {
+        // Mendapatkan satu baris hasil query dalam bentuk array asosiatif
         $this->execute();
         return $this->stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function rowCount()
     {
+        // Mendapatkan jumlah baris yang terpengaruh oleh query
         return $this->stmt->rowCount();
     }
 }

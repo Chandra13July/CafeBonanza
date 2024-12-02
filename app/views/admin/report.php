@@ -50,6 +50,8 @@
                             <th class="py-3 px-4 font-thin text-center">No</th>
                             <th class="py-3 px-4 font-thin text-center">Customer</th>
                             <th class="py-3 px-4 font-thin text-center">Total</th>
+                            <th class="py-3 px-4 font-thin text-center">Paid</th>
+                            <th class="py-3 px-4 font-thin text-center">Change</th>
                             <th class="py-3 px-4 font-thin text-center">Payment Method</th>
                             <th class="py-3 px-4 font-thin text-center">Status</th>
                             <th class="py-3 px-4 font-thin text-center">Date</th>
@@ -59,23 +61,27 @@
                     <tbody>
                         <?php if (!empty($data['orders'])): ?>
                             <?php foreach ($data['orders'] as $index => $order): ?>
-                                <tr class="text-sm text-gray-600">
-                                    <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['Customer'] ?? 'N/A') ?></td>
-                                    <td class="py-3 px-4 text-center"><?= 'Rp ' . number_format($order['Total'] ?? 0, 0, ',', '.') ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['PaymentMethod'] ?? 'N/A') ?></td>
-                                    <td class="py-3 px-4 text-center"><?= htmlspecialchars($order['Status'] ?? 'N/A') ?></td>
-                                    <td class="py-3 px-4 text-center">
+                                <tr class="text-sm text-gray-600 text-center"> <!-- Tambahkan text-center di sini -->
+                                    <td class="py-3 px-4"><?= $index + 1 ?></td>
+                                    <td class="py-3 px-4"><?= htmlspecialchars($order['Customer'] ?? 'N/A') ?></td>
+                                    <td class="py-3 px-4"><?= 'Rp ' . number_format($order['Total'] ?? 0, 0, ',', '.') ?></td>
+                                    <td class="py-3 px-4"><?= 'Rp ' . number_format($order['Paid'] ?? 0, 0, ',', '.') ?></td>
+                                    <td class="py-3 px-4"><?= 'Rp ' . number_format($order['Change'] ?? 0, 0, ',', '.') ?></td>
+                                    <td class="py-3 px-4"><?= htmlspecialchars($order['PaymentMethod'] ?? 'N/A') ?></td>
+                                    <td class="py-3 px-4"><?= htmlspecialchars($order['Status'] ?? 'N/A') ?></td>
+                                    <td class="py-3 px-4">
                                         <?= !empty($order['CreatedAt']) ? date("d F Y, H:i", strtotime($order['CreatedAt'])) : 'N/A' ?>
                                     </td>
-                                    <td class="py-3 px-4 text-center">
+                                    <td class="py-3 px-4">
                                         <!-- Tombol Show dengan Ikon Mata -->
-                                        <a href="<?= BASEURL; ?>/report/orderReceipt/<?= $order['OrderId']; ?>" class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200">
+                                        <a href="<?= BASEURL; ?>/report/orderReceipt/<?= $order['OrderId']; ?>"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200 w-14 text-center inline-block">
                                             <i class="fas fa-eye text-base"></i> <!-- Ikon Mata (Show) -->
                                         </a>
 
                                         <!-- Tombol Edit dengan Ikon Pensil -->
-                                        <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200 ml-2" onclick="openEditModal(<?= htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8'); ?>)">
+                                        <button class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700 transition duration-200 ml-2 w-14 text-center inline-block"
+                                            onclick="openEditModal(<?= htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8'); ?>)">
                                             <i class="fas fa-pen text-base"></i> <!-- Ikon Pensil (Edit) -->
                                         </button>
                                     </td>
@@ -83,7 +89,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" class="py-3 px-4 text-center text-gray-500">No order data available</td>
+                                <td colspan="9" class="py-3 px-4 text-center text-gray-500">No order data available</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
