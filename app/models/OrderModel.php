@@ -60,6 +60,8 @@ class OrderModel
             o.OrderId,
             c.Username AS Customer,
             o.Total,
+            o.Paid,
+            o.Change,
             o.PaymentMethod,
             o.Status,
             o.CreatedAt
@@ -118,7 +120,7 @@ class OrderModel
         d.Quantity,
         d.Price,
         d.Subtotal
-    FROM `orderdetails` d
+    FROM `orderdetail` d
     JOIN `menu` m ON d.MenuId = m.MenuId
     WHERE d.OrderId = :orderId
     ";

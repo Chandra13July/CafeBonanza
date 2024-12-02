@@ -18,8 +18,6 @@
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-700">Order Report</h2>
             </div>
-
-            <!-- Filter and Print Form -->
             <div class="mb-4 flex gap-4">
                 <form method="POST" action="<?= BASEURL; ?>/report/filterReport" class="flex items-center gap-4">
                     <div>
@@ -32,17 +30,12 @@
                     </div>
                     <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded">Filter</button>
                 </form>
-
-                <!-- Tombol Print -->
                 <div class="flex items-center">
                     <button id="printButton" class="bg-green-500 text-white px-6 py-2 rounded">Print</button>
 
-                    <!-- Tombol Export ke Excel -->
                     <button id="exportButton" class="bg-yellow-500 text-white px-6 py-2 rounded ml-2">Export to Excel</button>
                 </div>
             </div>
-
-            <!-- Report Table -->
             <div class="overflow-x-auto p-4">
                 <table id="reportTable" class="min-w-full bg-white table-auto">
                     <thead>
@@ -73,16 +66,14 @@
                                         <?= !empty($order['CreatedAt']) ? date("d F Y, H:i", strtotime($order['CreatedAt'])) : 'N/A' ?>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <!-- Tombol Show dengan Ikon Mata -->
                                         <a href="<?= BASEURL; ?>/report/orderReceipt/<?= $order['OrderId']; ?>"
                                             class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200 w-14 text-center inline-block">
-                                            <i class="fas fa-eye text-base"></i> <!-- Ikon Mata (Show) -->
+                                            <i class="fas fa-eye text-base"></i> 
                                         </a>
 
-                                        <!-- Tombol Edit dengan Ikon Pensil -->
                                         <button class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700 transition duration-200 ml-2 w-14 text-center inline-block"
                                             onclick="openEditModal(<?= htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8'); ?>)">
-                                            <i class="fas fa-pen text-base"></i> <!-- Ikon Pensil (Edit) -->
+                                            <i class="fas fa-pen text-base"></i> 
                                         </button>
                                     </td>
                                 </tr>

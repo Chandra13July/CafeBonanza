@@ -90,7 +90,7 @@ class Cart extends Controller
                         }
 
                         $_SESSION['success'] = "Pesanan berhasil dibuat! ID Pesanan: " . $orderId;
-                        header('Location: ' . BASEURL . '/order/details/' . $orderId); // Redirect to order details page
+                        header('Location: ' . BASEURL . '/cart/index' . $orderId); // Redirect to order details page
                     } else {
                         $_SESSION['error'] = "Gagal membuat pesanan, silakan coba lagi.";
                         header('Location: ' . BASEURL . '/cart');
