@@ -6,9 +6,10 @@ class Gallery extends Controller
 
     public function __construct()
     {
+        // Initialize gallery model and check if the user is logged in
         $this->galleryModel = $this->model('GalleryModel');
         if (!isset($_SESSION['user_id'])) {
-            $_SESSION['flash_message'] = 'Anda harus login terlebih dahulu!';
+            $_SESSION['flash_message'] = 'You must log in first!';
             header('Location: ' . BASEURL . '/auth/loginAdmin');
             exit;
         }
@@ -16,8 +17,8 @@ class Gallery extends Controller
 
     public function index()
     {
+        // Retrieve all gallery data and load the view
         $gallery = $this->galleryModel->getAllGallery();
-
         $this->view('layout/header');
         $this->view('layout/sidebar');
         $this->view('admin/gallery', ['gallery' => $gallery]);
@@ -25,87 +26,145 @@ class Gallery extends Controller
 
     public function btnAddGallery()
     {
+        // Function to add a new gallery item
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $title = trim($_POST['title']);
+            $description = trim($_POST['description']);
 
-            $imagePath = $this->uploadImage();
-  
-            if ($imagePath === false) {
+            // Validate title and description
+            if (empty($title) || empty($description)) {
+                $_SESSION['error'] = "Title and description cannot be empty!";
                 header("Location: " . BASEURL . "/gallery/index");
                 exit();
             }
 
+            // Upload image
+            $imagePath = $this->uploadMedia();
+            if ($imagePath === false) {
+                $_SESSION['error'] = "Failed to upload image. Please try again.";
+                header("Location: " . BASEURL . "/gallery/index");
+                exit();
+            }
+
+            // Data for the new gallery entry
             $data = [
-                'title' => trim($_POST['title']),
-                'description' => trim($_POST['description']),
-                'imageUrl' => $imagePath 
+                'title' => $title,
+                'description' => $description,
+                'imageUrl' => $imagePath
             ];
 
-            if ($this->galleryModel->addGallery ($data)) {
-                $_SESSION['success'] = "Gallry berhasil ditambahkan!";
+            // Add the gallery to the database
+            if ($this->galleryModel->addGallery($data)) {
+                $_SESSION['success'] = "Gallery successfully added!";
             } else {
-                $_SESSION['error'] = "Penambahan gallry gagal, silakan coba lagi.";
+                $_SESSION['error'] = "Failed to add gallery, please try again.";
             }
+
+            // Redirect to gallery page
             header("Location: " . BASEURL . "/gallery/index");
             exit();
         }
     }
 
-    private function uploadImage()
+    private function uploadMedia()
     {
+        // Function to upload media (image/video)
         if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
-            $imageName = $_FILES['imageUrl']['name'];
-            $imageTmpName = $_FILES['imageUrl']['tmp_name'];
-            $imageSize = $_FILES['imageUrl']['size'];
-            $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+            $fileName = $_FILES['imageUrl']['name'];
+            $fileTmpName = $_FILES['imageUrl']['tmp_name'];
+            $fileSize = $_FILES['imageUrl']['size'];
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+            // Allowed file extensions
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'mkv'];
 
-            if (in_array($imageExt, $allowed)) {
-                if ($imageSize < 5000000) { // Batas ukuran 5MB
-                    $newImageName = uniqid('', true) . '.' . $imageExt;
-                    $imageUploadPath = 'upload/gallery/' . $newImageName;
+            // Validate file extension and size
+            if (in_array($fileExt, $allowed)) {
+                if ($fileSize < 50000000) {
+                    $newFileName = uniqid('', true) . '.' . $fileExt;
+                    $uploadDir = 'upload/gallery/';
 
-                    if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $imageUploadPath; // Berhasil upload, return path
-                    } else {
-                        $_SESSION['error'] = "Gagal mengunggah gambar.";
-                        return false;
+                    // Create the directory if it does not exist
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    // Save the uploaded file
+                    $uploadPath = $uploadDir . $newFileName;
+                    if (move_uploaded_file($fileTmpName, $uploadPath)) {
+                        return $uploadPath;
                     }
                 } else {
-                    $_SESSION['error'] = "Ukuran gambar terlalu besar.";
+                    $_SESSION['error'] = "File size is too large (max 50MB).";
                     return false;
                 }
             } else {
-                $_SESSION['error'] = "Jenis file gambar tidak valid.";
+                $_SESSION['error'] = "File format not allowed.";
                 return false;
             }
+        } else {
+            $_SESSION['error'] = "No file uploaded or an error occurred.";
+            return false;
         }
-        return null;
     }
 
     public function btnEditGallery()
     {
+        // Function to edit an existing gallery
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $menu = $this->galleryModel->findGalleryById($_POST['GalleryId']); 
 
+            // Validate Gallery ID
+            if (empty($_POST['GalleryId'])) {
+                $_SESSION['error'] = "Gallery ID not found!";
+                header("Location: " . BASEURL . "/gallery/index");
+                exit();
+            }
+
+            // Get gallery data by ID
+            $menu = $this->galleryModel->findGalleryById($_POST['GalleryId']);
+            if (!$menu) {
+                $_SESSION['error'] = "Gallery not found!";
+                header("Location: " . BASEURL . "/gallery/index");
+                exit();
+            }
+
+            // Validate title and description input
+            $title = trim($_POST['title']);
+            $description = trim($_POST['description']);
+            if (empty($title) || empty($description)) {
+                $_SESSION['error'] = "Title and description cannot be empty!";
+                header("Location: " . BASEURL . "/gallery/index");
+                exit();
+            }
+
+            // Prepare data for update
             $data = [
-                'GalleryId' => $_POST['GalleryId'], 
-                'title' => trim($_POST['title']),
-                'description' => trim($_POST['description']),
+                'GalleryId' => $_POST['GalleryId'],
+                'title' => $title,
+                'description' => $description,
             ];
 
+            // Upload image if provided
             if (!empty($_FILES['imageUrl']['name'])) {
-                $data['imageUrl'] = $this->uploadImage();
+                $imagePath = $this->uploadMedia();
+                if ($imagePath === false) {
+                    $_SESSION['error'] = "Failed to upload image. Please try again.";
+                    header("Location: " . BASEURL . "/gallery/index");
+                    exit();
+                }
+                $data['imageUrl'] = $imagePath;
             } else {
-                $data['imageUrl'] = $menu['ImageUrl'];
+                $data['imageUrl'] = $menu['ImageUrl']; // Use the old image if no new image is provided
             }
 
+            // Update gallery in the database
             if ($this->galleryModel->editGallery($data)) {
-                $_SESSION['success'] = "Gallery berhasil diperbarui!";
+                $_SESSION['success'] = "Gallery successfully updated!";
             } else {
-                $_SESSION['error'] = "Pembaharuan gallery gagal.";
+                $_SESSION['error'] = "Failed to update gallery.";
             }
 
+            // Redirect to gallery page
             header("Location: " . BASEURL . "/gallery/index");
             exit();
         }
@@ -113,18 +172,21 @@ class Gallery extends Controller
 
     public function btnDeleteGallery()
     {
+        // Function to delete a gallery
         if (isset($_POST['GalleryId'])) {
             $galleryId = $_POST['GalleryId'];
 
+            // Delete the gallery by ID
             if ($this->galleryModel->deleteGallery($galleryId)) {
-                $_SESSION['success'] = "Gallery berhasil dihapus!";
+                $_SESSION['success'] = "Gallery successfully deleted!";
             } else {
-                $_SESSION['error'] = "Gagal menghapus gallery, silakan coba lagi.";
+                $_SESSION['error'] = "Failed to delete gallery, please try again.";
             }
         } else {
-            $_SESSION['error'] = "Menu ID tidak valid.";
+            $_SESSION['error'] = "Invalid Menu ID.";
         }
 
+        // Redirect to gallery page
         header("Location: " . BASEURL . "/gallery/index");
         exit();
     }

@@ -35,6 +35,10 @@
                     <tbody>
                         <?php if (!empty($data['gallery'])): ?>
                             <?php foreach ($data['gallery'] as $index => $gallery): ?>
+                                <?php
+                                $fileExt = strtolower(pathinfo($gallery['ImageUrl'], PATHINFO_EXTENSION));
+                                $isVideo = in_array($fileExt, ['mp4', 'avi', 'mov', 'mkv']);
+                                ?>
                                 <tr class="text-sm text-gray-600">
                                     <td class="py-3 px-4 text-center"><?= $index + 1 ?></td>
                                     <td class="py-3 px-4 text-center"><?= htmlspecialchars($gallery['Title']) ?></td>
@@ -42,7 +46,14 @@
                                         <?= htmlspecialchars($gallery['Description']) ?>
                                     </td>
                                     <td class="py-3 px-4 text-center">
-                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($gallery['ImageUrl']) ?>" alt="Gallery Image" class="w-12 h-12 object-cover mx-auto">
+                                        <?php if ($isVideo): ?>
+                                            <video class="w-12 h-12 object-cover mx-auto" controls>
+                                                <source src="<?= BASEURL; ?>/<?= htmlspecialchars($gallery['ImageUrl']) ?>" type="video/<?= $fileExt; ?>">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        <?php else: ?>
+                                            <img src="<?= BASEURL; ?>/<?= htmlspecialchars($gallery['ImageUrl']) ?>" alt="Gallery Image" class="w-12 h-12 object-cover mx-auto">
+                                        <?php endif; ?>
                                     </td>
                                     <td class="py-3 px-4 text-center">
                                         <button class="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition duration-200" onclick="openEditModal(<?= htmlspecialchars(json_encode($gallery), ENT_QUOTES, 'UTF-8'); ?>)">
