@@ -62,4 +62,36 @@ class Report extends Controller
             exit;
         }
     }
+
+    public function btnEditOrder()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $order = $this->orderModel->findOrderById($_POST['OrderId']);
+
+            if (!isset($_POST['OrderId']) || empty($_POST['OrderId'])) {
+                $_SESSION['error'] = "Order ID tidak valid.";
+                header("Location: " . BASEURL . "/report/index");
+                exit();
+            }
+
+
+            $data = [
+                'OrderId' => $_POST['OrderId'],
+                'Total' => trim($_POST['total']),
+                'Paid' => trim($_POST['paid']),
+                'Change' => trim($_POST['change']),
+                'PaymentMethod' => trim($_POST['paymentMethod']),
+                'Status' => trim($_POST['status']),
+            ];
+
+            if ($this->orderModel->editOrder($data)) {
+                $_SESSION['success'] = "Order berhasil diperbarui!";
+            } else {
+                $_SESSION['error'] = "Pembaharuan order gagal.";
+            }
+
+            header("Location: " . BASEURL . "/report/index");
+            exit();
+        }
+    }
 }

@@ -70,33 +70,26 @@ class OrderModel
         WHERE 1=1
     ";
 
-        // Add date filter condition if startDate and endDate are provided
         if ($startDate && $endDate) {
             $query .= " AND o.CreatedAt BETWEEN :startDate AND :endDate";
         }
 
-        // Order the results by creation date
         $query .= " ORDER BY o.CreatedAt DESC";
 
-        // Prepare the SQL statement
         $stmt = $this->db->prepare($query);
 
-        // Bind parameters if date range is provided
         if ($startDate && $endDate) {
             $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
             $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);
         }
 
-        // Execute the query
         $stmt->execute();
 
-        // Return the results as an associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getOrderReceipt($orderId)
     {
-        // Query untuk mendapatkan data pesanan
         $queryOrder = "
     SELECT 
         o.OrderId,
@@ -112,7 +105,6 @@ class OrderModel
     WHERE o.OrderId = :orderId
     ";
 
-        // Query untuk mendapatkan detail item dalam pesanan
         $queryOrderDetails = "
     SELECT 
         d.MenuId,
@@ -125,7 +117,6 @@ class OrderModel
     WHERE d.OrderId = :orderId
     ";
 
-        // Ambil data pesanan
         $stmtOrder = $this->db->prepare($queryOrder);
         $stmtOrder->bindValue(':orderId', $orderId, PDO::PARAM_INT);
         $stmtOrder->execute();
@@ -135,13 +126,11 @@ class OrderModel
             throw new Exception("Order dengan ID $orderId tidak ditemukan.");
         }
 
-        // Ambil data detail pesanan
         $stmtOrderDetails = $this->db->prepare($queryOrderDetails);
         $stmtOrderDetails->bindValue(':orderId', $orderId, PDO::PARAM_INT);
         $stmtOrderDetails->execute();
         $orderDetails = $stmtOrderDetails->fetchAll(PDO::FETCH_ASSOC);
 
-        // Format data untuk struk
         $receipt = [
             'OrderId' => $order['OrderId'],
             'Customer' => $order['Customer'],
@@ -159,19 +148,14 @@ class OrderModel
 
     public function checkout($customerId, $paymentMethod, $orderDetails)
     {
-        // Ensure that $orderDetails is an array and not null
         if (!is_array($orderDetails) || empty($orderDetails)) {
             throw new Exception("Order details are missing or invalid");
         }
 
-        // Start a transaction to ensure that both the order and its details are inserted successfully
         $this->db->beginTransaction();
 
         try {
-            // Define the status of the order (e.g., 'pending')
-            $status = 'pending';  // You can update this based on your logic
-
-            // Insert the order into the `order` table
+            $status = 'pending';
             $queryOrder = "
                 INSERT INTO `order` (CustomerId, Total, PaymentMethod, Status)
                 VALUES (:customerId, :total, :paymentMethod, :status)
@@ -184,11 +168,7 @@ class OrderModel
             $stmtOrder->bindValue(':status', $status, PDO::PARAM_STR);  // Bind status
 
             $stmtOrder->execute();
-
-            // Get the last inserted OrderId
             $orderId = $this->db->lastInsertId();
-
-            // Insert order details into the `orderdetail` table
             $queryOrderDetails = "
                 INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal)
                 VALUES (:orderId, :menuId, :quantity, :price, :subtotal)
@@ -215,16 +195,49 @@ class OrderModel
             $query = "UPDATE `order` SET total = '$total' WHERE OrderId = $orderId";
             $cart = $this->db->prepare($query);
             $cart->execute();
-
-            // Commit the transaction
             $this->db->commit();
-
-            // Return the OrderId of the newly created order
             return $orderId;
         } catch (Exception $e) {
-            // Rollback the transaction in case of an error
             $this->db->rollBack();
             throw new Exception("Checkout failed: " . $e->getMessage());
         }
+    }
+
+    public function getOrderById($orderId)
+    {
+        $query = "SELECT * FROM `order` WHERE OrderId = :orderId";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':orderId', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function findOrderById($id)
+    {
+        $this->db->query('SELECT * FROM `order` WHERE OrderId = :OrderId');
+        $this->db->bind(':OrderId', $id, PDO::PARAM_INT);
+        return $this->db->single();
+    }    
+
+    public function editOrder($data)
+    {
+        $query = "
+        UPDATE `order`
+        SET Total = :total, Paid = :paid, 
+            `Change` = :change, PaymentMethod = :paymentMethod, 
+            Status = :status
+        WHERE OrderId = :orderId
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':orderId', $data['OrderId'], PDO::PARAM_INT);
+        $stmt->bindValue(':total', $data['Total'], PDO::PARAM_STR);
+        $stmt->bindValue(':paid', $data['Paid'], PDO::PARAM_STR);
+        $stmt->bindValue(':change', $data['Change'], PDO::PARAM_STR);
+        $stmt->bindValue(':paymentMethod', $data['PaymentMethod'], PDO::PARAM_STR);
+        $stmt->bindValue(':status', $data['Status'], PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 }

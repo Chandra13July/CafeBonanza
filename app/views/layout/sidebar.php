@@ -58,7 +58,7 @@
             <li class="mb-4">
                 <a class="flex items-center p-3 rounded hover:bg-white hover:text-gray-900 transition" href="<?= BASEURL; ?>/report/index">
                     <i class="fas fa-chart-line mr-4"></i>
-                    Laporan Penjualan
+                    Sales Report
                 </a>
             </li>
         </ul>

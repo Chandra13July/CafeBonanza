@@ -68,12 +68,12 @@
                                     <td class="py-3 px-4">
                                         <a href="<?= BASEURL; ?>/report/orderReceipt/<?= $order['OrderId']; ?>"
                                             class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200 w-14 text-center inline-block">
-                                            <i class="fas fa-eye text-base"></i> 
+                                            <i class="fas fa-eye text-base"></i>
                                         </a>
 
                                         <button class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700 transition duration-200 ml-2 w-14 text-center inline-block"
                                             onclick="openEditModal(<?= htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8'); ?>)">
-                                            <i class="fas fa-pen text-base"></i> 
+                                            <i class="fas fa-pen text-base"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -88,30 +88,92 @@
             </div>
         </div>
 
+        <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+            <div class="bg-white rounded-lg w-3/4 max-w-4xl p-6">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Order</h2>
+                <form id="editOrderForm" method="POST" action="<?= BASEURL; ?>/report/btnEditOrder" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" name="OrderId" id="editOrderId" value="<?= isset($order['OrderId']) ? $order['OrderId'] : ''; ?>">
+
+                    <div class="mb-4">
+                        <label for="customer" class="block text-gray-700">Customer</label>
+                        <input type="text" name="customer" id="editCustomer" class="w-full p-2 border border-gray-300 rounded"
+                            value="<?= isset($order['Customer']) ? htmlspecialchars($order['Customer']) : ''; ?>" readonly required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="total" class="block text-gray-700">Total</label>
+                        <input type="number" name="total" id="editTotal" class="w-full p-2 border border-gray-300 rounded"
+                            value="<?= isset($order['Total']) ? $order['Total'] : ''; ?>" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="paid" class="block text-gray-700">Paid</label>
+                        <input type="number" name="paid" id="editPaid" class="w-full p-2 border border-gray-300 rounded"
+                            value="<?= isset($order['Paid']) ? $order['Paid'] : ''; ?>" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="change" class="block text-gray-700">Change</label>
+                        <input type="number" name="change" id="editChange" class="w-full p-2 border border-gray-300 rounded"
+                            value="<?= isset($order['Change']) ? $order['Change'] : ''; ?>" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="paymentMethod" class="block text-gray-700">Payment Method</label>
+                        <select name="paymentMethod" id="editPaymentMethod" class="w-full p-2 border border-gray-300 rounded" required>
+                            <option value="Cash" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Cash' ? 'selected' : ''; ?>>Cash</option>
+                            <option value="E-Wallet" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'E-Wallet' ? 'selected' : ''; ?>>E-Wallet</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="status" class="block text-gray-700">Status</label>
+                        <select name="status" id="editStatus" class="w-full p-2 border border-gray-300 rounded" required>
+                            <option value="Pending" <?= isset($order['Status']) && $order['Status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                            <option value="Processing" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
+                            <option value="Completed" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Cancelled" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end col-span-2">
+                        <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
 
         <script>
-            // Fungsi untuk mencetak laporan
+            const editModal = document.getElementById("editModal");
+
+            function openEditModal(order) {
+                document.getElementById('editOrderId').value = order.OrderId;
+                document.getElementById('editCustomer').value = order.Customer;
+                document.getElementById('editTotal').value = order.Total;
+                document.getElementById('editPaid').value = order.Paid;
+                document.getElementById('editChange').value = order.Change;
+                document.getElementById('editPaymentMethod').value = order.PaymentMethod;
+                document.getElementById('editStatus').value = order.Status;
+                editModal.classList.remove('hidden');
+            }
+
+            function closeEditModal() {
+                editModal.classList.add('hidden');
+            }
+
             document.getElementById('printButton').addEventListener('click', function() {
-                // Ambil tabel asli
                 var originalTable = document.getElementById('reportTable');
-                // Salin tabel baru tanpa kolom action
                 var tempTable = document.createElement('table');
                 tempTable.innerHTML = originalTable.outerHTML;
 
-                // Hapus kolom action (misalnya kolom terakhir)
                 var rows = tempTable.querySelectorAll('tr');
                 rows.forEach(row => {
-                    // Hapus sel terakhir (kolom action)
                     if (row.lastElementChild) {
                         row.removeChild(row.lastElementChild);
                     }
                 });
 
-                var printContent = tempTable.outerHTML; // Ambil konten tabel modifikasi
-                var printWindow = window.open('', '', 'height=800,width=1200'); // Buka jendela baru untuk print
+                var printContent = tempTable.outerHTML;
+                var printWindow = window.open('', '', 'height=800,width=1200');
                 printWindow.document.write(`
         <html>
         <head>
@@ -171,19 +233,28 @@
         </body>
         </html>
     `);
-                printWindow.document.close(); // Tutup dokumen jendela
-                printWindow.print(); // Cetak
+                printWindow.document.close();
+                printWindow.print();
             });
 
-            // Fungsi untuk mengekspor tabel ke Excel
             document.getElementById('exportButton').addEventListener('click', function() {
-                var wb = XLSX.utils.table_to_book(document.getElementById('reportTable'), {
+                var originalTable = document.getElementById('reportTable');
+                var tempTable = document.createElement('table');
+                tempTable.innerHTML = originalTable.outerHTML;
+
+                var rows = tempTable.querySelectorAll('tr');
+                rows.forEach(row => {
+                    if (row.lastElementChild) {
+                        row.removeChild(row.lastElementChild);
+                    }
+                });
+
+                var wb = XLSX.utils.table_to_book(tempTable, {
                     sheet: "Order Report"
                 });
                 XLSX.writeFile(wb, 'Order_Report.xlsx');
             });
 
-            // Menampilkan tabel menggunakan DataTables
             new DataTable('#reportTable');
         </script>
     </div>
