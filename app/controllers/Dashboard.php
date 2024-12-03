@@ -36,7 +36,7 @@ class Dashboard extends Controller
         $orderPercentage = ($totalOrders / $targetTotalOrder) * 100;
 
         $currentMonthProfit = $this->OrderModel->getCurrentMonthCompletedProfit();
-        $targetProfit = 100000; 
+        $targetProfit = 3000000; 
         $profitPercentage = ($currentMonthProfit / $targetProfit) * 100;
 
         $data = [

@@ -102,7 +102,7 @@
                     <div class="mb-4">
                         <label for="total" class="block text-gray-700">Total</label>
                         <input type="number" name="total" id="editTotal" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($order['Total']) ? $order['Total'] : ''; ?>" required>
+                            value="<?= isset($order['Total']) ? $order['Total'] : ''; ?>" required readonly>
                     </div>
                     <div class="mb-4">
                         <label for="paid" class="block text-gray-700">Paid</label>
@@ -112,7 +112,7 @@
                     <div class="mb-4">
                         <label for="change" class="block text-gray-700">Change</label>
                         <input type="number" name="change" id="editChange" class="w-full p-2 border border-gray-300 rounded"
-                            value="<?= isset($order['Change']) ? $order['Change'] : ''; ?>" required>
+                            value="<?= isset($order['Change']) ? $order['Change'] : ''; ?>" required readonly>
                     </div>
                     <div class="mb-4">
                         <label for="paymentMethod" class="block text-gray-700">Payment Method</label>
@@ -145,6 +145,7 @@
         <script>
             const editModal = document.getElementById("editModal");
 
+            // Fungsi untuk membuka modal edit dengan data order yang sudah diisi
             function openEditModal(order) {
                 document.getElementById('editOrderId').value = order.OrderId;
                 document.getElementById('editCustomer').value = order.Customer;
@@ -156,8 +157,21 @@
                 editModal.classList.remove('hidden');
             }
 
+            // Fungsi untuk menutup modal
             function closeEditModal() {
                 editModal.classList.add('hidden');
+            }
+
+            // Menambahkan event listener untuk menghitung change otomatis
+            document.getElementById('editTotal').addEventListener('input', calculateChange);
+            document.getElementById('editPaid').addEventListener('input', calculateChange);
+
+            // Fungsi untuk menghitung Change
+            function calculateChange() {
+                const total = parseInt(document.getElementById('editTotal').value) || 0;
+                const paid = parseInt(document.getElementById('editPaid').value) || 0;
+                const change = Math.floor(paid - total);
+                document.getElementById('editChange').value = change;
             }
 
             document.getElementById('printButton').addEventListener('click', function() {
@@ -229,7 +243,7 @@
         </head>
         <body>
             <h2>Order Report</h2>
-            ${printContent} <!-- Masukkan konten tabel -->
+            ${printContent}
         </body>
         </html>
     `);

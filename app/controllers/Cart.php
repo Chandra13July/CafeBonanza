@@ -63,34 +63,27 @@ class Cart extends Controller
                 $customerId = intval($_SESSION['user_id']);
                 $paymentMethod = $_POST['payment-method'] ?? null;
                 $selectedItems = $_POST['selected_items'] ?? null;
-                $orderDetails = $_POST['cartItems'] ?? null;  // This could be NULL if not set
+                $orderDetails = $_POST['cartItems'] ?? null;  
 
-                // Check if orderDetails is valid
                 if (is_array($selectedItems)  && $paymentMethod) {
                     $cartModel = $this->model('CartModel');
-                    $orderModel = $this->model('OrderModel'); // Assuming you have an OrderModel for order handling
+                    $orderModel = $this->model('OrderModel'); 
 
-
-
-                    // Call the checkout method with valid order details
                     $orderId = $orderModel->checkout($customerId,  $paymentMethod, $selectedItems);
 
-                    // Validasi jika items dan metode pembayaran telah dipilih
                     if (empty($selectedItems) || empty($paymentMethod)) {
                         $_SESSION['error'] = "Anda harus memilih item dan metode pembayaran.";
                         header('Location: ' . BASEURL . '/cart');
                         exit();
                     }
 
-                    // If the order is created successfully, delete the items from the cart
                     if ($orderId) {
-                        // Delete items from the cart after successful order creation
                         foreach ($selectedItems as $cartId) {
                             $cartModel->deleteItem($customerId, $cartId);
                         }
 
                         $_SESSION['success'] = "Pesanan berhasil dibuat! ID Pesanan: " . $orderId;
-                        header('Location: ' . BASEURL . '/cart/index' . $orderId); // Redirect to order details page
+                        header('Location: ' . BASEURL . '/cart/index' . $orderId); 
                     } else {
                         $_SESSION['error'] = "Gagal membuat pesanan, silakan coba lagi.";
                         header('Location: ' . BASEURL . '/cart');

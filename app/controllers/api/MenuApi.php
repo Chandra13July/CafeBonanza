@@ -116,18 +116,30 @@ class MenuApi
             if (in_array($imageExt, $allowed)) {
                 if ($imageSize < 5000000) {
                     $newImageName = uniqid('', true) . '.' . $imageExt;
-                    $imageUploadPath = 'http://192.168.1.13/CafeBonanza/app/controllers/api/upload/menu/' . $newImageName;
+                    $uploadDir = __DIR__ . '/../../public/upload/menu/'; 
+                    $relativePath = 'upload/menu/' . $newImageName; 
+                    $imageUploadPath = $uploadDir . $newImageName;
 
-                    if (!is_dir('upload/menu/')) {
-                        mkdir('upload/menu/', 0755, true);
+                    if (!is_dir($uploadDir)) {
+                        if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+                            error_log('Gagal membuat folder: ' . $uploadDir);
+                            return false;
+                        }
                     }
 
-                    if (move_uploaded_file($imageTmpName, 'upload/menu/' . $newImageName)) {
-                        return $imageUploadPath;
+                    if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
+                        return $relativePath;
                     } else {
+                        error_log('File upload failed: ' . print_r(error_get_last(), true));
                         return false;
                     }
+                } else {
+                    error_log('File size exceeds the limit.');
+                    return false; 
                 }
+            } else {
+                error_log('File type not allowed: ' . $imageExt);
+                return false;
             }
         }
         return null;
@@ -217,7 +229,6 @@ class MenuApi
     }
 }
 
-// Main router logic
 try {
     $menuApi = new MenuApi();
     $method = $_SERVER['REQUEST_METHOD'];
