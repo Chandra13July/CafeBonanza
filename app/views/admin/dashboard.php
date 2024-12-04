@@ -91,67 +91,55 @@
                     </div>
                 </div>
 
-                <!-- Order Chart and Popular Menu Section -->
+                <!-- Order and Profit Chart Section -->
                 <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
-                    <!-- Order Chart Section -->
-                    <div class="w-full lg:w-2/3 bg-white p-4 rounded-lg shadow">
+                    <!-- Chart Section -->
+                    <div class="w-full lg:w-full bg-white p-4 rounded-lg shadow">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-semibold text-gray-700">
                                 Chart
                             </h3>
                             <div class="flex space-x-2">
                                 <select class="border border-gray-300 rounded-md p-2" id="chartType" onchange="updateChart()">
-                                    <option value="orders">
-                                        Orders
-                                    </option>
-                                    <option value="profit">
-                                        Profit
-                                    </option>
+                                    <option value="orders">Orders</option>
+                                    <option value="profit">Profit</option>
+                                    <option value="status">Status</option> <!-- Opsi untuk Status -->
                                 </select>
                                 <select class="border border-gray-300 rounded-md p-2" id="chartShape" onchange="updateChartShape()">
-                                    <option value="line">
-                                        Line
-                                    </option>
-                                    <option value="bar">
-                                        Bar
-                                    </option>
-                                    <option value="pie">
-                                        Pie
-                                    </option>
-                                </select>
-                                <select class="border border-gray-300 rounded-md p-2" id="chartRange" onchange="updateChartRange()">
-                                    <option value="1-6">
-                                        January - June
-                                    </option>
-                                    <option value="7-12">
-                                        July - December
-                                    </option>
+                                    <option value="line">Line</option>
+                                    <option value="bar">Bar</option>
                                 </select>
                             </div>
                         </div>
-                        <canvas id="orderChart">
-                        </canvas>
+                        <canvas id="orderChart" style="max-height: 350px;"></canvas>
                         <script>
+                            var monthlyOrders = <?php echo json_encode($data['monthlyOrders']); ?>;
+                            var monthlyProfit = <?php echo json_encode($data['monthlyCompletedProfit1']); ?>;
+                            var monthlyOrdersStatus = <?php echo json_encode($data['monthlyOrdersStatus']); ?>; // Data untuk status
+                            var months = <?php echo json_encode($data['months']); ?>;
+
+                            // Data untuk status pesanan
+                            var pendingOrders = monthlyOrdersStatus.map(item => item.Pending);
+                            var processingOrders = monthlyOrdersStatus.map(item => item.Processing);
+                            var completedOrders = monthlyOrdersStatus.map(item => item.Completed);
+                            var cancelledOrders = monthlyOrdersStatus.map(item => item.Cancelled);
+
                             var ctx = document.getElementById('orderChart').getContext('2d');
-                            var chartData = {
-                                orders: {
-                                    '2022': [100, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220],
-                                    '2023': [130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240]
-                                },
-                                profit: {
-                                    '2022': [100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500],
-                                    '2023': [200, 600, 1100, 1600, 2100, 2600, 3100, 3600, 4100, 4600, 5100, 5600]
-                                }
-                            };
-                            var orderChart = new Chart(ctx, {
-                                type: 'line',
+
+                            // Default chart (Orders)
+                            var chartData = monthlyOrders;
+                            var chartLabel = 'Total Orders';
+
+                            // Default Chart Configuration
+                            var chartConfig = {
+                                type: 'line', // Default to line chart
                                 data: {
-                                    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                                    labels: months,
                                     datasets: [{
-                                        label: 'Orders',
-                                        data: chartData.orders['2022'].slice(0, 6),
-                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        label: chartLabel,
+                                        data: chartData,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
                                         borderWidth: 1
                                     }]
                                 },
@@ -162,128 +150,72 @@
                                         }
                                     }
                                 }
-                            });
+                            };
+
+                            var orderChart = new Chart(ctx, chartConfig);
 
                             function updateChart() {
                                 var selectedType = document.getElementById('chartType').value;
-                                var selectedRange = document.getElementById('chartRange').value;
-                                var range = selectedRange.split('-').map(Number);
-                                orderChart.data.datasets[0].data = chartData[selectedType]['2022'].slice(range[0] - 1, range[1]);
-                                orderChart.data.datasets[0].label = selectedType.charAt(0).toUpperCase() + selectedType.slice(1);
-                                orderChart.update();
+
+                                if (selectedType === 'orders') {
+                                    chartData = monthlyOrders;
+                                    chartLabel = 'Total Orders';
+                                    chartConfig.data.datasets = [{
+                                        label: chartLabel,
+                                        data: chartData,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }];
+                                } else if (selectedType === 'profit') {
+                                    chartData = monthlyProfit;
+                                    chartLabel = 'Total Profit';
+                                    chartConfig.data.datasets = [{
+                                        label: chartLabel,
+                                        data: chartData,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }];
+                                } else if (selectedType === 'status') {
+                                    chartData = [pendingOrders, processingOrders, completedOrders, cancelledOrders];
+                                    chartLabel = ''; // Tidak ada label tunggal untuk status
+                                    chartConfig.data.datasets = [{
+                                        label: 'Pending',
+                                        data: pendingOrders,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 1
+                                    }, {
+                                        label: 'Processing',
+                                        data: processingOrders,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }, {
+                                        label: 'Completed',
+                                        data: completedOrders,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }, {
+                                        label: 'Cancelled',
+                                        data: cancelledOrders,
+                                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                        borderColor: 'rgba(153, 102, 255, 1)',
+                                        borderWidth: 1
+                                    }];
+                                }
+
+                                orderChart.update(); // Memperbarui grafik sesuai dengan pilihan
                             }
 
                             function updateChartShape() {
                                 var selectedShape = document.getElementById('chartShape').value;
-                                var selectedType = document.getElementById('chartType').value;
-                                var selectedRange = document.getElementById('chartRange').value;
-                                var range = selectedRange.split('-').map(Number);
-                                orderChart.destroy();
-                                orderChart = new Chart(ctx, {
-                                    type: selectedShape,
-                                    data: {
-                                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].slice(range[0] - 1, range[1]),
-                                        datasets: [{
-                                            label: selectedType.charAt(0).toUpperCase() + selectedType.slice(1),
-                                            data: chartData[selectedType]['2022'].slice(range[0] - 1, range[1]),
-                                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                            borderColor: 'rgba(255, 99, 132, 1)',
-                                            borderWidth: 1
-                                        }]
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-
-                            function updateChartRange() {
-                                updateChart();
-                                updateChartShape();
+                                orderChart.config.type = selectedShape; // Ganti tipe grafik sesuai pilihan
+                                orderChart.update(); // Update grafik dengan tipe baru
                             }
                         </script>
-                    </div>
-                    <!-- Popular Menu Section -->
-                    <div class="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-lg">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-6">
-                            Popular Menu
-                        </h3>
-                        <ul>
-                            <!-- Example Menu Item -->
-                            <li class="flex items-center justify-between text-gray-600 mb-4">
-                                <!-- Menu Item Image -->
-                                <img alt="A delicious looking dish with vibrant colors and garnishes" class="w-12 h-12 rounded-full mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/QLzeXzpybyVcIaZ6O4Pz9fMmyqVP5ivNdGlVEkAVU8bxKb3TA.jpg" width="100" />
-                                <!-- Menu Item Name and Orders -->
-                                <div class="flex-1">
-                                    <span class="font-medium">
-                                        Menu Item 1
-                                    </span>
-                                </div>
-                                <span class="font-semibold text-gray-800">
-                                    200 Orders
-                                </span>
-                            </li>
-                            <!-- Example Menu Item -->
-                            <li class="flex items-center justify-between text-gray-600 mb-4">
-                                <!-- Menu Item Image -->
-                                <img alt="A crispy and golden-brown dish with a side of dipping sauce" class="w-12 h-12 rounded-full mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/71MAX9pCiZ52I5EwfHf7963ScAE5wmEt9JaX7XUi5Ie9V2unA.jpg" width="100" />
-                                <!-- Menu Item Name and Orders -->
-                                <div class="flex-1">
-                                    <span class="font-medium">
-                                        Menu Item 2
-                                    </span>
-                                </div>
-                                <span class="font-semibold text-gray-800">
-                                    150 Orders
-                                </span>
-                            </li>
-                            <!-- Example Menu Item -->
-                            <li class="flex items-center justify-between text-gray-600 mb-4">
-                                <!-- Menu Item Image -->
-                                <img alt="A flavorful dish with a mix of spices and herbs" class="w-12 h-12 rounded-full mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/Cy57PXVBYAYiFNVsCNE2pZKxaMQQCaqI3w8uzRk1WWkry29E.jpg" width="100" />
-                                <!-- Menu Item Name and Orders -->
-                                <div class="flex-1">
-                                    <span class="font-medium">
-                                        Menu Item 3
-                                    </span>
-                                </div>
-                                <span class="font-semibold text-gray-800">
-                                    120 Orders
-                                </span>
-                            </li>
-                            <!-- Example Menu Item -->
-                            <li class="flex items-center justify-between text-gray-600 mb-4">
-                                <!-- Menu Item Image -->
-                                <img alt="A beautifully plated dish with fresh ingredients" class="w-12 h-12 rounded-full mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/1I6Z5v6vTGoUMBRWVKDF6iL5qLtsaeCW7S4kVCVqwqsfKb3TA.jpg" width="100" />
-                                <!-- Menu Item Name and Orders -->
-                                <div class="flex-1">
-                                    <span class="font-medium">
-                                        Menu Item 4
-                                    </span>
-                                </div>
-                                <span class="font-semibold text-gray-800">
-                                    100 Orders
-                                </span>
-                            </li>
-                            <!-- Example Menu Item -->
-                            <li class="flex items-center justify-between text-gray-600 mb-4">
-                                <!-- Menu Item Image -->
-                                <img alt="A savory dish with a rich and creamy sauce" class="w-12 h-12 rounded-full mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/efxfWueptucCnR1aVWk5nvchcrl2XSgfXXkgWweWFmdeXlt7JA.jpg" width="100" />
-                                <!-- Menu Item Name and Orders -->
-                                <div class="flex-1">
-                                    <span class="font-medium">
-                                        Menu Item 5
-                                    </span>
-                                </div>
-                                <span class="font-semibold text-gray-800">
-                                    90 Orders
-                                </span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

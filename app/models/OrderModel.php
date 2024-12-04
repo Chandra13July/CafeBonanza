@@ -218,7 +218,7 @@ class OrderModel
         $this->db->query('SELECT * FROM `order` WHERE OrderId = :OrderId');
         $this->db->bind(':OrderId', $id, PDO::PARAM_INT);
         return $this->db->single();
-    }    
+    }
 
     public function editOrder($data)
     {
@@ -239,5 +239,154 @@ class OrderModel
         $stmt->bindValue(':status', $data['Status'], PDO::PARAM_STR);
 
         return $stmt->execute();
+    }
+
+    public function getMonthlyTotalOrdersWithZero($year)
+    {
+        // Daftar nama bulan
+        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Query untuk mengambil total order per bulan, termasuk bulan dengan 0 order
+        $query = "
+    SELECT 
+        months.month,
+        COALESCE(COUNT(o.OrderId), 0) AS totalOrders
+    FROM 
+        (SELECT 1 AS month UNION ALL 
+         SELECT 2 UNION ALL 
+         SELECT 3 UNION ALL 
+         SELECT 4 UNION ALL 
+         SELECT 5 UNION ALL 
+         SELECT 6 UNION ALL 
+         SELECT 7 UNION ALL 
+         SELECT 8 UNION ALL 
+         SELECT 9 UNION ALL 
+         SELECT 10 UNION ALL 
+         SELECT 11 UNION ALL 
+         SELECT 12) AS months
+    LEFT JOIN `order` o 
+        ON MONTH(o.CreatedAt) = months.month
+        AND YEAR(o.CreatedAt) = :year
+    GROUP BY months.month
+    ORDER BY months.month;
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Menyusun hasilnya dalam format array untuk grafik
+        $monthlyOrders = [];
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mengisi data hasil query ke dalam array yang akan digunakan untuk grafik
+        foreach ($result as $row) {
+            // Menyimpan hasil berdasarkan nama bulan (dari array $monthNames)
+            $monthlyOrders[$monthNames[$row['month'] - 1]] = $row['totalOrders'];
+        }
+
+        // Pastikan setiap bulan (January - December) ada, dengan default 0 jika tidak ada data
+        foreach ($monthNames as $monthName) {
+            if (!isset($monthlyOrders[$monthName])) {
+                $monthlyOrders[$monthName] = 0;
+            }
+        }
+
+        return $monthlyOrders;
+    }
+
+    public function getMonthlyCompletedProfit1($year)
+    {
+        // Daftar nama bulan
+        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Query untuk mengambil total profit per bulan, hanya yang berstatus 'Completed'
+        $query = "
+    SELECT 
+        MONTH(CreatedAt) AS month,
+        SUM(Total) AS completedProfit
+    FROM `order`
+    WHERE YEAR(CreatedAt) = :year
+    AND Status = 'Completed'
+    GROUP BY MONTH(CreatedAt)
+    ORDER BY month
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Menyusun hasilnya dalam format array dengan nama bulan
+        $monthlyProfit = [];
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mengisi data hasil query ke dalam array dengan nama bulan
+        foreach ($result as $row) {
+            $monthlyProfit[$monthNames[$row['month'] - 1]] = $row['completedProfit'];
+        }
+
+        // Pastikan setiap bulan (January - December) ada, dengan default 0 jika tidak ada data
+        foreach ($monthNames as $monthName) {
+            if (!isset($monthlyProfit[$monthName])) {
+                $monthlyProfit[$monthName] = 0;
+            }
+        }
+
+        return $monthlyProfit;
+    }
+
+    // Tambahkan metode baru untuk mendapatkan jumlah pesanan per bulan berdasarkan status
+    public function getMonthlyOrdersStatusWithZero($year)
+    {
+        // Daftar nama bulan
+        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Query untuk mengambil total order per bulan berdasarkan status
+        $query = "
+        SELECT 
+            months.month,
+            COALESCE(SUM(CASE WHEN o.Status = 'Pending' THEN 1 ELSE 0 END), 0) AS Pending,
+            COALESCE(SUM(CASE WHEN o.Status = 'Processing' THEN 1 ELSE 0 END), 0) AS Processing,
+            COALESCE(SUM(CASE WHEN o.Status = 'Completed' THEN 1 ELSE 0 END), 0) AS Completed,
+            COALESCE(SUM(CASE WHEN o.Status = 'Cancelled' THEN 1 ELSE 0 END), 0) AS Cancelled
+        FROM 
+            (SELECT 1 AS month UNION ALL 
+             SELECT 2 UNION ALL 
+             SELECT 3 UNION ALL 
+             SELECT 4 UNION ALL 
+             SELECT 5 UNION ALL 
+             SELECT 6 UNION ALL 
+             SELECT 7 UNION ALL 
+             SELECT 8 UNION ALL 
+             SELECT 9 UNION ALL 
+             SELECT 10 UNION ALL 
+             SELECT 11 UNION ALL 
+             SELECT 12) AS months
+        LEFT JOIN `order` o 
+            ON MONTH(o.CreatedAt) = months.month
+            AND YEAR(o.CreatedAt) = :year
+        GROUP BY months.month
+        ORDER BY months.month;
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Ambil hasil query dan return sebagai array
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Menyusun hasil berdasarkan nama bulan
+        $monthlyOrdersStatus = [];
+        foreach ($result as $row) {
+            $monthlyOrdersStatus[] = [
+                'Pending' => $row['Pending'],
+                'Processing' => $row['Processing'],
+                'Completed' => $row['Completed'],
+                'Cancelled' => $row['Cancelled']
+            ];
+        }
+
+        return $monthlyOrdersStatus;
     }
 }

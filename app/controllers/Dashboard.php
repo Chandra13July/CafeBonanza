@@ -20,25 +20,42 @@ class Dashboard extends Controller
             exit;
         }
     }
-
     public function index()
     {
+        // Target yang bisa diubah dari pengaturan
+        $targets = [
+            'menu' => 50,
+            'customer' => 100,
+            'order' => 100,
+            'profit' => 3000000
+        ];
+
+        // Mengambil data statistik
         $totalMenu = $this->MenuModel->getTotalMenu();
-        $targetTotalMenu = 50;
-        $menuPercentage = ($totalMenu / $targetTotalMenu) * 100;
+        $menuPercentage = ($totalMenu / $targets['menu']) * 100;
 
         $totalCustomer = $this->CustomerModel->getTotalCustomer();
-        $targetTotalCustomer = 100;
-        $customerPercentage = ($totalCustomer / $targetTotalCustomer) * 100;
+        $customerPercentage = ($totalCustomer / $targets['customer']) * 100;
 
         $totalOrders = $this->OrderModel->getTotalOrders();
-        $targetTotalOrder = 100;
-        $orderPercentage = ($totalOrders / $targetTotalOrder) * 100;
+        $orderPercentage = ($totalOrders / $targets['order']) * 100;
 
         $currentMonthProfit = $this->OrderModel->getCurrentMonthCompletedProfit();
-        $targetProfit = 3000000; 
-        $profitPercentage = ($currentMonthProfit / $targetProfit) * 100;
+        $profitPercentage = ($currentMonthProfit / $targets['profit']) * 100;
 
+        // Mendapatkan data total order per bulan untuk grafik
+        $monthlyOrders = $this->OrderModel->getMonthlyTotalOrdersWithZero(date('Y'));
+
+        // Mendapatkan data profit per bulan (Januari sampai Desember)
+        $monthlyCompletedProfit1 = $this->OrderModel->getMonthlyCompletedProfit1(date('Y'));
+
+        // Mendapatkan data status pesanan per bulan
+        $monthlyOrdersStatus = $this->OrderModel->getMonthlyOrdersStatusWithZero(date('Y'));
+
+        // Menyusun data bulan (dari Januari sampai Desember)
+        $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Menyusun data untuk view
         $data = [
             'totalMenu' => $totalMenu,
             'menuPercentage' => $menuPercentage,
@@ -47,9 +64,15 @@ class Dashboard extends Controller
             'totalOrders' => $totalOrders,
             'orderPercentage' => $orderPercentage,
             'currentMonthProfit' => $currentMonthProfit,
-            'profitPercentage' => $profitPercentage 
+            'profitPercentage' => $profitPercentage,
+            'targets' => $targets,
+            'monthlyOrders' => $monthlyOrders,
+            'monthlyCompletedProfit1' => $monthlyCompletedProfit1,
+            'monthlyOrdersStatus' => $monthlyOrdersStatus, // Menambahkan data status pesanan
+            'months' => $months
         ];
 
+        // Menampilkan view
         $this->view('layout/header', $data);
         $this->view('layout/sidebar', $data);
         $this->view('admin/dashboard', $data);
