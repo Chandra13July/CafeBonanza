@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__. '/../../core/Database.php';
+require_once __DIR__ . '/../../core/Database.php';
 
 class EmployeeApi
 {
@@ -14,11 +14,8 @@ class EmployeeApi
 
     public function login()
     {
-        // Ambil data dari $_POST jika menggunakan Content-Type: application/x-www-form-urlencoded
-        $data = [
-            'Email' => $_POST['Email'] ?? null,
-            'Password' => $_POST['Password'] ?? null,
-        ];
+        // Ambil data JSON dari body request
+        $data = json_decode(file_get_contents("php://input"), true);
 
         // Validasi data
         if (empty($data['Email']) || empty($data['Password'])) {
@@ -38,9 +35,12 @@ class EmployeeApi
         }
 
         // Query database untuk mendapatkan data karyawan
+        // Debugging SQL Query
         $this->db->query("SELECT * FROM employee WHERE Email = :email");
+        error_log("SQL Query: SELECT * FROM employee WHERE Email = " . $data['Email']);  // Log query
         $this->db->bind(':email', $data['Email']);
         $employee = $this->db->single();
+
 
         // Validasi hasil query
         if ($employee) {
@@ -84,7 +84,6 @@ class EmployeeApi
         }
     }
 
-
     public function getAllEmployees()
     {
         $this->db->query("SELECT * FROM employee");
@@ -122,8 +121,35 @@ class EmployeeApi
 
     public function addEmployee($data)
     {
+        // Validasi file gambar
+        if (isset($_FILES['ImageUrl']) && $_FILES['ImageUrl']['error'] === UPLOAD_ERR_OK) {
+            $image = $_FILES['ImageUrl'];
+            $targetDir = __DIR__ . '/../../uploads/';
+            $imageName = uniqid() . '-' . basename($image['name']);
+            $targetFilePath = $targetDir . $imageName;
+
+            // Validasi tipe file
+            $validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            $fileExtension = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+            if (!in_array($fileExtension, $validExtensions)) {
+                echo json_encode(["status" => "error", "message" => "Invalid image format. Allowed: jpg, jpeg, png, gif"]);
+                return;
+            }
+
+            // Simpan file gambar ke direktori tujuan
+            if (!move_uploaded_file($image['tmp_name'], $targetFilePath)) {
+                echo json_encode(["status" => "error", "message" => "Failed to upload image"]);
+                return;
+            }
+
+            $data['ImageUrl'] = 'uploads/' . $imageName;
+        } else {
+            $data['ImageUrl'] = null; // Gambar opsional
+        }
+
+        // Lanjutkan dengan penyimpanan data
         $this->db->query("INSERT INTO employee (Username, Email, Phone, Role, Password, Gender, DateOfBirth, Address, ImageUrl) 
-                          VALUES (:username, :email, :phone, :role, :password, :gender, :dob, :address, :imageUrl)");
+                      VALUES (:username, :email, :phone, :role, :password, :gender, :dob, :address, :imageUrl)");
         $this->db->bind(':username', $data['Username']);
         $this->db->bind(':email', $data['Email']);
         $this->db->bind(':phone', $data['Phone']);
@@ -143,9 +169,39 @@ class EmployeeApi
 
     public function updateEmployee($id, $data)
     {
+        // Siapkan jalur gambar jika di-upload
+        $imagePath = null;
+
+        if (isset($_FILES['ImageUrl']) && $_FILES['ImageUrl']['error'] === UPLOAD_ERR_OK) {
+            $image = $_FILES['ImageUrl'];
+            $targetDir = __DIR__ . '/../../uploads/';
+            $imageName = uniqid() . '-' . basename($image['name']);
+            $targetFilePath = $targetDir . $imageName;
+
+            // Validasi tipe file
+            $validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            $fileExtension = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+            if (!in_array($fileExtension, $validExtensions)) {
+                echo json_encode(["status" => "error", "message" => "Invalid image format. Allowed: jpg, jpeg, png, gif"]);
+                return;
+            }
+
+            // Simpan file gambar
+            if (!move_uploaded_file($image['tmp_name'], $targetFilePath)) {
+                echo json_encode(["status" => "error", "message" => "Failed to upload image"]);
+                return;
+            }
+
+            $imagePath = 'uploads/' . $imageName;
+        } else {
+            // Tidak ada file baru, gunakan data lama jika ada
+            $imagePath = $data['ImageUrl'] ?? null;
+        }
+
+        // Update data di database
         $this->db->query("UPDATE employee SET Username = :username, Email = :email, Phone = :phone, Role = :role, 
-                          Password = :password, Gender = :gender, DateOfBirth = :dob, Address = :address, ImageUrl = :imageUrl 
-                          WHERE EmployeeId = :id");
+                      Password = :password, Gender = :gender, DateOfBirth = :dob, Address = :address, ImageUrl = :imageUrl 
+                      WHERE EmployeeId = :id");
         $this->db->bind(':id', $id);
         $this->db->bind(':username', $data['Username']);
         $this->db->bind(':email', $data['Email']);
@@ -155,7 +211,7 @@ class EmployeeApi
         $this->db->bind(':gender', $data['Gender']);
         $this->db->bind(':dob', $data['DateOfBirth']);
         $this->db->bind(':address', $data['Address']);
-        $this->db->bind(':imageUrl', $data['ImageUrl']);
+        $this->db->bind(':imageUrl', $imagePath);
 
         if ($this->db->execute()) {
             echo json_encode(["status" => "success", "message" => "Employee updated successfully"]);
@@ -164,19 +220,38 @@ class EmployeeApi
         }
     }
 
-    public function deleteEmployee($id)
-    {
-        $this->db->query("DELETE FROM employee WHERE EmployeeId = :id");
-        $this->db->bind(':id', $id);
 
-        if ($this->db->execute()) {
-            echo json_encode(["status" => "success", "message" => "Employee deleted successfully"]);
+    public function uploadImage()
+    {
+        if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+            echo json_encode(["status" => "error", "message" => "No file uploaded or upload error"]);
+            return;
+        }
+
+        $file = $_FILES['image'];
+        $targetDir = __DIR__ . '/../../uploads/';
+        $fileName = uniqid() . '-' . basename($file['name']);
+        $targetFilePath = $targetDir . $fileName;
+
+        // Validasi file
+        $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array($fileType, $allowedTypes)) {
+            echo json_encode(["status" => "error", "message" => "Invalid file type"]);
+            return;
+        }
+
+        if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+            echo json_encode([
+                "status" => "success",
+                "message" => "File uploaded successfully",
+                "imageUrl" => "uploads/" . $fileName
+            ]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Failed to delete employee"]);
+            echo json_encode(["status" => "error", "message" => "Failed to upload file"]);
         }
     }
 }
-
 $employeeApi = new EmployeeApi();
 
 header("Content-Type: application/json");
@@ -199,10 +274,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $data = json_decode(file_get_contents("php://input"), true);
     if (isset($_GET['id'])) {
         $employeeApi->updateEmployee($_GET['id'], $data);
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    if (isset($_GET['id'])) {
-        $employeeApi->deleteEmployee($_GET['id']);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Invalid request"]);

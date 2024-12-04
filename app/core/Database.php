@@ -37,8 +37,9 @@ class Database
     // Corrected query method that now executes the query and returns the result set
     public function query($query)
     {
+        // Siapkan query
         $this->stmt = $this->dbh->prepare($query);
-        $this->execute();
+        return $this->stmt; // Kembalikan objek statement
     }
 
     public function bind($param, $value, $type = null)
