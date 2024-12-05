@@ -30,17 +30,20 @@
             <div class="text-2xl font-bold mb-6">Daftar Order</div>
             <div id="orderHistory">
                 <?php foreach ($orderHistory as $order) : ?>
-                    <div class="flex mb-4 bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl cursor-pointer transition-shadow duration-300 ease-in-out hover:bg-gray-50" onclick="showDetail(<?= $order['OrderId'] ?>)">
-                        <div class="flex-1">
-                            <!-- Menampilkan Order Info -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl cursor-pointer transition-shadow duration-300 ease-in-out hover:bg-gray-50" onclick="showDetail(<?= $order['OrderId'] ?>)">
+                        <!-- Bagian Kiri -->
+                        <div>
                             <div class="text-lg font-bold text-gray-800 mb-2">Order ID: <?= htmlspecialchars($order['OrderId']) ?></div>
-                            <div class="text-sm text-gray-600 mb-2">Customer ID: <?= htmlspecialchars($order['CustomerId']) ?></div>
                             <div class="text-xl font-semibold text-gray-900 mb-2">Total: Rp<?= number_format($order['Total'], 0, ',', '.') ?></div>
+                            <div class="font-semibold text-blue-600 mt-2">Status: <?= htmlspecialchars($order['Status']) ?></div>
+                            <div class="text-sm text-gray-600 mt-2">Created At: <?= date('d-m-Y H:i:s', strtotime($order['CreatedAt'])) ?></div>
+                        </div>
+                        <!-- Bagian Kanan -->
+                        <div>
+                            <div class="text-sm text-gray-600 mb-2">Customer ID: <?= htmlspecialchars($order['CustomerId']) ?></div>
                             <div class="text-sm text-gray-600 mb-2">Paid: Rp<?= number_format($order['Paid'], 0, ',', '.') ?></div>
                             <div class="text-sm text-gray-600 mb-2">Change: Rp<?= number_format($order['Change'], 0, ',', '.') ?></div>
                             <div class="text-sm text-gray-600 mb-2">Payment Method: <?= htmlspecialchars($order['PaymentMethod']) ?></div>
-                            <div class="font-semibold text-blue-600 mt-2">Status: <?= htmlspecialchars($order['Status']) ?></div>
-                            <div class="text-sm text-gray-600 mt-2">Created At: <?= date('d-m-Y H:i:s', strtotime($order['CreatedAt'])) ?></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
