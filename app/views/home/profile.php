@@ -31,8 +31,8 @@
     </style>
     </head>
 
-    <body class="bg-gray-100 flex justify-center items-center min-h-screen">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-4xl w-full flex justify-between gap-8">
+    <body class="bg-gray-100  flex justify-center items-center min-h-screen">
+        <div class="bg-white mx-auto p-8 rounded-lg shadow-lg max-w-4xl w-full flex justify-between gap-8">
             <div class="flex-1">
                 <h1 class="text-2xl font-bold text-gray-800 mb-4">Profil Anda</h1>
                 <p class="text-gray-600 mb-6">Kelola informasi profil Anda untuk mengontrol, melindungi, dan mengamankan akun.</p>
@@ -164,7 +164,7 @@
             };
 
             function uploadImage(event) {
-                const file = event.target.files[0]; 
+                const file = event.target.files[0];
                 if (!file) return;
 
                 const formData = new FormData();
@@ -177,7 +177,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            document.getElementById('profileImage').src = data.imageUrl; 
+                            document.getElementById('profileImage').src = data.imageUrl;
                             alert('Gambar berhasil diubah!');
                         } else {
                             alert('Gagal mengunggah gambar!');
@@ -193,7 +193,7 @@
                 var reader = new FileReader();
                 reader.onload = function() {
                     var output = document.getElementById('profileImage');
-                    output.src = reader.result; 
+                    output.src = reader.result;
                 };
                 reader.readAsDataURL(event.target.files[0]);
 

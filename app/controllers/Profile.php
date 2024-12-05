@@ -19,6 +19,7 @@ class Profile extends Controller
 
             if ($customerData) {
                 $this->view('layout/header');
+                $this->view('layout/navbar');
                 $this->view('home/profile', $customerData);
             } else {
                 echo "Data pengguna tidak ditemukan!";

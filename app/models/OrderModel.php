@@ -308,7 +308,7 @@ class OrderModel
         $stmt->bindValue(':year', $year, PDO::PARAM_INT);
         $stmt->execute();
 
-        $monthlyProfit = array_fill_keys($monthNames, 0); 
+        $monthlyProfit = array_fill_keys($monthNames, 0);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($result as $row) {
@@ -367,5 +367,68 @@ class OrderModel
         }
 
         return $monthlyOrdersStatus;
+    }
+
+    public function getOrderHistory($customerId)
+    {
+        $query = "
+    SELECT 
+        o.OrderId, 
+        o.CustomerId,
+        o.Total,
+        o.Paid,
+        o.Change,
+        o.PaymentMethod,
+        o.Status,
+        o.CreatedAt,
+        d.Quantity,
+        d.Subtotal,
+        m.MenuName,
+        m.Description,
+        m.ImageUrl,
+        m.Price
+    FROM `order` o
+    JOIN `orderdetail` d ON o.OrderId = d.OrderId
+    JOIN `menu` m ON d.MenuId = m.MenuId
+    WHERE o.CustomerId = :customerId
+    ORDER BY o.CreatedAt DESC
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':customerId', $customerId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $orderHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mengelompokkan item berdasarkan OrderId
+        $groupedOrderHistory = [];
+        foreach ($orderHistory as $order) {
+            $orderId = $order['OrderId'];
+            // Jika OrderId belum ada dalam array, buat array baru untuk menyimpan item
+            if (!isset($groupedOrderHistory[$orderId])) {
+                $groupedOrderHistory[$orderId] = [
+                    'OrderId' => $order['OrderId'],
+                    'CustomerId' => $order['CustomerId'],
+                    'Total' => $order['Total'],
+                    'Paid' => $order['Paid'],
+                    'Change' => $order['Change'],
+                    'PaymentMethod' => $order['PaymentMethod'],
+                    'Status' => $order['Status'],
+                    'CreatedAt' => $order['CreatedAt'],
+                    'items' => []
+                ];
+            }
+            // Menambahkan item ke dalam array 'items'
+            $groupedOrderHistory[$orderId]['items'][] = [
+                'MenuName' => $order['MenuName'],
+                'Description' => $order['Description'],
+                'ImageUrl' => $order['ImageUrl'],
+                'Price' => $order['Price'],
+                'Quantity' => $order['Quantity'],
+                'Subtotal' => $order['Subtotal']
+            ];
+        }
+
+        return array_values($groupedOrderHistory); // Mengembalikan array yang sudah dikelompokkan
     }
 }
