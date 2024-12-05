@@ -126,26 +126,6 @@ class Home extends Controller
         }
     }
 
-    public function profile()
-    {
-        if (isset($_SESSION['username'])) {
-            $username = $_SESSION['username'];
-
-            $customerModel = $this->model('CustomerModel');
-            $customerData = $customerModel->getUserByUsername($username);
-
-            if ($customerData) {
-                $this->view('layout/header');
-                $this->view('home/profile', $customerData);
-            } else {
-                echo "Data pengguna tidak ditemukan!";
-            }
-        } else {
-            header('Location: ' . BASEURL . '/login');
-            exit;
-        }
-    }
-
     public function getItemCountCart()
     {
         if (isset($_SESSION['user_id'])) {

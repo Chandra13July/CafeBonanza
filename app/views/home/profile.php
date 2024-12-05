@@ -2,6 +2,32 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+
+        #editModal {
+            display: none;
+            /* Pastikan modal tersembunyi secara default */
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #editModal>div {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
     </head>
 
@@ -61,20 +87,13 @@
                     <span class="text-gray-600 ml-2"><?= $createdAt; ?></span>
                 </div>
                 <div class="flex gap-4 mt-4">
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded" onclick="document.getElementById('editModal').style.display='block'">Edit Profil</button>
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded" onclick="openModal()">Edit Profil</button>
                 </div>
             </div>
             <div class="text-center">
                 <?php
-                if (!empty($_SESSION['ImageUrl'])) {
-                    if (strpos($_SESSION['ImageUrl'], 'http://localhost') !== false) {
-                        $imageUrl = htmlspecialchars($_SESSION['ImageUrl']);
-                    } else {
-                        $imageUrl = rtrim(BASEURL, '/') . '/' . htmlspecialchars($_SESSION['ImageUrl']);
-                    }
-                } else {
-                    $imageUrl = BASEURL . '/img/user.png';
-                }
+                // Gunakan URL gambar yang ada di session, jika tidak ada, gunakan gambar default
+                $imageUrl = !empty($_SESSION['ImageUrl']) ? htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
                 ?>
                 <img id="profileImage" alt="Profile picture" src="<?= $imageUrl; ?>" class="w-48 h-48 rounded-full object-cover mb-4 mx-auto border-4 border-gray-300 hover:border-gray-500 transition-all">
                 <input id="fileInput" class="hidden" type="file" accept=".jpg, .jpeg, .png" onchange="previewImage(event)">
@@ -83,63 +102,102 @@
             </div>
         </div>
 
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden" id="editModal">
+        <!-- Modal Edit Profil -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 hidden" id="editModal">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-                <div class="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 class="text-xl font-bold">Edit Profil</h2>
-                    <span class="text-gray-500 cursor-pointer text-2xl" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="username" class="font-bold text-gray-800">Username</label>
-                        <input id="username" name="username" type="text" value="<?= $username; ?>" class="w-full p-2 border rounded mt-1" />
+                <form action="<?= BASEURL; ?>/profile/btnEditProfile" method="POST">
+                    <div class="flex justify-between items-center border-b pb-3 mb-4">
+                        <h2 class="text-xl font-bold">Edit Profil</h2>
+                        <span class="text-gray-500 cursor-pointer text-2xl" onclick="closeModal()">&times;</span>
                     </div>
-                    <div>
-                        <label for="email" class="font-bold text-gray-800">Email</label>
-                        <input id="email" name="email" type="email" value="<?= $email; ?>" class="w-full p-2 border rounded mt-1" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="username" class="font-bold text-gray-800">Username</label>
+                            <input id="username" name="username" type="text" value="<?= $username; ?>" class="w-full p-2 border rounded mt-1" required />
+                        </div>
+                        <div>
+                            <label for="email" class="font-bold text-gray-800">Email</label>
+                            <input id="email" name="email" type="email" value="<?= $email; ?>" class="w-full p-2 border rounded mt-1" required />
+                        </div>
+                        <div>
+                            <label for="phone" class="font-bold text-gray-800">Phone</label>
+                            <input id="phone" name="phone" type="text" value="<?= $phone; ?>" class="w-full p-2 border rounded mt-1" required />
+                        </div>
+                        <div>
+                            <label for="gender" class="font-bold text-gray-800">Gender</label>
+                            <select id="gender" name="gender" class="w-full p-2 border rounded mt-1" required>
+                                <option value="male" <?= $gender == 'male' ? 'selected' : ''; ?>>Male</option>
+                                <option value="female" <?= $gender == 'female' ? 'selected' : ''; ?>>Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="dob" class="font-bold text-gray-800">Date of Birth</label>
+                            <input id="dob" name="dateOfBirth" type="date" value="<?= $dob; ?>" class="w-full p-2 border rounded mt-1" required />
+                        </div>
+                        <div>
+                            <label for="address" class="font-bold text-gray-800">Address</label>
+                            <input id="address" name="address" type="text" value="<?= $address; ?>" class="w-full p-2 border rounded mt-1" required />
+                        </div>
                     </div>
-                    <div>
-                        <label for="phone" class="font-bold text-gray-800">Phone</label>
-                        <input id="phone" name="phone" type="text" value="<?= $phone; ?>" class="w-full p-2 border rounded mt-1" />
+                    <div class="flex justify-end gap-4 mt-6">
+                        <button type="button" class="bg-red-500 text-white py-2 px-4 rounded" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Save</button>
                     </div>
-                    <div>
-                        <label for="gender" class="font-bold text-gray-800">Gender</label>
-                        <select id="gender" name="gender" class="w-full p-2 border rounded mt-1">
-                            <option value="male" <?= $gender == 'male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="female" <?= $gender == 'female' ? 'selected' : ''; ?>>Female</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="dob" class="font-bold text-gray-800">Date of Birth</label>
-                        <input id="dob" name="dob" type="date" value="<?= $dob; ?>" class="w-full p-2 border rounded mt-1" />
-                    </div>
-                    <div>
-                        <label for="address" class="font-bold text-gray-800">Address</label>
-                        <input id="address" name="address" type="text" value="<?= $address; ?>" class="w-full p-2 border rounded mt-1" />
-                    </div>
-                </div>
-                <div class="flex justify-end gap-4 mt-6">
-                    <button class="bg-red-500 text-white py-2 px-4 rounded" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
-                    <button class="bg-green-500 text-white py-2 px-4 rounded">Save</button>
-                </div>
+                </form>
             </div>
         </div>
 
         <script>
-            function previewImage(event) {
-                var reader = new FileReader();
-                reader.onload = function() {
-                    var output = document.getElementById('profileImage');
-                    output.src = reader.result;
-                }
-                reader.readAsDataURL(event.target.files[0]);
+            function openModal() {
+                document.getElementById('editModal').style.display = 'flex';
+            }
+
+            function closeModal() {
+                document.getElementById('editModal').style.display = 'none';
             }
 
             window.onclick = function(event) {
                 var editModal = document.getElementById('editModal');
                 if (event.target == editModal) {
-                    editModal.style.display = "none";
+                    closeModal();
                 }
+            };
+
+            function uploadImage(event) {
+                const file = event.target.files[0]; 
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("image", file);
+
+                fetch("<?= BASEURL; ?>/profile/btnEditImage", {
+                        method: "POST",
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('profileImage').src = data.imageUrl; 
+                            alert('Gambar berhasil diubah!');
+                        } else {
+                            alert('Gagal mengunggah gambar!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error uploading image:", error);
+                        alert('Terjadi kesalahan saat mengunggah gambar.');
+                    });
+            }
+
+            function previewImage(event) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    var output = document.getElementById('profileImage');
+                    output.src = reader.result; 
+                };
+                reader.readAsDataURL(event.target.files[0]);
+
+                uploadImage(event);
             }
         </script>
     </body>

@@ -243,10 +243,8 @@ class OrderModel
 
     public function getMonthlyTotalOrdersWithZero($year)
     {
-        // Daftar nama bulan
         $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Query untuk mengambil total order per bulan, termasuk bulan dengan 0 order
         $query = "
     SELECT 
         months.month,
@@ -275,17 +273,13 @@ class OrderModel
         $stmt->bindValue(':year', $year, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Menyusun hasilnya dalam format array untuk grafik
         $monthlyOrders = [];
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Mengisi data hasil query ke dalam array yang akan digunakan untuk grafik
         foreach ($result as $row) {
-            // Menyimpan hasil berdasarkan nama bulan (dari array $monthNames)
             $monthlyOrders[$monthNames[$row['month'] - 1]] = $row['totalOrders'];
         }
 
-        // Pastikan setiap bulan (January - December) ada, dengan default 0 jika tidak ada data
         foreach ($monthNames as $monthName) {
             if (!isset($monthlyOrders[$monthName])) {
                 $monthlyOrders[$monthName] = 0;
@@ -297,10 +291,8 @@ class OrderModel
 
     public function getMonthlyCompletedProfit1($year)
     {
-        // Daftar nama bulan
         $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Query untuk mengambil total profit per bulan, hanya yang berstatus 'Completed'
         $query = "
     SELECT 
         MONTH(CreatedAt) AS month,
@@ -316,32 +308,21 @@ class OrderModel
         $stmt->bindValue(':year', $year, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Menyusun hasilnya dalam format array dengan nama bulan
-        $monthlyProfit = [];
+        $monthlyProfit = array_fill_keys($monthNames, 0); 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Mengisi data hasil query ke dalam array dengan nama bulan
         foreach ($result as $row) {
-            $monthlyProfit[$monthNames[$row['month'] - 1]] = $row['completedProfit'];
-        }
-
-        // Pastikan setiap bulan (January - December) ada, dengan default 0 jika tidak ada data
-        foreach ($monthNames as $monthName) {
-            if (!isset($monthlyProfit[$monthName])) {
-                $monthlyProfit[$monthName] = 0;
-            }
+            $monthIndex = $row['month'] - 1;
+            $monthlyProfit[$monthNames[$monthIndex]] = $row['completedProfit'];
         }
 
         return $monthlyProfit;
     }
 
-    // Tambahkan metode baru untuk mendapatkan jumlah pesanan per bulan berdasarkan status
     public function getMonthlyOrdersStatusWithZero($year)
     {
-        // Daftar nama bulan
         $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Query untuk mengambil total order per bulan berdasarkan status
         $query = "
         SELECT 
             months.month,
@@ -373,10 +354,8 @@ class OrderModel
         $stmt->bindValue(':year', $year, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Ambil hasil query dan return sebagai array
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Menyusun hasil berdasarkan nama bulan
         $monthlyOrdersStatus = [];
         foreach ($result as $row) {
             $monthlyOrdersStatus[] = [

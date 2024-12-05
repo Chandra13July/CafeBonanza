@@ -156,6 +156,7 @@
 
                             function updateChart() {
                                 var selectedType = document.getElementById('chartType').value;
+                              
 
                                 if (selectedType === 'orders') {
                                     chartData = monthlyOrders;

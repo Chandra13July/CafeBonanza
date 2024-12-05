@@ -128,7 +128,7 @@ class CustomerModel
         return $this->db->execute();
     }
 
-    public function editPhoto($data)
+    public function editImage($data)
     {
         $this->db->query("UPDATE customer SET 
                         ImageUrl = :imageUrl 

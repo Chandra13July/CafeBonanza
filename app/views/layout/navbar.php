@@ -92,19 +92,18 @@
                                 <?= htmlspecialchars($_SESSION['username']); ?>
                             </span>
                             <div id="dropdown-menu" class="absolute right-100 top-full mt-2 w-40 bg-white rounded-lg shadow-lg hidden z-40">
-                                <a href="<?= BASEURL; ?>/home/profile" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
+                                <a href="<?= BASEURL; ?>/profile/index" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
                                     <i class="fas fa-user-circle mr-2 text-gray-600 text-lg"></i> Profile
                                 </a>
                                 <a href="<?= BASEURL; ?>/cart/index" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center relative">
-    <i class="fas fa-shopping-cart mr-2 text-gray-600 text-lg"></i> Cart
-    <?php if (isset($totalCartItems) && $totalCartItems > 0): ?>
-        <span class="text-red-500 text-xs font-bold ml-2">
-            <?= $totalCartItems; ?>
-        </span>
-    <?php endif; ?>
-</a>
-
-                                <a href="<?= BASEURL; ?>/home/history" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
+                                    <i class="fas fa-shopping-cart mr-2 text-gray-600 text-lg"></i> Cart
+                                    <?php if (isset($totalCartItems) && $totalCartItems > 0): ?>
+                                        <span class="text-red-500 text-xs font-bold ml-2">
+                                            <?= $totalCartItems; ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </a>
+                                <a href="<?= BASEURL; ?>/history/index" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">
                                     <i class="fas fa-history mr-2 text-gray-600 text-lg"></i> History
                                 </a>
                                 <a href="#" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center" onclick="openLogoutModal()">
