@@ -46,7 +46,7 @@ class GalleryModel
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
-        $this->db->bind(':GalleryId', $data['GalleryId']); 
+        $this->db->bind(':GalleryId', $data['GalleryId']);
 
         return $this->db->execute();
     }
@@ -57,5 +57,13 @@ class GalleryModel
         $this->db->bind(':GalleryId', $galleryId);
 
         return $this->db->execute();
+    }
+
+    public function getLatestGalleries()
+    {
+        // Query untuk mengambil 4 gallery terbaru berdasarkan kolom 'created_at'
+        $this->db->query('SELECT GalleryId, Title, Description, ImageUrl FROM gallery ORDER BY created_at DESC LIMIT 4');
+
+        return $this->db->resultSet();
     }
 }

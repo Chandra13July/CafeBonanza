@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../core/Database.php';
 class CartApi
 {
     private $db;
-    private $customerId = 1; // Default, bisa diganti jika diperlukan untuk otentikasi
+    private $customerId = 1; 
 
     public function __construct()
     {
@@ -19,6 +19,7 @@ class CartApi
             $this->db->query(
                 "SELECT 
                     c.CartId,
+                    c.MenuId,
                     m.ImageUrl,
                     m.MenuName,
                     m.Description,
@@ -44,14 +45,13 @@ class CartApi
             foreach ($cartItems as $item) {
                 $data['data'][] = [
                     'CartId' => $item['CartId'],
+                    'MenuId' => $item['MenuId'],
                     'ImageUrl' => (defined('BASEURL') ? BASEURL : '') . '/' . $item['ImageUrl'],
                     'MenuName' => $item['MenuName'],
-                    'Description' => $item['Description'],
                     'Price' => $item['Price'],
                     'Stock' => $item['Stock'],
                     'Quantity' => $item['Quantity'],
                     'TotalPrice' => $item['TotalPrice'],
-                    'CreatedAt' => $item['CreatedAt'],
                 ];
             }
 
@@ -68,10 +68,8 @@ class CartApi
 
     public function addToCart()
     {
-        // Mengambil data dari request body
         $data = json_decode(file_get_contents("php://input"));
 
-        // Validasi input
         if (empty($data->customerId) || empty($data->menuId) || empty($data->quantity)) {
             http_response_code(400);
             echo json_encode(['message' => 'CustomerId, MenuId, and Quantity are required']);
@@ -83,7 +81,6 @@ class CartApi
         $quantity = $data->quantity;
 
         try {
-            // Cek apakah item sudah ada di keranjang
             $stmt = $this->db->prepare("SELECT Quantity FROM cart WHERE CustomerId = :CustomerId AND MenuId = :MenuId");
             $stmt->bindParam(':CustomerId', $customerId, PDO::PARAM_INT);
             $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
@@ -92,7 +89,6 @@ class CartApi
             $existingCartItem = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($existingCartItem) {
-                // Item sudah ada, update jumlah
                 $newQuantity = $existingCartItem['Quantity'] + $quantity;
 
                 $updateStmt = $this->db->prepare("
@@ -107,7 +103,6 @@ class CartApi
 
                 echo json_encode(['message' => 'Cart updated successfully']);
             } else {
-                // Item belum ada di keranjang, insert baru
                 $insertStmt = $this->db->prepare("
                     INSERT INTO cart (CustomerId, MenuId, Quantity) 
                     VALUES (:CustomerId, :MenuId, :Quantity)
@@ -120,7 +115,6 @@ class CartApi
                 echo json_encode(['message' => 'Item added to cart successfully']);
             }
         } catch (PDOException $e) {
-            // Error handling
             http_response_code(500);
             error_log("Error in addToCart: " . $e->getMessage());
             echo json_encode(['message' => 'Error adding to cart', 'error' => $e->getMessage()]);

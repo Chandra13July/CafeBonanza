@@ -24,7 +24,6 @@ class ContactModel
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':type', $data['type']);
         $this->db->bind(':message', $data['message']);
-
         return $this->db->execute();
     }
 
@@ -32,7 +31,26 @@ class ContactModel
     {
         $this->db->query("DELETE FROM contact WHERE ContactId = :ContactId");
         $this->db->bind(':ContactId', $contactId);
-
         return $this->db->execute();
+    }
+
+    public function getLatestContacts()
+    {
+        $query = 'SELECT ContactId, Name, Message 
+              FROM contact 
+              WHERE Type = :type 
+              ORDER BY CreatedAt DESC 
+              LIMIT 10';
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':type', 'Suggestion', PDO::PARAM_STR);
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debug: Cek hasil query
+        error_log(print_r($results, true));
+
+        return $results;
     }
 }

@@ -81,39 +81,30 @@
         <button class="px-6 py-2 mt-8 bg-black text-white font-bold" onclick="window.location.href='<?= BASEURL; ?>/home/gallery'">
             SEE MORE
         </button>
-    </section>
-    <section class="py-12 bg-gray-100 text-center px-4 md:px-0">
-        <h2 class="text-xl font-bold mb-8">SOME REVIEWS FROM OUR CUSTOMERS</h2>
-        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-white p-6 shadow-md">
-                <i class="fas fa-quote-left text-gray-600"></i>
-                <p class="my-4">"Great coffee, but the music is too loud!"</p>
-                <p class="font-bold">- Alief</p>
+        
+        <section class="py-12 bg-gray-100 text-center px-4 md:px-0">
+            <h2 class="text-xl font-bold mb-8">Some Suggestions from Our Customers</h2>
+            <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+                <?php if (!empty($data['latestContacts'])): ?>
+                    <?php foreach ($data['latestContacts'] as $contact): ?>
+                        <div class="bg-white p-6 shadow-md">
+                            <i class="fas fa-quote-left text-gray-600"></i>
+                            <p class="my-4"><?= htmlspecialchars($contact['Message']); ?></p>
+                            <p class="font-bold">- <?= htmlspecialchars($contact['Name']); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-gray-600 text-center col-span-4">No suggestions available at the moment.</p>
+                <?php endif; ?>
             </div>
-            <div class="bg-white p-6 shadow-md">
-                <i class="fas fa-quote-left text-gray-600"></i>
-                <p class="my-4">"The place is too crowded, but the food is great."</p>
-                <p class="font-bold">- Raihan</p>
-            </div>
-            <div class="bg-white p-6 shadow-md">
-                <i class="fas fa-quote-left text-gray-600"></i>
-                <p class="my-4">"The cashier is friendly, but not very interactive."</p>
-                <p class="font-bold">- Raffi</p>
-            </div>
-            <div class="bg-white p-6 shadow-md">
-                <i class="fas fa-quote-left text-gray-600"></i>
-                <p class="my-4">"A nice and enjoyable café!"</p>
-                <p class="font-bold">- Finno</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <script>
-        function scrollToSection() {
-            const section = document.getElementById("coffee-point-of-view");
-            section.scrollIntoView({
-                behavior: "smooth"
-            });
-        }
-    </script>
+        <script>
+            function scrollToSection() {
+                const section = document.getElementById("coffee-point-of-view");
+                section.scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+        </script>
 </body>

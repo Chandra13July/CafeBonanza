@@ -16,14 +16,16 @@ class Home extends Controller
     public function index()
     {
         $totalCartItems = $this->getItemCountCart();
+        $latestContacts = $this->contactModel->getLatestContacts();
 
         $data = [
-            'totalCartItems' => $totalCartItems
+            'totalCartItems' => $totalCartItems,
+            'latestContacts' => $latestContacts
         ];
 
         $this->view('layout/header');
         $this->view('layout/navbar', $data);
-        $this->view('home/home');
+        $this->view('home/home', $data);
         $this->view('layout/footer');
     }
 

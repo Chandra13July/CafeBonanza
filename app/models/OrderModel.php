@@ -375,9 +375,8 @@ class OrderModel
     SELECT 
         o.OrderId, 
         o.CustomerId,
+        c.Username,  -- Menambahkan informasi Username dari tabel customer
         o.Total,
-        o.Paid,
-        o.Change,
         o.PaymentMethod,
         o.Status,
         o.CreatedAt,
@@ -390,6 +389,7 @@ class OrderModel
     FROM `order` o
     JOIN `orderdetail` d ON o.OrderId = d.OrderId
     JOIN `menu` m ON d.MenuId = m.MenuId
+    JOIN `customer` c ON o.CustomerId = c.CustomerId  -- Menghubungkan tabel customer
     WHERE o.CustomerId = :customerId
     ORDER BY o.CreatedAt DESC
     ";
@@ -409,9 +409,8 @@ class OrderModel
                 $groupedOrderHistory[$orderId] = [
                     'OrderId' => $order['OrderId'],
                     'CustomerId' => $order['CustomerId'],
+                    'Username' => $order['Username'],  // Menambahkan Username ke dalam array
                     'Total' => $order['Total'],
-                    'Paid' => $order['Paid'],
-                    'Change' => $order['Change'],
                     'PaymentMethod' => $order['PaymentMethod'],
                     'Status' => $order['Status'],
                     'CreatedAt' => $order['CreatedAt'],

@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__ . '/../../core/Database.php';
+require_once __DIR__ . '/../../config/config.php'; 
+require_once __DIR__ . '/../../core/Database.php'; 
 
 class MenuApi
 {
@@ -26,7 +26,7 @@ class MenuApi
                 "Price" => $menu["Price"],
                 "Stock" => $menu["Stock"],
                 "Category" => $menu["Category"],
-                "ImageUrl" => $menu["ImageUrl"], // URL sudah disimpan penuh di DB
+                "ImageUrl" => BASEURL . '/' . $menu["ImageUrl"],
                 "CreatedAt" => $menu["CreatedAt"],
             ];
 
@@ -64,11 +64,14 @@ class MenuApi
         $price = $price ?? 0;
         $stock = $stock ?? 0;
 
-        if (!is_numeric($price) || !is_numeric($stock)) {
+        if ($price === null || $stock === null || !is_numeric($price) || !is_numeric($stock)) {
             http_response_code(400);
             echo json_encode(["message" => "Price and Stock must be numeric."]);
-            return;
+            return;  
         }
+
+        $price = (int) $price;
+        $stock = (int) $stock;
 
         if (empty($menuName) || empty($description) || empty($category)) {
             http_response_code(400);
@@ -88,8 +91,8 @@ class MenuApi
                           VALUES (:name, :description, :price, :stock, :category, :imageUrl)");
         $this->db->bind(':name', $menuName);
         $this->db->bind(':description', $description);
-        $this->db->bind(':price', (int)$price);
-        $this->db->bind(':stock', (int)$stock);
+        $this->db->bind(':price', $price);
+        $this->db->bind(':stock', $stock);
         $this->db->bind(':category', $category);
         $this->db->bind(':imageUrl', $uploadedImagePath);
 
@@ -104,48 +107,50 @@ class MenuApi
     }
 
     private function uploadImage()
-    {
-        if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
-            $imageName = $_FILES['imageUrl']['name'];
-            $imageTmpName = $_FILES['imageUrl']['tmp_name'];
-            $imageSize = $_FILES['imageUrl']['size'];
-            $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+{
+    if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
+        $imageName = $_FILES['imageUrl']['name'];
+        $imageTmpName = $_FILES['imageUrl']['tmp_name'];
+        $imageSize = $_FILES['imageUrl']['size'];
+        $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
 
-            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
-            if (in_array($imageExt, $allowed)) {
-                if ($imageSize < 5000000) {
-                    $newImageName = uniqid('', true) . '.' . $imageExt;
-                    $uploadDir = __DIR__ . '/../../public/upload/menu/'; 
-                    $relativePath = 'upload/menu/' . $newImageName; 
-                    $imageUploadPath = $uploadDir . $newImageName;
+        if (in_array($imageExt, $allowed)) {
+            if ($imageSize < 5000000) {
+                $newImageName = uniqid('', true) . '.' . $imageExt; 
 
-                    if (!is_dir($uploadDir)) {
-                        if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
-                            error_log('Gagal membuat folder: ' . $uploadDir);
-                            return false;
-                        }
-                    }
+                $baseDir = dirname(__DIR__, 3); 
+                $uploadDir = $baseDir . '/public/upload/menu/';
+                $relativePath = 'upload/menu/' . $newImageName; 
+                $imageUploadPath = $uploadDir . $newImageName;
 
-                    if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $relativePath;
-                    } else {
-                        error_log('File upload failed: ' . print_r(error_get_last(), true));
+                if (!is_dir($uploadDir)) {
+                    if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+                        error_log('Gagal membuat folder: ' . $uploadDir);
                         return false;
                     }
+                }
+
+                if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
+                    return $relativePath;
                 } else {
-                    error_log('File size exceeds the limit.');
-                    return false; 
+                    error_log('File upload failed: ' . print_r(error_get_last(), true));
+                    return false;
                 }
             } else {
-                error_log('File type not allowed: ' . $imageExt);
-                return false;
+                error_log('File size exceeds the limit.');
+                return false; 
             }
+        } else {
+            error_log('File type not allowed: ' . $imageExt);
+            return false; 
         }
-        return null;
     }
+    return null; 
+}
 
-    public function updateMenu($id)
+public function updateMenu($id)
     {
         $method = $_SERVER['REQUEST_METHOD'];
         $input = json_decode(file_get_contents('php://input'), true);
@@ -215,12 +220,14 @@ class MenuApi
         $this->db->bind(':id', $id);
 
         try {
-            if ($this->db->execute()) {
+            $result = $this->db->execute();
+            
+            if ($result) {
                 http_response_code(200);
                 echo json_encode(["message" => "Menu deleted successfully"]);
             } else {
                 http_response_code(404);
-                echo json_encode(["message" => "Menu not found"]);
+                echo json_encode(["message" => "Menu not found or could not be deleted"]);
             }
         } catch (PDOException $e) {
             http_response_code(500);
@@ -229,34 +236,54 @@ class MenuApi
     }
 }
 
+function handleError($message) {
+    http_response_code(404);
+    header('Content-Type: application/json');
+    echo json_encode(["message" => $message]);
+    exit;
+}
+
 try {
     $menuApi = new MenuApi();
+
     $method = $_SERVER['REQUEST_METHOD'];
+    
     $id = $_GET['id'] ?? null;
 
     header('Content-Type: application/json');
-
+    
     switch ($method) {
         case 'GET':
-            if ($id) $menuApi->getMenuById($id);
-            else $menuApi->getAllMenus();
+            if ($id) {
+                $menuApi->getMenuById($id);
+            } else {
+                $menuApi->getAllMenus();
+            }
             break;
+        
         case 'POST':
             $menuApi->addMenu();
             break;
+        
         case 'PUT':
         case 'PATCH':
-            if ($id) $menuApi->updateMenu($id);
-            else http_response_code(400);
+            if ($id) {
+                $menuApi->updateMenu($id);
+            } else {
+                handleError('No ID provided for update');
+            }
             break;
+        
         case 'DELETE':
-            if ($id) $menuApi->deleteMenu($id);
-            else http_response_code(400);
+            if ($id) {
+                $menuApi->deleteMenu($id);
+            } else {
+                handleError('No ID provided for deletion');
+            }
             break;
+        
         default:
-            http_response_code(405);
-            echo json_encode(["message" => "Method not allowed"]);
-            break;
+            handleError('Invalid request method');
     }
 } catch (Exception $e) {
     http_response_code(500);
