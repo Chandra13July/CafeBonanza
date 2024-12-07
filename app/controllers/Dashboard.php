@@ -26,7 +26,7 @@ class Dashboard extends Controller
         $targets = [
             'menu' => 50,
             'customer' => 100,
-            'order' => 100,
+            'order' => 300,
             'profit' => 3000000
         ];
 

@@ -43,33 +43,29 @@ class EmployeeModel
         $this->db->bind(':role', 'Admin');
         $result = $this->db->single();
 
-        return $result['total'] > 0; // True jika sudah ada admin
+        return $result['total'] > 0; 
     }
 
-    // Tambahkan employee baru
     public function addEmployee($data)
     {
-        // Periksa apakah admin sudah ada sebelum menambahkan
         if ($data['role'] === 'Admin' && $this->isAdminExists()) {
-            return false; // Gagal jika admin sudah ada
+            return false; 
         }
 
-        // Query untuk menambahkan data employee
-        $this->db->query("INSERT INTO employees (Username, Email, Phone, Password, Gender, DateOfBirth, Address, Role, ImageUrl) 
+        $this->db->query("INSERT INTO employee (Username, Email, Phone, Password, Gender, DateOfBirth, Address, Role, ImageUrl) 
                           VALUES (:username, :email, :phone, :password, :gender, :dateOfBirth, :address, :role, :imageUrl)");
 
         // Bind parameter
         $this->db->bind(':username', $data['username']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':phone', $data['phone']);
-        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT)); // Enkripsi password
+        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
         $this->db->bind(':gender', $data['gender']);
         $this->db->bind(':dateOfBirth', $data['dateOfBirth']);
         $this->db->bind(':address', $data['address']);
         $this->db->bind(':role', $data['role']);
         $this->db->bind(':imageUrl', $data['imageUrl']);
 
-        // Eksekusi query
         return $this->db->execute();
     }
 

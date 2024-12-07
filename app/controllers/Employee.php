@@ -7,11 +7,7 @@ class Employee extends Controller
     public function __construct()
     {
         $this->employeeModel = $this->model('EmployeeModel');
-        if (!isset($_SESSION['user_id'])) {
-            $_SESSION['flash_message'] = 'Anda harus login terlebih dahulu!';
-            header('Location: ' . BASEURL . '/auth/loginAdmin');
-            exit;
-        }
+
     }
 
     public function index()
@@ -26,7 +22,6 @@ class Employee extends Controller
     public function btnAddEmployee()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Ambil data dari form
             $data = [
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
@@ -41,12 +36,10 @@ class Employee extends Controller
 
             $errors = [];
 
-            // Validasi Role: Hanya boleh ada satu admin
             if ($data['role'] === 'Admin' && $this->employeeModel->isAdminExists()) {
                 $errors['role'] = "Hanya boleh ada satu admin dalam sistem.";
             }
 
-            // Validasi lainnya
             if (empty($data['username'])) {
                 $errors['username'] = "Username tidak boleh kosong.";
             }
@@ -74,24 +67,29 @@ class Employee extends Controller
             if (!$data['imageUrl']) {
                 $errors['imageUrl'] = "Gagal mengunggah gambar.";
             }
-            // Jika ada error, kembalikan ke halaman form
+
             if (!empty($errors)) {
-                $_SESSION['errors'] = $errors;
-                header("Location: " . BASEURL . "/employee/add");
-                exit();
+                $this->view('employee/add', [
+                    'data' => $data,
+                    'errors' => $errors
+                ]);
+                return;
             }
 
-            // Tambahkan employee jika validasi lolos
             if ($this->employeeModel->addEmployee($data)) {
                 $_SESSION['success'] = "Employee berhasil ditambahkan!";
+                header("Location: " . BASEURL . "/employee/index");
+                exit();
             } else {
-                $_SESSION['error'] = "Penambahan employee gagal, silakan coba lagi.";
+                $errors['general'] = "Terjadi kesalahan sistem. Silakan coba lagi.";
+                $this->view('employee/add', [
+                    'data' => $data,
+                    'errors' => $errors
+                ]);
             }
-            header("Location: " . BASEURL . "/employee/index");
-            exit();
         }
     }
- 
+
     private function uploadImage()
     {
         if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {

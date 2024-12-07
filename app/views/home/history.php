@@ -26,21 +26,23 @@
 <body class="bg-gray-50 font-sans">
     <div class="container mx-auto p-4 max-w-screen-xl flex flex-wrap">
         <!-- Daftar Order di kiri (2/3) -->
-        <div class="w-full lg:w-2/3 pr-2 mb-4 lg:mb-0">
+        <div class="w-full lg:w-2/3 pr-2 mb-4 lg:mb-0 h-[80vh] overflow-y-auto">
             <div class="text-2xl font-bold mb-6">Daftar Order</div>
             <div id="orderHistory">
                 <?php foreach ($orderHistory as $order) : ?>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl cursor-pointer transition-shadow duration-300 ease-in-out hover:bg-gray-50" onclick="showDetail(<?= $order['OrderId'] ?>)">
                         <!-- Bagian Kiri -->
                         <div>
-                            <div class="text-lg font-bold text-gray-800 mb-2">Order ID: <?= htmlspecialchars($order['OrderId']) ?></div>
+                            <!-- Hapus atau sembunyikan Order ID -->
+                            <!-- <div class="text-lg font-bold text-gray-800 mb-2">Order ID: <?= htmlspecialchars($order['OrderId']) ?></div> -->
                             <div class="text-xl font-semibold text-gray-900 mb-2">Total: Rp<?= number_format($order['Total'], 0, ',', '.') ?></div>
                             <div class="font-semibold text-blue-600 mt-2">Status: <?= htmlspecialchars($order['Status']) ?></div>
                             <div class="text-sm text-gray-600 mt-2">Created At: <?= date('d-m-Y H:i:s', strtotime($order['CreatedAt'])) ?></div>
                         </div>
                         <!-- Bagian Kanan -->
                         <div>
-                            <div class="text-sm text-gray-600 mb-2">Customer ID: <?= htmlspecialchars($order['CustomerId']) ?></div>
+                            <!-- Hapus atau sembunyikan Customer ID -->
+                            <!-- <div class="text-sm text-gray-600 mb-2">Customer ID: <?= htmlspecialchars($order['CustomerId']) ?></div> -->
                             <div class="text-sm text-gray-600 mb-2">Paid: Rp<?= number_format($order['Paid'], 0, ',', '.') ?></div>
                             <div class="text-sm text-gray-600 mb-2">Change: Rp<?= number_format($order['Change'], 0, ',', '.') ?></div>
                             <div class="text-sm text-gray-600 mb-2">Payment Method: <?= htmlspecialchars($order['PaymentMethod']) ?></div>
@@ -51,7 +53,7 @@
         </div>
 
         <!-- Detail Order di kanan (1/3) -->
-        <div class="w-full lg:w-1/3 pl-2">
+        <div class="w-full lg:w-1/3 pl-2 h-[80vh] overflow-y-auto">
             <div id="orderDetails">
                 <?php foreach ($orderHistory as $order) : ?>
                     <div id="detail-<?= $order['OrderId'] ?>" class="order-detail" style="display: none;">

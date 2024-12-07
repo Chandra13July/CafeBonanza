@@ -1,26 +1,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const qtyElements = document.querySelectorAll('.qty'); 
-            const totalElement = document.getElementById('total'); 
-            const buyButton = document.getElementById('buy-button'); 
-            const selectAllCheckbox = document.getElementById('select-all'); 
-            const itemCheckboxes = document.querySelectorAll('.item-checkbox'); 
-            const selectAllLabel = document.getElementById('select-all-label'); 
+            const qtyElements = document.querySelectorAll('.qty');
+            const totalElement = document.getElementById('total');
+            const buyButton = document.getElementById('buy-button');
+            const selectAllCheckbox = document.getElementById('select-all');
+            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+            const selectAllLabel = document.getElementById('select-all-label');
 
             const updateTotal = () => {
                 let totalQty = 0;
-                let totalPrice = 0; 
+                let totalPrice = 0;
 
                 document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
-                    const itemElement = checkbox.closest('.item'); 
-                    const qtyElement = itemElement.querySelector('.qty'); 
-                    const priceElement = itemElement.querySelector('.item-price'); 
+                    const itemElement = checkbox.closest('.item');
+                    const qtyElement = itemElement.querySelector('.qty');
+                    const priceElement = itemElement.querySelector('.item-price');
 
-                    const qty = parseInt(qtyElement.innerText); 
-                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, '')); 
+                    const qty = parseInt(qtyElement.innerText);
+                    const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''));
 
-                    totalQty += qty; 
-                    totalPrice += qty * price; 
+                    totalQty += qty;
+                    totalPrice += qty * price;
                 });
                 const totalElement = document.getElementById('total');
                 const buyButton = document.getElementById('buy-button');
@@ -30,15 +30,15 @@
             };
 
             const updateSelectAllLabel = () => {
-                const checkedCount = document.querySelectorAll('.item-checkbox:checked').length; 
+                const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
                 selectAllLabel.innerText = `Pilih Semua (${checkedCount})`;
             };
 
             document.querySelectorAll('.decrease').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault(); 
+                    e.preventDefault();
 
-                    const cartId = this.getAttribute('data-cart-id'); 
+                    const cartId = this.getAttribute('data-cart-id');
                     const quantityElement = document.querySelector(`#quantity-${cartId}`);
                     let quantity = parseInt(quantityElement.value);
 
@@ -46,27 +46,27 @@
                         quantity--;
                         quantityElement.value = quantity;
 
-                        const form = this.closest('form'); 
-                        form.submit(); 
+                        const form = this.closest('form');
+                        form.submit();
                     }
                 });
             });
 
             document.querySelectorAll('.increase').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault(); 
+                    e.preventDefault();
 
-                    const cartId = this.getAttribute('data-cart-id'); 
-                    const quantityElement = document.querySelector(`#quantity-${cartId}`); 
+                    const cartId = this.getAttribute('data-cart-id');
+                    const quantityElement = document.querySelector(`#quantity-${cartId}`);
                     let quantity = parseInt(quantityElement.value);
-                    const stock = parseInt(this.closest('.item').querySelector('.stock').innerText.split(': ')[1]); 
+                    const stock = parseInt(this.closest('.item').querySelector('.stock').innerText.split(': ')[1]);
 
                     if (quantity < stock) {
                         quantity++;
                         quantityElement.value = quantity;
 
-                        const form = this.closest('form'); 
-                        form.submit(); 
+                        const form = this.closest('form');
+                        form.submit();
                     }
                 });
             });
@@ -74,7 +74,7 @@
 
             selectAllCheckbox.addEventListener('change', function() {
                 itemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked; 
+                    checkbox.checked = selectAllCheckbox.checked;
 
                     var value = checkbox.value;
                     const html = `<input type="hidden" name="selected_items[]" value="${value}" id="selected${value}">`;
@@ -96,28 +96,28 @@
                     }
                 });
 
-                updateTotal(); 
-                updateSelectAllLabel(); 
+                updateTotal();
+                updateSelectAllLabel();
             });
 
             itemCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     if (!checkbox.checked) {
-                        selectAllCheckbox.checked = false; 
+                        selectAllCheckbox.checked = false;
                     } else if (document.querySelectorAll('.item-checkbox:checked').length === itemCheckboxes.length) {
                         selectAllCheckbox.checked = true;
                     }
                     updateTotal();
-                    updateSelectAllLabel(); 
+                    updateSelectAllLabel();
                 });
             });
 
             document.querySelectorAll('.delete-item').forEach(button => {
                 button.addEventListener('click', () => {
                     const item = button.closest('.item');
-                    item.remove(); 
+                    item.remove();
                     updateTotal();
-                    updateSelectAllLabel(); 
+                    updateSelectAllLabel();
                 });
             });
 
@@ -143,6 +143,23 @@
                     }
                 });
             });
+
+            window.onload = function() {
+                const successNotification = document.getElementById('success-notification');
+                if (successNotification) {
+                    setTimeout(() => {
+                        successNotification.style.display = 'none';
+                    }, 1000);
+                    s
+                }
+
+                const errorNotification = document.getElementById('error-notification');
+                if (errorNotification) {
+                    setTimeout(() => {
+                        errorNotification.style.display = 'none';
+                    }, 1000);
+                }
+            }
         });
     </script>
     <style>

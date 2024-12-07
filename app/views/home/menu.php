@@ -124,14 +124,14 @@
             if (successNotification) {
                 setTimeout(() => {
                     successNotification.classList.add('hidden');
-                }, 2000);
+                }, 1000);
             }
 
             const errorNotification = document.getElementById('error-notification');
             if (errorNotification) {
                 setTimeout(() => {
                     errorNotification.classList.add('hidden');
-                }, 2000);
+                }, 1000);
             }
         };
 
