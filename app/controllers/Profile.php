@@ -79,12 +79,12 @@ class Profile extends Controller
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (in_array($imageExt, $allowed)) {
-                if ($imageSize < 5000000) { // Ukuran maksimum 5MB
+                if ($imageSize <= 5000000) { // Maksimal 5MB
                     $newImageName = uniqid('', true) . '.' . $imageExt;
                     $imageUploadPath = 'upload/customer/' . $newImageName;
 
                     if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                        return $imageUploadPath;
+                        return $imageUploadPath; // Kembalikan path sebagai string
                     } else {
                         return ['error' => 'Gagal mengunggah gambar.'];
                     }
@@ -103,9 +103,9 @@ class Profile extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagePath = $this->uploadImage(); // Panggil fungsi uploadImage
 
-            if ($imagePath) {
-                // Simpan hanya path relatif tanpa BASEURL
-                $imageUrl = $imagePath; // Path relatif ke folder upload
+            if (is_string($imagePath)) {
+                // Jika berhasil, simpan hanya path relatif
+                $imageUrl = $imagePath;
 
                 $data = [
                     'CustomerId' => $_SESSION['user_id'], // Pastikan user sudah login
@@ -117,10 +117,12 @@ class Profile extends Controller
                     $_SESSION['ImageUrl'] = $data['imageUrl'];  // Perbarui ImageUrl di session
                     echo json_encode(['success' => true, 'imageUrl' => $data['imageUrl']]);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Failed to update profile image.']);
+                    echo json_encode(['success' => false, 'message' => 'Gagal memperbarui gambar profil.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to upload image.']);
+                // Tangani kesalahan
+                $errorMessage = $imagePath['error'] ?? 'Gagal mengunggah gambar.';
+                echo json_encode(['success' => false, 'message' => $errorMessage]);
             }
             exit();
         }

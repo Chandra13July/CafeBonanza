@@ -39,7 +39,7 @@ class ContactModel
     $query = 'SELECT ContactId, Name, Message 
               FROM contact 
               ORDER BY CreatedAt DESC 
-              LIMIT 100';
+              LIMIT 4';
 
     $stmt = $this->db->prepare($query);
     $stmt->execute();

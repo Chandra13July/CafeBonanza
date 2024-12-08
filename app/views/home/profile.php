@@ -93,9 +93,10 @@
             <div class="text-center">
                 <?php
                 // Gunakan URL gambar yang ada di session, jika tidak ada, gunakan gambar default
-                $imageUrl = !empty($_SESSION['ImageUrl']) ? htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
+                $imageUrl = !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . htmlspecialchars($_SESSION['ImageUrl']) : BASEURL . '/img/user.png';
                 ?>
-                <img id="profileImage" alt="Profile picture" src="<?= $imageUrl; ?>" class="w-48 h-48 rounded-full object-cover mb-4 mx-auto border-4 border-gray-300 hover:border-gray-500 transition-all">
+                <img id="profileImage" alt="Profile picture" src="<?= $imageUrl; ?>"
+                    class="w-48 h-48 rounded-full object-cover mb-4 mx-auto border-4 border-gray-300 hover:border-gray-500 transition-all">
                 <input id="fileInput" class="hidden" type="file" accept=".jpg, .jpeg, .png" onchange="previewImage(event)">
                 <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded" onclick="document.getElementById('fileInput').click();">Pilih Foto Profil</button>
                 <p class="text-sm text-gray-600 mt-2">Hanya file dengan format <strong>JPG, PNG, JPEG</strong></p>

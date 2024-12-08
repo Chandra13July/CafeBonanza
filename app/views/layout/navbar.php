@@ -89,7 +89,6 @@
                                 class="w-10 h-10 rounded-full mr-2 cursor-pointer"
                                 onclick="toggleDropdown()">
                             <span class="text-gray-800 cursor-pointer" onclick="toggleDropdown()">
-                                <?= htmlspecialchars($_SESSION['username']); ?>
                             </span>
                             <div id="dropdown-menu" class="absolute right-100 top-full mt-2 w-40 bg-white rounded-lg shadow-lg hidden z-40">
                                 <a href="<?= BASEURL; ?>/profile/index" class="block px-4 py-3 text-base text-gray-800 hover:bg-gray-200 flex items-center">

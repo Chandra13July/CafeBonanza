@@ -28,13 +28,10 @@
             <div id="orderHistory">
                 <?php foreach ($orderHistory as $order) : ?>
                     <div class="max-w-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 bg-white px-4 py-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 hover:bg-gray-50 relative ml-2">
-                        <!-- CreatedAt di pojok kanan atas -->
-                        <div class="absolute top-0 right-0 text-sm text-gray-600 mt-2 mr-4">
-                            <span><?= date('d M Y', strtotime($order['CreatedAt'])) ?></span>
-                        </div>
                         <div class="cursor-pointer" onclick="showDetail(<?= $order['OrderId'] ?>)">
-                            <div class="flex items-center mb-2">
+                            <div class="flex items-center justify-between mb-2">
                                 <span class="text-lg font-semibold text-black">Order ID: <?= htmlspecialchars($order['OrderId']) ?></span>
+                                <span class="text-sm text-gray-600"><?= date('d M Y', strtotime($order['CreatedAt'])) ?></span>
                             </div>
                             <div class="flex items-center mb-2">
                                 <span class="font-medium text-black">Total: Rp<?= number_format($order['Total'], 0, ',', '.') ?></span>
@@ -43,50 +40,49 @@
                                 <span class="font-medium text-black">Payment: <?= htmlspecialchars($order['PaymentMethod']) ?></span>
                             </div>
                         </div>
-                        <div class="flex items-center mb-3 relative">
-                            <div class="flex justify-between w-full relative z-10 pointer-events-none">
-                                <?php
-                                // Array status dengan indeks masing-masing
-                                $statuses = [
-                                    'Pending' => 0,
-                                    'Processing' => 1,
-                                    'Completed' => 2,
-                                    'Cancelled' => 3,
-                                ];
+                        <!-- Status -->
+                        <div class="flex items-center justify-between w-full mb-3 relative z-10 pointer-events-none">
+                            <?php
+                            // Array status dengan indeks masing-masing
+                            $statuses = [
+                                'Pending' => 0,
+                                'Processing' => 1,
+                                'Completed' => 2,
+                                'Cancelled' => 3,
+                            ];
 
-                                // Menentukan status saat ini berdasarkan index status
-                                $currentStatus = $order['Status'];
-                                $currentStatusIndex = $statuses[$currentStatus]; // Mendapatkan index status saat ini
+                            // Menentukan status saat ini berdasarkan index status
+                            $currentStatus = $order['Status'];
+                            $currentStatusIndex = $statuses[$currentStatus]; // Mendapatkan index status saat ini
 
-                                // Iterasi melalui semua status yang ada
-                                foreach ($statuses as $status => $index) :
-                                    // Menandai status yang aktif dan yang sudah dilalui
-                                    $isActive = $index <= $currentStatusIndex;
+                            // Iterasi melalui semua status yang ada
+                            foreach ($statuses as $status => $index) :
+                                // Menandai status yang aktif dan yang sudah dilalui
+                                $isActive = $index <= $currentStatusIndex;
 
-                                    // Tentukan warna background dan ikon untuk status ini
-                                    $bgColor = match ($status) {
-                                        'Pending' => 'bg-yellow-500',
-                                        'Processing' => 'bg-blue-500',
-                                        'Completed' => 'bg-green-500',
-                                        'Cancelled' => 'bg-red-500',
-                                        default => 'bg-gray-300',
-                                    };
-                                    $icon = match ($status) {
-                                        'Pending' => 'fa-hourglass-start',
-                                        'Processing' => 'fa-cogs',
-                                        'Completed' => 'fa-check',
-                                        'Cancelled' => 'fa-times',
-                                        default => '',
-                                    };
-                                ?>
-                                    <div class="flex flex-col items-center w-1/4 group">
-                                        <div class="w-8 h-8 rounded-full <?= $bgColor ?> border-4 border-white flex items-center justify-center <?= $isActive ? '' : 'opacity-50' ?> group-hover:scale-110 transition-transform duration-200">
-                                            <i class="fas <?= $icon ?> text-white"></i>
-                                        </div>
-                                        <span class="text-xs text-gray-600 mt-1 group-hover:text-black"><?= $status ?></span>
+                                // Tentukan warna background dan ikon untuk status ini
+                                $bgColor = match ($status) {
+                                    'Pending' => 'bg-yellow-500',
+                                    'Processing' => 'bg-blue-500',
+                                    'Completed' => 'bg-green-500',
+                                    'Cancelled' => 'bg-red-500',
+                                    default => 'bg-gray-300',
+                                };
+                                $icon = match ($status) {
+                                    'Pending' => 'fa-hourglass-start',
+                                    'Processing' => 'fa-cogs',
+                                    'Completed' => 'fa-check',
+                                    'Cancelled' => 'fa-times',
+                                    default => '',
+                                };
+                            ?>
+                                <div class="flex flex-col items-center w-1/4 group">
+                                    <div class="w-8 h-8 rounded-full <?= $bgColor ?> border-4 border-white flex items-center justify-center <?= $isActive ? '' : 'opacity-50' ?> group-hover:scale-110 transition-transform duration-200">
+                                        <i class="fas <?= $icon ?> text-white"></i>
                                     </div>
-                                <?php endforeach; ?>
-                            </div>
+                                    <span class="text-xs text-gray-600 mt-1 group-hover:text-black"><?= $status ?></span>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
