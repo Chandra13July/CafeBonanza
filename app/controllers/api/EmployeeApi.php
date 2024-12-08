@@ -19,7 +19,7 @@ class EmployeeApi
             'Email' => $_POST['Email'] ?? null,
             'Password' => $_POST['Password'] ?? null,
         ];
-    
+
         // Validasi data
         if (empty($data['Email']) || empty($data['Password'])) {
             echo json_encode([
@@ -28,7 +28,7 @@ class EmployeeApi
             ]);
             return;
         }
-    
+
         if (!filter_var($data['Email'], FILTER_VALIDATE_EMAIL)) {
             echo json_encode([
                 "status" => "error",
@@ -36,12 +36,12 @@ class EmployeeApi
             ]);
             return;
         }
-    
+
         // Query database untuk mendapatkan data karyawan
         $this->db->query("SELECT * FROM employee WHERE Email = :email");
         $this->db->bind(':email', $data['Email']);
         $employee = $this->db->single();
-    
+
         // Validasi hasil query
         if ($employee) {
             // Verifikasi password
@@ -51,7 +51,7 @@ class EmployeeApi
                 $_SESSION['username'] = $employee['Username'];
                 $_SESSION['email'] = $employee['Email'];
                 $_SESSION['role'] = $employee['Role'];
-    
+
                 // Kirim response JSON untuk login berhasil
                 echo json_encode([
                     "status" => "success",

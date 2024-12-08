@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../config/config.php'; 
-require_once __DIR__ . '/../../core/Database.php'; 
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../core/Database.php';
 
 class MenuApi
 {
@@ -67,7 +67,7 @@ class MenuApi
         if ($price === null || $stock === null || !is_numeric($price) || !is_numeric($stock)) {
             http_response_code(400);
             echo json_encode(["message" => "Price and Stock must be numeric."]);
-            return;  
+            return;
         }
 
         $price = (int) $price;
@@ -107,50 +107,58 @@ class MenuApi
     }
 
     private function uploadImage()
-{
-    if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
-        $imageName = $_FILES['imageUrl']['name'];
-        $imageTmpName = $_FILES['imageUrl']['tmp_name'];
-        $imageSize = $_FILES['imageUrl']['size'];
-        $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+    {
+        // Periksa apakah file diunggah tanpa error
+        if (isset($_FILES['imageUrl']) && $_FILES['imageUrl']['error'] === 0) {
+            $imageName = $_FILES['imageUrl']['name'];
+            $imageTmpName = $_FILES['imageUrl']['tmp_name'];
+            $imageSize = $_FILES['imageUrl']['size'];
+            $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
 
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+            // Format file yang diizinkan
+            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
-        if (in_array($imageExt, $allowed)) {
-            if ($imageSize < 5000000) {
-                $newImageName = uniqid('', true) . '.' . $imageExt; 
+            if (in_array($imageExt, $allowed)) {
+                // Periksa ukuran file (maks 5MB)
+                if ($imageSize < 5000000) {
+                    $newImageName = uniqid('', true) . '.' . $imageExt; // Nama file unik
 
-                $baseDir = dirname(__DIR__, 3); 
-                $uploadDir = $baseDir . '/public/upload/menu/';
-                $relativePath = 'upload/menu/' . $newImageName; 
-                $imageUploadPath = $uploadDir . $newImageName;
+                    // Menentukan lokasi folder public/upload/menu/
+                    $baseDir = dirname(__DIR__, 3); // Tiga tingkat ke atas untuk mencapai root proyek
+                    $uploadDir = $baseDir . '/public/upload/menu/'; // Lokasi penyimpanan absolut
+                    $relativePath = 'upload/menu/' . $newImageName; // Path relatif untuk disimpan di database
+                    $imageUploadPath = $uploadDir . $newImageName;
 
-                if (!is_dir($uploadDir)) {
-                    if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
-                        error_log('Gagal membuat folder: ' . $uploadDir);
+                    // Cek dan buat folder jika belum ada
+                    if (!is_dir($uploadDir)) {
+                        if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+                            error_log('Gagal membuat folder: ' . $uploadDir);
+                            return false;
+                        }
+                    }
+
+                    // Pindahkan file ke folder target
+                    if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
+                        // Return path relatif untuk disimpan di database
+                        return $relativePath;
+                    } else {
+                        // Debug jika terjadi kesalahan saat memindahkan file
+                        error_log('File upload failed: ' . print_r(error_get_last(), true));
                         return false;
                     }
-                }
-
-                if (move_uploaded_file($imageTmpName, $imageUploadPath)) {
-                    return $relativePath;
                 } else {
-                    error_log('File upload failed: ' . print_r(error_get_last(), true));
-                    return false;
+                    error_log('File size exceeds the limit.');
+                    return false; // Ukuran file terlalu besar
                 }
             } else {
-                error_log('File size exceeds the limit.');
-                return false; 
+                error_log('File type not allowed: ' . $imageExt);
+                return false; // Format file tidak diizinkan
             }
-        } else {
-            error_log('File type not allowed: ' . $imageExt);
-            return false; 
         }
+        return null; // Tidak ada file yang diunggah
     }
-    return null; 
-}
 
-public function updateMenu($id)
+    public function updateMenu($id)
     {
         $method = $_SERVER['REQUEST_METHOD'];
         $input = json_decode(file_get_contents('php://input'), true);
@@ -214,6 +222,10 @@ public function updateMenu($id)
         }
     }
 
+
+
+
+
     public function deleteMenu($id)
     {
         $this->db->query("DELETE FROM menu WHERE MenuId = :id");
@@ -221,7 +233,7 @@ public function updateMenu($id)
 
         try {
             $result = $this->db->execute();
-            
+
             if ($result) {
                 http_response_code(200);
                 echo json_encode(["message" => "Menu deleted successfully"]);
@@ -236,22 +248,29 @@ public function updateMenu($id)
     }
 }
 
-function handleError($message) {
+// Error handling for undefined routes
+function handleError($message)
+{
     http_response_code(404);
     header('Content-Type: application/json');
     echo json_encode(["message" => $message]);
     exit;
 }
 
+// Main routing logic
 try {
+    // Create instance of MenuApi
     $menuApi = new MenuApi();
 
+    // Determine request method
     $method = $_SERVER['REQUEST_METHOD'];
-    
+
+    // Extract ID from URL if present
     $id = $_GET['id'] ?? null;
 
+    // Route the request
     header('Content-Type: application/json');
-    
+
     switch ($method) {
         case 'GET':
             if ($id) {
@@ -260,11 +279,11 @@ try {
                 $menuApi->getAllMenus();
             }
             break;
-        
+
         case 'POST':
             $menuApi->addMenu();
             break;
-        
+
         case 'PUT':
         case 'PATCH':
             if ($id) {
@@ -273,7 +292,7 @@ try {
                 handleError('No ID provided for update');
             }
             break;
-        
+
         case 'DELETE':
             if ($id) {
                 $menuApi->deleteMenu($id);
@@ -281,7 +300,7 @@ try {
                 handleError('No ID provided for deletion');
             }
             break;
-        
+
         default:
             handleError('Invalid request method');
     }

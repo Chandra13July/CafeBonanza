@@ -27,11 +27,11 @@
             <div class="text-2xl font-bold mb-6 text-gray-900">Order History</div>
             <div id="orderHistory">
                 <?php foreach ($orderHistory as $order) : ?>
-                    <div class="max-w-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 bg-white px-4 py-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 hover:bg-gray-50 relative ml-2">
+                    <div class="max-w-2xl mx-auto grid grid-cols-1 lg:grid-cols-1 gap-4 mb-4 bg-white px-4 py-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 hover:bg-gray-50 relative ml-2">
                         <div class="cursor-pointer" onclick="showDetail(<?= $order['OrderId'] ?>)">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="text-lg font-semibold text-black">Order ID: <?= htmlspecialchars($order['OrderId']) ?></span>
-                                <span class="text-sm text-gray-600"><?= date('d M Y', strtotime($order['CreatedAt'])) ?></span>
+                                <span class="text-sm text-gray-600"><?= date('d M Y, H:i', strtotime($order['CreatedAt'])) ?></span>
                             </div>
                             <div class="flex items-center mb-2">
                                 <span class="font-medium text-black">Total: Rp<?= number_format($order['Total'], 0, ',', '.') ?></span>
@@ -40,7 +40,7 @@
                                 <span class="font-medium text-black">Payment: <?= htmlspecialchars($order['PaymentMethod']) ?></span>
                             </div>
                         </div>
-                        <!-- Status -->
+                        <!-- Status moved here, below the CreatedAt content -->
                         <div class="flex items-center justify-between w-full mb-3 relative z-10 pointer-events-none">
                             <?php
                             // Array status dengan indeks masing-masing
