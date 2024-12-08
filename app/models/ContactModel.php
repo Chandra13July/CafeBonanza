@@ -35,22 +35,17 @@ class ContactModel
     }
 
     public function getLatestContacts()
-    {
-        $query = 'SELECT ContactId, Name, Message 
+{
+    $query = 'SELECT ContactId, Name, Message 
               FROM contact 
-              WHERE Type = :type 
               ORDER BY CreatedAt DESC 
-              LIMIT 10';
+              LIMIT 100';
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(':type', 'Suggestion', PDO::PARAM_STR);
-        $stmt->execute();
+    $stmt = $this->db->prepare($query);
+    $stmt->execute();
 
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $results;
+}
 
-        // Debug: Cek hasil query
-        error_log(print_r($results, true));
-
-        return $results;
-    }
 }

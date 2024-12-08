@@ -61,9 +61,19 @@ class GalleryModel
 
     public function getLatestGalleries()
     {
-        // Query untuk mengambil 4 gallery terbaru berdasarkan kolom 'created_at'
-        $this->db->query('SELECT GalleryId, Title, Description, ImageUrl FROM gallery ORDER BY created_at DESC LIMIT 4');
+        $query = 'SELECT ImageUrl 
+              FROM gallery 
+              ORDER BY CreatedAt DESC 
+              LIMIT 4';
 
-        return $this->db->resultSet();
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debug: Cek hasil query
+        error_log(print_r($results, true));
+
+        return $results;
     }
 }

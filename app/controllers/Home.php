@@ -3,12 +3,14 @@
 class Home extends Controller
 {
     private $contactModel;
+    private $galleryModel;
     private $customerModel;
     private $cartModel;
 
     public function __construct()
     {
         $this->contactModel = $this->model('ContactModel');
+        $this->galleryModel = $this->model('GalleryModel');
         $this->customerModel = $this->model('CustomerModel');
         $this->cartModel = $this->model('CartModel');
     }
@@ -17,10 +19,12 @@ class Home extends Controller
     {
         $totalCartItems = $this->getItemCountCart();
         $latestContacts = $this->contactModel->getLatestContacts();
+        $latestGalleries = $this->galleryModel->getLatestGalleries();
 
         $data = [
             'totalCartItems' => $totalCartItems,
-            'latestContacts' => $latestContacts
+            'latestContacts' => $latestContacts,
+            'latestGalleries' => $latestGalleries
         ];
 
         $this->view('layout/header');

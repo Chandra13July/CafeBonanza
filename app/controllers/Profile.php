@@ -104,9 +104,12 @@ class Profile extends Controller
             $imagePath = $this->uploadImage(); // Panggil fungsi uploadImage
 
             if ($imagePath) {
+                // Simpan hanya path relatif tanpa BASEURL
+                $imageUrl = $imagePath; // Path relatif ke folder upload
+
                 $data = [
                     'CustomerId' => $_SESSION['user_id'], // Pastikan user sudah login
-                    'imageUrl' => BASEURL . '/' . $imagePath
+                    'imageUrl' => $imageUrl // Simpan path relatif ke database
                 ];
 
                 // Update URL gambar menggunakan model
