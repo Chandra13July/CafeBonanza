@@ -75,14 +75,22 @@ class Gallery extends Controller
             $fileSize = $_FILES['imageUrl']['size'];
             $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-            // Allowed file extensions
-            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'mkv'];
+            // Allowed file extensions for image and video
+            $allowedImageExt = ['jpg', 'jpeg', 'png', 'gif'];
+            $allowedVideoExt = ['mp4', 'avi', 'mov', 'mkv'];
 
             // Validate file extension and size
-            if (in_array($fileExt, $allowed)) {
+            if (in_array($fileExt, $allowedImageExt) || in_array($fileExt, $allowedVideoExt)) {
                 if ($fileSize < 50000000) {
+                    // Generate a unique file name
                     $newFileName = uniqid('', true) . '.' . $fileExt;
-                    $uploadDir = 'upload/gallery/';
+
+                    // Determine upload directory based on file type
+                    if (in_array($fileExt, $allowedImageExt)) {
+                        $uploadDir = 'upload/gallery/images/';
+                    } elseif (in_array($fileExt, $allowedVideoExt)) {
+                        $uploadDir = 'upload/gallery/videos/';
+                    }
 
                     // Create the directory if it does not exist
                     if (!is_dir($uploadDir)) {

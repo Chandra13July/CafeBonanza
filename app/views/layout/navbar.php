@@ -86,7 +86,7 @@
                         <div class="flex items-center relative">
                             <img onerror="this.src = '<?= BASEURL . '/img/user.png' ?>'"
                                 src="<?= !empty($_SESSION['ImageUrl']) ? BASEURL . '/' . $_SESSION['ImageUrl'] : BASEURL . '/img/user.png'; ?>"
-                                class="w-10 h-10 rounded-full mr-2 cursor-pointer"
+                                class="w-10 h-10 rounded-full mr-2 cursor-pointer object-cover"
                                 onclick="toggleDropdown()">
                             <span class="text-gray-800 cursor-pointer" onclick="toggleDropdown()">
                             </span>

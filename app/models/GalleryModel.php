@@ -58,22 +58,4 @@ class GalleryModel
 
         return $this->db->execute();
     }
-
-    public function getLatestGalleries()
-    {
-        $query = 'SELECT ImageUrl 
-              FROM gallery 
-              ORDER BY CreatedAt DESC 
-              LIMIT 4';
-
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Debug: Cek hasil query
-        error_log(print_r($results, true));
-
-        return $results;
-    }
 }

@@ -33,19 +33,4 @@ class ContactModel
         $this->db->bind(':ContactId', $contactId);
         return $this->db->execute();
     }
-
-    public function getLatestContacts()
-{
-    $query = 'SELECT ContactId, Name, Message 
-              FROM contact 
-              ORDER BY CreatedAt DESC 
-              LIMIT 4';
-
-    $stmt = $this->db->prepare($query);
-    $stmt->execute();
-
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $results;
-}
-
 }
