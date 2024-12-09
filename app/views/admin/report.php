@@ -161,17 +161,77 @@
                 editModal.classList.add('hidden');
             }
 
-            // Menambahkan event listener untuk menghitung change otomatis
-            document.getElementById('editTotal').addEventListener('input', calculateChange);
-            document.getElementById('editPaid').addEventListener('input', calculateChange);
-
             // Fungsi untuk menghitung Change
             function calculateChange() {
                 const total = parseInt(document.getElementById('editTotal').value) || 0;
                 const paid = parseInt(document.getElementById('editPaid').value) || 0;
-                const change = Math.floor(paid - total);
-                document.getElementById('editChange').value = change;
+
+                // Jika Paid kosong, maka kosongkan Change
+                if (document.getElementById('editPaid').value === "") {
+                    document.getElementById('editChange').value = '';
+                    return;
+                }
+
+                // Jika pembayaran lebih kecil dari total, tampilkan nilai negatif di Change
+                if (paid < total) {
+                    const change = paid - total;
+                    document.getElementById('editChange').value = change;
+                    document.getElementById('editPaid').setCustomValidity("Pembayaran harus lebih besar dari Total");
+                } else {
+                    // Jika pembayaran cukup, hitung sisa perubahan
+                    const change = paid - total;
+                    document.getElementById('editChange').value = change;
+                    document.getElementById('editPaid').setCustomValidity(""); // Reset validasi
+                }
             }
+
+            // Menambahkan event listener untuk menghitung change otomatis
+            document.getElementById('editTotal').addEventListener('input', calculateChange);
+            document.getElementById('editPaid').addEventListener('input', calculateChange);
+
+            // Fungsi untuk menangani submit form edit
+            document.getElementById("editOrderForm").addEventListener("submit", function(event) {
+                // Mengecek apakah pembayaran cukup sebelum mengirim formulir
+                const paid = parseInt(document.getElementById('editPaid').value) || 0;
+                const total = parseInt(document.getElementById('editTotal').value) || 0;
+                const status = document.getElementById('editStatus').value;
+
+                // Pastikan pembayaran lebih besar dari total
+                if (paid < total) {
+                    alert("Pembayaran tidak cukup! Total pembayaran harus lebih besar dari jumlah total.");
+                    event.preventDefault(); // Mencegah pengiriman formulir
+                    return;
+                }
+
+                // Jika status sedang "Processing" atau "Completed", jangan biarkan mundur ke "Pending"
+                if (status === "Pending") {
+                    alert("Status tidak bisa mundur menjadi 'Pending'.");
+                    event.preventDefault();
+                    return;
+                }
+
+                // Jika pembayaran sudah cukup, otomatis ganti status menjadi "Processing"
+                if (paid >= total && status === "Pending") {
+                    document.getElementById('editStatus').value = "Processing";
+                }
+            });
+
+            // Fungsi untuk memastikan status tidak bisa mundur
+            document.getElementById('editStatus').addEventListener('change', function(event) {
+                const currentStatus = event.target.value;
+
+                // Jangan biarkan status mundur dari Processing ke Pending
+                const previousStatus = document.getElementById('editStatus').dataset.previousStatus || "Pending";
+
+                if (previousStatus === "Processing" && currentStatus === "Pending") {
+                    alert("Tidak bisa mengubah status ke 'Pending' setelah status menjadi 'Processing'.");
+                    event.preventDefault(); // Mencegah perubahan status
+                    return;
+                }
+
+                // Simpan status sebelumnya untuk referensi
+                document.getElementById('editStatus').dataset.previousStatus = currentStatus;
+            });
 
             document.getElementById('printButton').addEventListener('click', function() {
                 var originalTable = document.getElementById('reportTable');
@@ -267,6 +327,22 @@
                 });
                 XLSX.writeFile(wb, 'Order_Report.xlsx');
             });
+
+            window.onload = function() {
+                const successNotification = document.getElementById('success-notification');
+                if (successNotification) {
+                    setTimeout(() => {
+                        successNotification.style.display = 'none';
+                    }, 2000);
+                }
+
+                const errorNotification = document.getElementById('error-notification');
+                if (errorNotification) {
+                    setTimeout(() => {
+                        errorNotification.style.display = 'none';
+                    }, 2000);
+                }
+            }
 
             new DataTable('#reportTable');
         </script>
