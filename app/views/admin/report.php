@@ -127,7 +127,6 @@
                             <option value="Pending" <?= isset($order['Status']) && $order['Status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
                             <option value="Processing" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
                             <option value="Completed" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                            <option value="Cancelled" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                         </select>
                     </div>
                     <div class="flex justify-end col-span-2">

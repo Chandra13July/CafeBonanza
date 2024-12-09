@@ -49,9 +49,6 @@ class Dashboard extends Controller
         // Mendapatkan data profit per bulan (Januari sampai Desember)
         $monthlyCompletedProfit1 = $this->OrderModel->getMonthlyCompletedProfit1(date('Y'));
 
-        // Mendapatkan data status pesanan per bulan
-        $monthlyOrdersStatus = $this->OrderModel->getMonthlyOrdersStatusWithZero(date('Y'));
-
         // Menyusun data bulan (dari Januari sampai Desember)
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -68,7 +65,6 @@ class Dashboard extends Controller
             'targets' => $targets,
             'monthlyOrders' => $monthlyOrders,
             'monthlyCompletedProfit1' => $monthlyCompletedProfit1,
-            'monthlyOrdersStatus' => $monthlyOrdersStatus, // Menambahkan data status pesanan
             'months' => $months
         ];
 

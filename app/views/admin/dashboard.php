@@ -103,7 +103,6 @@
                                 <select class="border border-gray-300 rounded-md p-2" id="chartType" onchange="updateChart()">
                                     <option value="orders">Orders</option>
                                     <option value="profit">Profit</option>
-                                    <option value="status">Status</option> <!-- Opsi untuk Status -->
                                 </select>
                                 <select class="border border-gray-300 rounded-md p-2" id="chartShape" onchange="updateChartShape()">
                                     <option value="line">Line</option>
@@ -115,14 +114,7 @@
                         <script>
                             var monthlyOrders = <?php echo json_encode($data['monthlyOrders']); ?>;
                             var monthlyProfit = <?php echo json_encode($data['monthlyCompletedProfit1']); ?>;
-                            var monthlyOrdersStatus = <?php echo json_encode($data['monthlyOrdersStatus']); ?>; // Data untuk status
                             var months = <?php echo json_encode($data['months']); ?>;
-
-                            // Data untuk status pesanan
-                            var pendingOrders = monthlyOrdersStatus.map(item => item.Pending);
-                            var processingOrders = monthlyOrdersStatus.map(item => item.Processing);
-                            var completedOrders = monthlyOrdersStatus.map(item => item.Completed);
-                            var cancelledOrders = monthlyOrdersStatus.map(item => item.Cancelled);
 
                             var ctx = document.getElementById('orderChart').getContext('2d');
 
@@ -156,7 +148,6 @@
 
                             function updateChart() {
                                 var selectedType = document.getElementById('chartType').value;
-                              
 
                                 if (selectedType === 'orders') {
                                     chartData = monthlyOrders;
@@ -176,34 +167,6 @@
                                         data: chartData,
                                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                         borderColor: 'rgba(54, 162, 235, 1)',
-                                        borderWidth: 1
-                                    }];
-                                } else if (selectedType === 'status') {
-                                    chartData = [pendingOrders, processingOrders, completedOrders, cancelledOrders];
-                                    chartLabel = ''; // Tidak ada label tunggal untuk status
-                                    chartConfig.data.datasets = [{
-                                        label: 'Pending',
-                                        data: pendingOrders,
-                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                        borderColor: 'rgba(255, 99, 132, 1)',
-                                        borderWidth: 1
-                                    }, {
-                                        label: 'Processing',
-                                        data: processingOrders,
-                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                        borderColor: 'rgba(54, 162, 235, 1)',
-                                        borderWidth: 1
-                                    }, {
-                                        label: 'Completed',
-                                        data: completedOrders,
-                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1
-                                    }, {
-                                        label: 'Cancelled',
-                                        data: cancelledOrders,
-                                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                                        borderColor: 'rgba(153, 102, 255, 1)',
                                         borderWidth: 1
                                     }];
                                 }

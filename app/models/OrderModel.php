@@ -319,56 +319,6 @@ class OrderModel
         return $monthlyProfit;
     }
 
-    public function getMonthlyOrdersStatusWithZero($year)
-    {
-        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-        $query = "
-        SELECT 
-            months.month,
-            COALESCE(SUM(CASE WHEN o.Status = 'Pending' THEN 1 ELSE 0 END), 0) AS Pending,
-            COALESCE(SUM(CASE WHEN o.Status = 'Processing' THEN 1 ELSE 0 END), 0) AS Processing,
-            COALESCE(SUM(CASE WHEN o.Status = 'Completed' THEN 1 ELSE 0 END), 0) AS Completed,
-            COALESCE(SUM(CASE WHEN o.Status = 'Cancelled' THEN 1 ELSE 0 END), 0) AS Cancelled
-        FROM 
-            (SELECT 1 AS month UNION ALL 
-             SELECT 2 UNION ALL 
-             SELECT 3 UNION ALL 
-             SELECT 4 UNION ALL 
-             SELECT 5 UNION ALL 
-             SELECT 6 UNION ALL 
-             SELECT 7 UNION ALL 
-             SELECT 8 UNION ALL 
-             SELECT 9 UNION ALL 
-             SELECT 10 UNION ALL 
-             SELECT 11 UNION ALL 
-             SELECT 12) AS months
-        LEFT JOIN `order` o 
-            ON MONTH(o.CreatedAt) = months.month
-            AND YEAR(o.CreatedAt) = :year
-        GROUP BY months.month
-        ORDER BY months.month;
-        ";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $monthlyOrdersStatus = [];
-        foreach ($result as $row) {
-            $monthlyOrdersStatus[] = [
-                'Pending' => $row['Pending'],
-                'Processing' => $row['Processing'],
-                'Completed' => $row['Completed'],
-                'Cancelled' => $row['Cancelled']
-            ];
-        }
-
-        return $monthlyOrdersStatus;
-    }
-
     public function getOrderHistory($customerId)
     {
         $query = "
