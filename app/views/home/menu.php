@@ -1,27 +1,27 @@
 <html>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
 
-        .zoom-container {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 12rem;
-        }
+    .zoom-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 12rem;
+    }
 
-        .zoom-image {
-            transition: transform 0.3s ease;
-            transform-origin: center center;
-            cursor: zoom-in;
-        }
+    .zoom-image {
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        cursor: zoom-in;
+    }
 
-        .zoom-container:hover .zoom-image {
-            transform: scale(1.5);
-            cursor: zoom-in;
-        }
-    </style>
+    .zoom-container:hover .zoom-image {
+        transform: scale(1.5);
+        cursor: zoom-in;
+    }
+</style>
 </head>
 
 <body class="bg-gray-100 text-gray-800 p-4 sm:p-6 md:p-8 lg:p-10">
@@ -82,21 +82,24 @@
 
                         <div class="flex justify-between items-center mt-2 w-full">
                             <span class="text-lg font-bold">Rp <?= number_format($item['Price'], 0, ',', '.'); ?></span>
-                            <?php if ($item['Stock'] > 0): ?>
-                                <span class="text-sm text-gray-600 ml-4">Stock: <?= $item['Stock']; ?></span>
-                            <?php else: ?>
-                                <span class="text-sm text-red-500 ml-4">Out of Stock</span>
-                            <?php endif; ?>
+                            <span class="text-sm text-gray-600 ml-4">Stock: <?= $item['Stock']; ?></span>
                         </div>
                         <div class="flex justify-between items-center mt-2 w-full">
-                            <span class="text-sm text-gray-600">Sold: <?= $item['TotalSold']; ?> items</span>
+                            <div>
+                                <?php if ($item['TotalSold'] > 0): ?>
+                                    <span class="text-sm text-gray-600"><?= $item['TotalSold']; ?> Sold</span>
+                                <?php endif; ?>
+                            </div>
+
                             <div class="flex items-center space-x-2">
-                                <button class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="decreaseQuantity(<?= $item['MenuId']; ?>)">-</button>
+                                <button id="decrease-<?= $item['MenuId']; ?>" class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="decreaseQuantity(<?= $item['MenuId']; ?>)" <?= $item['Stock'] == 0 ? 'disabled' : '' ?>>-</button>
                                 <input id="quantity-<?= $item['MenuId']; ?>" type="number" min="1" max="<?= $item['Stock']; ?>" value="1" class="w-12 text-center font-medium border border-gray-300 rounded" onchange="updateCartQuantity(<?= $item['MenuId']; ?>)" style="display: none;">
                                 <span id="quantity-display-<?= $item['MenuId']; ?>" class="w-12 text-center font-medium border border-gray-300 rounded"><?= $item['Stock'] > 0 ? 1 : 0 ?></span>
-                                <button class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="increaseQuantity(<?= $item['MenuId']; ?>)">+</button>
+                                <button id="increase-<?= $item['MenuId']; ?>" class="bg-gray-200 text-gray-700 px-2 py-1 rounded" onclick="increaseQuantity(<?= $item['MenuId']; ?>)" <?= $item['Stock'] == 0 ? 'disabled' : '' ?>>+</button>
                             </div>
+
                         </div>
+
                         <div class="quantity-controls flex items-center justify-center space-x-2 mt-4 w-full">
                             <?php if ($item['Stock'] > 0): ?>
                                 <button
@@ -160,8 +163,10 @@
             const quantity = parseInt(document.getElementById('quantity-' + menuId).value);
             const stock = parseInt(document.getElementById('quantity-' + menuId).max);
 
+            // Cek apakah quantity valid, jika lebih dari stok setel ke stok maksimum
             if (quantity <= 0 || quantity > stock) {
-                alert("Please select a valid quantity.");
+                document.getElementById('quantity-' + menuId).value = stock; // Set ke stok maksimum
+                alert("Jumlah melebihi stok, diatur ke stok maksimum: " + stock);
                 return;
             }
 
@@ -197,6 +202,11 @@
                 quantity = stock;
             }
 
+            // Pastikan quantity tidak melebihi stok jika stoknya 0
+            if (stock === 0) {
+                quantity = 0; // jika stok 0, quantity harus 0
+            }
+
             quantityInput.value = quantity;
             quantityDisplay.innerText = quantity;
         }
@@ -207,31 +217,67 @@
             let quantity = parseInt(quantityInput.value);
             const stock = parseInt(quantityInput.max);
 
-            if (quantity < stock) {
+            // Hanya tambah jika stok lebih besar dari 0 dan quantity kurang dari stok
+            if (stock > 0 && quantity < stock) {
                 quantity += 1;
             }
 
             quantityInput.value = quantity;
             quantityDisplay.innerText = quantity;
+
+            // Disable tombol + dan - jika stok 0
+            const increaseButton = document.querySelector(`#increase-${menuId}`);
+            const decreaseButton = document.querySelector(`#decrease-${menuId}`);
+            if (stock === 0 || quantity >= stock) {
+                increaseButton.disabled = true; // Disable tombol +
+            } else {
+                increaseButton.disabled = false; // Enable tombol + jika stok lebih besar dari quantity
+            }
+            if (stock === 0 || quantity <= 1) {
+                decreaseButton.disabled = true; // Disable tombol -
+            } else {
+                decreaseButton.disabled = false; // Enable tombol - jika quantity lebih besar dari 1
+            }
         }
 
         function decreaseQuantity(menuId) {
             const quantityInput = document.getElementById('quantity-' + menuId);
             const quantityDisplay = document.getElementById('quantity-display-' + menuId);
             let quantity = parseInt(quantityInput.value);
+            const stock = parseInt(quantityInput.max);
 
+            // Jangan izinkan quantity berkurang lebih rendah dari 1
             if (quantity > 1) {
                 quantity -= 1;
             }
 
+            // Pastikan quantity tidak bisa berkurang jika stoknya 0
+            if (stock === 0) {
+                quantity = 0; // Set ke 0 jika stoknya 0
+            }
+
             quantityInput.value = quantity;
             quantityDisplay.innerText = quantity;
+
+            // Disable tombol + dan - jika stok 0
+            const increaseButton = document.querySelector(`#increase-${menuId}`);
+            const decreaseButton = document.querySelector(`#decrease-${menuId}`);
+            if (stock === 0 || quantity >= stock) {
+                increaseButton.disabled = true; // Disable tombol +
+            } else {
+                increaseButton.disabled = false; // Enable tombol + jika stok lebih besar dari quantity
+            }
+            if (stock === 0 || quantity <= 1) {
+                decreaseButton.disabled = true; // Disable tombol -
+            } else {
+                decreaseButton.disabled = false; // Enable tombol - jika quantity lebih besar dari 1
+            }
         }
 
         function sortMenu() {
-            const sortValue = document.getElementById('sortDropdown').value; 
+            const sortValue = document.getElementById('sortDropdown').value;
             const menuGrid = document.getElementById('menuGrid');
-            const menuItems = Array.from(menuGrid.children); 
+            const menuItems = Array.from(menuGrid.children);
 
             console.log("Sort Value: ", sortValue);
 
@@ -244,20 +290,20 @@
 
                 switch (sortValue) {
                     case 'az':
-                        return nameA.localeCompare(nameB); 
+                        return nameA.localeCompare(nameB);
                     case 'za':
                         return nameB.localeCompare(nameA);
                     case 'price-low':
                         return priceA - priceB;
                     case 'price-high':
-                        return priceB - priceA; 
+                        return priceB - priceA;
                     default:
-                        return 0; 
+                        return 0;
                 }
             });
 
-            menuGrid.innerHTML = ''; 
-            menuItems.forEach(item => menuGrid.appendChild(item)); 
+            menuGrid.innerHTML = '';
+            menuItems.forEach(item => menuGrid.appendChild(item));
         }
 
         function filterMenu() {

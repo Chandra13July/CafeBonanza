@@ -6,6 +6,7 @@
             const selectAllCheckbox = document.getElementById('select-all');
             const itemCheckboxes = document.querySelectorAll('.item-checkbox');
             const selectAllLabel = document.getElementById('select-all-label');
+            const cartItems = document.querySelectorAll('.item');
 
             const updateTotal = () => {
                 let totalQty = 0;
@@ -28,6 +29,26 @@
                 buyButton.textContent = totalQty > 0 ? 'Beli (' + totalQty + ')' : 'Beli';
 
             };
+
+            cartItems.forEach(item => {
+                const cartId = item.getAttribute('data-cart-id');
+                const quantityElement = document.querySelector(`#quantity-${cartId}`);
+                const stockElement = item.querySelector('.stock');
+                const form = item.querySelector('form[action*="updateQuantity"]');
+
+                if (quantityElement && stockElement && form) {
+                    let quantity = parseInt(quantityElement.value);
+                    let stock = parseInt(stockElement.innerText.split(': ')[1]);
+
+                    if (quantity > stock) {
+                        quantityElement.value = stock;
+                        form.querySelector('input[name="quantity"]').value = stock;
+
+                        // Kirim formulir untuk memperbarui jumlah
+                        form.submit();
+                    }
+                }
+            });
 
             const updateSelectAllLabel = () => {
                 const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
@@ -64,9 +85,11 @@
                     if (quantity < stock) {
                         quantity++;
                         quantityElement.value = quantity;
-
                         const form = this.closest('form');
                         form.submit();
+                    } else {
+                        alert("Jumlah barang di keranjang telah mencapai stok maksimum.");
+                        window.location.reload();
                     }
                 });
             });
