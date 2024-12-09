@@ -12,55 +12,81 @@ class OrderApi
         $this->db = new Database();
     }
 
-    public function checkoutOrder()
+    public function checkoutOrderFromCart($customerId = 1)
     {
-        // Ambil data dari request
-        $input = json_decode(file_get_contents("php://input"), true);
+        // Ambil data cart customer
+        $this->db->query("SELECT * FROM `cart` WHERE CustomerId = :customerId");
+        $this->db->bind(':customerId', $customerId);
+        $cartItems = $this->db->resultSet();
 
-        // Validasi data yang diperlukan
-        if (
-            empty($input['Total']) ||
-            empty($input['Paid']) ||
-            empty($input['OrderDetails']) ||
-            !is_array($input['OrderDetails']) // Pastikan OrderDetails adalah array
-        ) {
+        // Periksa apakah ada item di cart
+        if (empty($cartItems)) {
             http_response_code(400);
-            echo json_encode(["message" => "Missing required fields"]);
+            echo json_encode(["message" => "Cart is empty, no items to checkout"]);
             return;
         }
 
-        // Set PaymentMethod default menjadi "Cash" jika tidak ada dalam request
+        // Ambil data order dari cart untuk checkout
+        $orderDetails = [];
+        $total = 0;
+
+        foreach ($cartItems as $item) {
+            // Jika Price kosong, ambil dari tabel menu
+            if (empty($item['Price'])) {
+                $this->db->query("SELECT Price FROM `menu` WHERE MenuId = :menuId");
+                $this->db->bind(':menuId', $item['MenuId']);
+                $menuItem = $this->db->single();
+                $item['Price'] = $menuItem['Price']; // Set price from menu table if it's missing in the cart
+            }
+
+            // Pastikan Price tidak kosong sebelum melanjutkan
+            if (empty($item['Price'])) {
+                http_response_code(400);
+                echo json_encode(["message" => "Price not found for MenuId: " . $item['MenuId']]);
+                return;
+            }
+
+            // Hitung subtotal untuk setiap item di cart
+            $subtotal = $item['Quantity'] * $item['Price'];
+            $orderDetails[] = [
+                "MenuId" => $item['MenuId'],
+                "Quantity" => $item['Quantity'],
+                "Price" => $item['Price'],
+                "Subtotal" => $subtotal
+            ];
+            $total += $subtotal;
+        }
+
+        // Validasi jika data 'Paid' dikirimkan dalam request
+        $input = json_decode(file_get_contents("php://input"), true);
+        $paid = isset($input['Paid']) ? $input['Paid'] : $total; // Ambil nilai Paid dari input atau set sesuai total
         $paymentMethod = isset($input['PaymentMethod']) ? $input['PaymentMethod'] : 'Cash';
 
         // Hitung kembalian
-        $change = $input['Paid'] - $input['Total'];
+        $change = $paid - $total;
 
-        // Mulai transaksi database
+        // Mulai transaksi
         $this->db->beginTransaction();
 
         try {
-            // Insert data ke tabel `orders`
-            $this->db->query("INSERT INTO `order` 
-        (CustomerId, Total, Paid, `Change`, PaymentMethod, Status, CreatedAt) 
-        VALUES (1, :total, :paid, :change, :paymentMethod, :status, NOW())");
+            // Insert ke tabel `order`
+            $this->db->query("INSERT INTO `order` (CustomerId, Total, Paid, `Change`, PaymentMethod, Status, CreatedAt) 
+                        VALUES (:customerId, :total, :paid, :change, :paymentMethod, :status, NOW())");
 
             // Bind parameter
-            $this->db->bind(':total', $input['Total']);
-            $this->db->bind(':paid', $input['Paid']);
+            $this->db->bind(':customerId', $customerId);
+            $this->db->bind(':total', $total);
+            $this->db->bind(':paid', $paid);
             $this->db->bind(':change', $change);
-            $this->db->bind(':paymentMethod', $paymentMethod);  // Gunakan PaymentMethod yang sudah diset default
+            $this->db->bind(':paymentMethod', $paymentMethod);
             $this->db->bind(':status', 'Completed'); // Status default "Completed"
 
-            // Eksekusi query dan dapatkan OrderId yang baru saja disisipkan
+            // Eksekusi query
             $this->db->execute();
             $orderId = $this->db->lastInsertId();
 
-            // Insert OrderDetails
-            $orderDetails = [];
-            foreach ($input['OrderDetails'] as $detail) {
-                // Hitung Subtotal
-                $subtotal = $detail['Quantity'] * $detail['Price'];
-
+            // Insert order details
+            foreach ($orderDetails as $detail) {
                 $this->db->query("INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal) 
                               VALUES (:orderId, :menuId, :quantity, :price, :subtotal)");
 
@@ -68,20 +94,17 @@ class OrderApi
                 $this->db->bind(':menuId', $detail['MenuId']);
                 $this->db->bind(':quantity', $detail['Quantity']);
                 $this->db->bind(':price', $detail['Price']);
-                $this->db->bind(':subtotal', $subtotal);
+                $this->db->bind(':subtotal', $detail['Subtotal']);
                 $this->db->execute();
-
-                // Menyimpan detail untuk respons
-                $orderDetails[] = [
-                    "MenuId" => $detail['MenuId'],
-                    "Quantity" => $detail['Quantity'],
-                    "Price" => $detail['Price'],
-                    "Subtotal" => $subtotal
-                ];
             }
 
             // Commit transaksi
             $this->db->commit();
+
+            // Hapus cart setelah checkout
+            $this->db->query("DELETE FROM `cart` WHERE CustomerId = :customerId");
+            $this->db->bind(':customerId', $customerId);
+            $this->db->execute();
 
             // Respons sukses dengan data pesanan
             http_response_code(201);
@@ -89,11 +112,11 @@ class OrderApi
                 "data" => [
                     [
                         "OrderId" => $orderId,
-                        "CustomerId" => 1, // Asumsi CustomerId = 1
-                        "Total" => $input['Total'],
-                        "Paid" => $input['Paid'],
-                        "Change" => $change, // Menambahkan Change pada respons
-                        "PaymentMethod" => $paymentMethod, // Kirimkan PaymentMethod yang sudah diset default
+                        "CustomerId" => $customerId,
+                        "Total" => $total,
+                        "Paid" => $paid,
+                        "Change" => $change,
+                        "PaymentMethod" => $paymentMethod,
                         "Status" => 'Completed',
                         "CreatedAt" => date('Y-m-d H:i:s'),
                         "OrderDetails" => $orderDetails
@@ -101,7 +124,7 @@ class OrderApi
                 ]
             ]);
         } catch (Exception $e) {
-            // Rollback transaksi jika terjadi error
+            // Rollback jika terjadi error
             $this->db->rollBack();
             http_response_code(500);
             echo json_encode(["message" => "Failed to create order: " . $e->getMessage()]);
@@ -242,7 +265,7 @@ try {
 
     switch ($method) {
         case 'POST':
-            $orderApi->checkoutOrder();
+            $orderApi->checkoutOrderFromCart();
             break;
 
         case 'GET':
