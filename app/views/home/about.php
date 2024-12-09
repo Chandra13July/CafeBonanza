@@ -1,23 +1,15 @@
-<html>
-
-<head>
-    <title>
-        Cafe Bonanza
-    </title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'Alexandria', sans-serif;
-        }
-    </style>
-</head>
+<style>
+    /* Menetapkan font Alexandria untuk keseluruhan halaman */
+    body {
+        font-family: 'Alexandria', sans-serif;
+    }
+</style>
 
 <body class="bg-gray-100 text-gray-800">
+    <!-- Section: Tentang Cafe Bonanza -->
     <section class="bg-white py-16 about-section">
         <div class="container mx-auto flex flex-col md:flex-row items-center px-6 md:px-28">
+            <!-- Bagian teks untuk deskripsi Cafe Bonanza -->
             <div class="md:w-1/2">
                 <div class="mb-4">
                     <span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-base md:text-lg">
@@ -30,17 +22,22 @@
                 <p class="text-base md:text-lg mb-6">
                     Cafe Bonanza started as an old truck garage inherited from our grandfather, which our family transformed into a cozy and warm café. Today, Bonanza blends rustic charm with modern touches, offering artisan coffee and delicious dishes in a setting rich with family history.
                 </p>
+                <!-- Tombol untuk mengarahkan pengguna ke section layanan -->
                 <a class="bg-black text-white py-2 px-6 inline-block" href="#service-section" id="view-more">
                     View More
                 </a>
             </div>
+            <!-- Bagian gambar untuk menunjukkan interior Cafe Bonanza -->
             <div class="md:w-1/2 mt-8 md:mt-0 flex justify-start md:justify-end">
                 <img alt="Interior of Cafe Bonanza with modern rustic design" class="rounded-lg shadow-lg" height="300" src="https://storage.googleapis.com/a1aa/image/XqGwX6e3GuylV6gHWnf7nU0eoibgtbRogGZy6apQyfhSlBjPB.jpg" width="500" />
             </div>
         </div>
     </section>
+
+    <!-- Section: Layanan yang Ditawarkan oleh Cafe Bonanza -->
     <section class="bg-gray-100 py-16 service-section" id="service-section">
         <div class="container mx-auto text-center px-6 md:px-28">
+            <!-- Judul layanan -->
             <div class="mb-8">
                 <span class="bg-white text-gray-600 py-1 px-3 text-sm">
                     Our Services
@@ -49,7 +46,9 @@
             <h2 class="text-3xl font-bold mb-12">
                 What Do We Offer You?
             </h2>
+            <!-- Tampilan layanan dengan scroll horizontal pada perangkat mobile -->
             <div class="flex overflow-x-auto space-x-4">
+                <!-- Setiap div di sini mewakili satu layanan -->
                 <div class="bg-white p-8 shadow-lg min-w-[250px]">
                     <i class="fas fa-utensils text-4xl text-gray-600 mb-4">
                     </i>
@@ -93,6 +92,8 @@
             </div>
         </div>
     </section>
+
+    <!-- Section: Misi Cafe Bonanza -->
     <section class="bg-white py-16">
         <div class="container mx-auto px-6 md:px-28">
             <div class="text-left mb-8">
@@ -137,6 +138,8 @@
             </div>
         </div>
     </section>
+
+    <!-- Section: Visi Cafe Bonanza -->
     <section class="bg-gray-100 py-16">
         <div class="container mx-auto px-6 md:px-28">
             <div class="text-center mb-8">
@@ -158,6 +161,7 @@
                     <p>
                         To become a café known and valued for its premium coffee, delightful dishes, and cozy ambiance, where every visit becomes a memorable and enjoyable moment. We strive to innovate, maintain good customer relationships, and deliver friendly and professional service. Cafe Bonanza aims to be a favorite destination for relaxation and gathering.
                     </p>
+                    <!-- Tombol untuk bergabung sebagai anggota -->
                     <button class="bg-black text-white py-2 px-6 mt-4">
                         <a class="text-white" href="<?= BASEURL; ?>/auth/signup">
                             Join Us
@@ -167,6 +171,8 @@
             </div>
         </div>
     </section>
+
+    <!-- JavaScript untuk scroll smooth saat mengklik tombol "View More" -->
     <script>
         document.querySelector('#view-more').addEventListener('click', function(e) {
             e.preventDefault();
@@ -176,5 +182,3 @@
         });
     </script>
 </body>
-
-</html>
