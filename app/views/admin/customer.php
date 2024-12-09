@@ -313,14 +313,14 @@
             if (successNotification) {
                 setTimeout(() => {
                     successNotification.style.display = 'none';
-                }, 2000);
+                }, 1000);
             }
 
             const errorNotification = document.getElementById('error-notification');
             if (errorNotification) {
                 setTimeout(() => {
                     errorNotification.style.display = 'none';
-                }, 2000);
+                }, 1000);
             }
         }
     </script>

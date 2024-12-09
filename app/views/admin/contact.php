@@ -82,5 +82,21 @@
                 function closeDeleteModal() {
                     document.getElementById('deleteModal').classList.add('hidden');
                 }
+
+                window.onload = function() {
+                    const successNotification = document.getElementById('success-notification');
+                    if (successNotification) {
+                        setTimeout(() => {
+                            successNotification.style.display = 'none';
+                        }, 1000);
+                    }
+
+                    const errorNotification = document.getElementById('error-notification');
+                    if (errorNotification) {
+                        setTimeout(() => {
+                            errorNotification.style.display = 'none';
+                        }, 1000);
+                    }
+                }
             </script>
 </body>
