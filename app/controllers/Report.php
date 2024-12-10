@@ -100,58 +100,76 @@ class Report extends Controller
         }
     }
 
-    // Metode untuk ekspor laporan ke PDF
     public function exportPdf($startDate = null, $endDate = null)
     {
-        // Ambil data pesanan dari model
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
-
-        // Inisialisasi objek FPDF
-        $pdf = new Fpdi();
+    
+        usort($orders, function ($a, $b) {
+            return strtotime($a['CreatedAt']) - strtotime($b['CreatedAt']);
+        });
+    
+        $pdf = new Fpdi('L');  
         $pdf->AddPage();
+    
+        $pdf->SetFont('Arial', 'B', 16);
+        $pdf->Cell(0, 10, 'Report Order Cafe Bonanza', 0, 1, 'C'); 
+        $pdf->Ln(5);
+    
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->SetXY(180, 10); 
+        $pdf->Cell(0, 10, 'Tanggal Export: ' . date('Y-m-d H:i:s'), 0, 1, 'R'); 
+        $pdf->Ln(10); 
+    
         $pdf->SetFont('Arial', 'B', 12);
-
-        // Menambahkan header kolom ke PDF
-        $pdf->Cell(30, 10, 'OrderId', 1);
-        $pdf->Cell(50, 10, 'Customer', 1);
-        $pdf->Cell(30, 10, 'Total', 1);
-        $pdf->Cell(30, 10, 'Paid', 1);
-        $pdf->Cell(30, 10, 'Change', 1);
-        $pdf->Cell(30, 10, 'PaymentMethod', 1);
-        $pdf->Cell(30, 10, 'Status', 1);
-        $pdf->Cell(30, 10, 'CreatedAt', 1);
+        $pdf->Cell(20, 10, 'No', 1, 0, 'C');  
+        $pdf->Cell(40, 10, 'Customer', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'Total', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'Paid', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'Change', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'PaymentMethod', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'Status', 1, 0, 'C');
+        $pdf->Cell(50, 10, 'CreatedAt', 1, 1, 'C'); 
         $pdf->Ln();
-
-        // Menambahkan data pesanan ke PDF
-        foreach ($orders as $order) {
-            $pdf->Cell(30, 10, $order['OrderId'], 1);
-            $pdf->Cell(50, 10, $order['Customer'], 1);
-            $pdf->Cell(30, 10, $order['Total'], 1);
-            $pdf->Cell(30, 10, $order['Paid'], 1);
-            $pdf->Cell(30, 10, $order['Change'], 1);
-            $pdf->Cell(30, 10, $order['PaymentMethod'], 1);
-            $pdf->Cell(30, 10, $order['Status'], 1);
-            $pdf->Cell(30, 10, $order['CreatedAt'], 1);
+    
+        $pdf->SetFont('Arial', '', 12);
+        foreach ($orders as $index => $order) {
+            $pdf->Cell(20, 10, $index + 1, 1, 0, 'C');  
+            $pdf->Cell(40, 10, $order['Customer'], 1, 0, 'C');
+            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Total'], 0, ',', '.'), 1, 0, 'C'); 
+            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Paid'], 0, ',', '.'), 1, 0, 'C');
+            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Change'], 0, ',', '.'), 1, 0, 'C'); 
+            $pdf->Cell(40, 10, $order['PaymentMethod'], 1, 0, 'C');
+            $pdf->Cell(30, 10, $order['Status'], 1, 0, 'C');
+            $pdf->Cell(50, 10, $order['CreatedAt'], 1, 0, 'C');
             $pdf->Ln();
         }
-
-        // Output PDF ke browser
-        $pdf->Output();
+    
+        $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.pdf';
+        $filePath = __DIR__ . '/../../public/report/pdf/' . $fileName;
+    
+        $pdf->Output('F', $filePath);
+    
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Length: ' . filesize($filePath));
+    
+        readfile($filePath);
+    
         exit();
     }
-
-    // Metode untuk ekspor laporan ke Excel
+    
     public function exportExcel($startDate = null, $endDate = null)
     {
-        // Ambil data pesanan dari model
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
 
-        // Buat objek Spreadsheet
+        usort($orders, function ($a, $b) {
+            return strtotime($a['CreatedAt']) - strtotime($b['CreatedAt']);
+        });
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set header kolom
-        $sheet->setCellValue('A1', 'OrderId');
+        $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Customer');
         $sheet->setCellValue('C1', 'Total');
         $sheet->setCellValue('D1', 'Paid');
@@ -160,10 +178,9 @@ class Report extends Controller
         $sheet->setCellValue('G1', 'Status');
         $sheet->setCellValue('H1', 'CreatedAt');
 
-        // Menambahkan data pesanan ke sheet
         $row = 2;
-        foreach ($orders as $order) {
-            $sheet->setCellValue('A' . $row, $order['OrderId']);
+        foreach ($orders as $index => $order) {
+            $sheet->setCellValue('A' . $row, $index + 1);
             $sheet->setCellValue('B' . $row, $order['Customer']);
             $sheet->setCellValue('C' . $row, $order['Total']);
             $sheet->setCellValue('D' . $row, $order['Paid']);
@@ -171,54 +188,77 @@ class Report extends Controller
             $sheet->setCellValue('F' . $row, $order['PaymentMethod']);
             $sheet->setCellValue('G' . $row, $order['Status']);
             $sheet->setCellValue('H' . $row, $order['CreatedAt']);
+
+            // Format Total, Paid, Change sebagai mata uang Rp
+            $sheet->getStyle('C' . $row)->getNumberFormat()->setFormatCode('Rp #,##0');
+            $sheet->getStyle('D' . $row)->getNumberFormat()->setFormatCode('Rp #,##0');
+            $sheet->getStyle('E' . $row)->getNumberFormat()->setFormatCode('Rp #,##0');
+
             $row++;
         }
 
-        // Buat writer untuk menyimpan file Excel
+        foreach (range('A', 'H') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
         $writer = new Xlsx($spreadsheet);
 
-        // Set header untuk file Excel
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="order_report.xlsx"');
-        header('Cache-Control: max-age=0');
+        $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $filePath = __DIR__ . '/../../public/report/excel/' . $fileName;
 
-        // Simpan dan output file Excel
-        $writer->save('php://output');
+        $writer->save($filePath);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Length: ' . filesize($filePath));
+
+        readfile($filePath);
+
         exit();
     }
 
-    // Metode untuk ekspor laporan ke CSV
     public function exportCsv($startDate = null, $endDate = null)
     {
-        // Ambil data pesanan dari model
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
 
-        // Set header untuk file CSV
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment;filename="order_report.csv"');
+        usort($orders, function ($a, $b) {
+            return strtotime($a['CreatedAt']) - strtotime($b['CreatedAt']);
+        });
 
-        // Buka output untuk menulis CSV
-        $output = fopen('php://output', 'w');
+        $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.csv';
 
-        // Menulis header kolom
-        fputcsv($output, ['OrderId', 'Customer', 'Total', 'Paid', 'Change', 'PaymentMethod', 'Status', 'CreatedAt']);
+        $filePath = __DIR__ . '/../../public/report/csv/' . $fileName;
 
-        // Menulis data pesanan ke CSV
+        $output = fopen($filePath, 'w');
+
+        fputcsv($output, ['No', 'Customer', 'Total', 'Paid', 'Change', 'PaymentMethod', 'Status', 'CreatedAt']);
+
+        $no = 1;
         foreach ($orders as $order) {
+            $total = 'Rp ' . number_format($order['Total'], 0, ',', '.');
+            $paid = 'Rp ' . number_format($order['Paid'], 0, ',', '.');
+            $change = 'Rp ' . number_format($order['Change'], 0, ',', '.');
+
             fputcsv($output, [
-                $order['OrderId'],
+                $no++,
                 $order['Customer'],
-                $order['Total'],
-                $order['Paid'],
-                $order['Change'],
+                $total,
+                $paid,
+                $change,
                 $order['PaymentMethod'],
                 $order['Status'],
                 $order['CreatedAt']
             ]);
         }
 
-        // Tutup file output
         fclose($output);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Length: ' . filesize($filePath));
+
+        readfile($filePath);
+
         exit();
     }
 }
