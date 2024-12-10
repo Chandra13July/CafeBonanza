@@ -22,20 +22,30 @@
                 <form method="POST" action="<?= BASEURL; ?>/report/filterReport" class="flex items-center gap-4">
                     <div>
                         <label for="startDate" class="text-gray-600">Start Date:</label>
-                        <input type="date" name="startDate" id="startDate" class="border rounded p-1" required>
+                        <input type="date" name="startDate" id="startDate" class="border rounded p-1">
                     </div>
                     <div>
                         <label for="endDate" class="text-gray-600">End Date:</label>
-                        <input type="date" name="endDate" id="endDate" class="border rounded p-1" required>
+                        <input type="date" name="endDate" id="endDate" class="border rounded p-1">
                     </div>
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded">Filter</button>
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded ml-2 flex items-center">
+                        <i class="fas fa-filter mr-2"></i> Filter
+                    </button>
                 </form>
-                <div class="flex items-center">
-                    <button id="printButton" class="bg-green-500 text-white px-6 py-2 rounded">Print</button>
 
-                    <button id="exportButton" class="bg-yellow-500 text-white px-6 py-2 rounded ml-2">Export to Excel</button>
+                <div class="flex items-center gap-4">
+                    <a href="<?= BASEURL; ?>/report/exportPdf" id="exportPdfButton" class="bg-pink-500 text-white px-6 py-2 rounded flex items-center">
+                        <i class="fas fa-file-pdf mr-2"></i> Export to PDF
+                    </a>
+                    <a href="<?= BASEURL; ?>/report/exportExcel" id="exportExcelButton" class="bg-blue-500 text-white px-6 py-2 rounded flex items-center">
+                        <i class="fas fa-file-excel mr-2"></i> Export to Excel
+                    </a>
+                    <a href="<?= BASEURL; ?>/report/exportCsv" id="exportCsvButton" class="bg-yellow-500 text-white px-6 py-2 rounded flex items-center">
+                        <i class="fas fa-file-csv mr-2"></i> Export to CSV
+                    </a>
                 </div>
             </div>
+
             <div class="overflow-x-auto p-4">
                 <table id="reportTable" class="min-w-full bg-white table-auto">
                     <thead>
@@ -125,8 +135,9 @@
                         <label for="status" class="block text-gray-700">Status</label>
                         <select name="status" id="editStatus" class="w-full p-2 border border-gray-300 rounded" required>
                             <option value="Pending" <?= isset($order['Status']) && $order['Status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                            <option value="Processing" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
-                            <option value="Completed" <?= isset($order['PaymentMethod']) && $order['PaymentMethod'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Processing" <?= isset($order['Status']) && $order['Status'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
+                            <option value="Completed" <?= isset($order['Status']) && $order['Status'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Cancelled" <?= isset($order['Status']) && $order['Status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                         </select>
                     </div>
                     <div class="flex justify-end col-span-2">
@@ -144,7 +155,6 @@
         <script>
             const editModal = document.getElementById("editModal");
 
-            // Fungsi untuk membuka modal edit dengan data order yang sudah diisi
             function openEditModal(order) {
                 document.getElementById('editOrderId').value = order.OrderId;
                 document.getElementById('editCustomer').value = order.Customer;
@@ -156,12 +166,10 @@
                 editModal.classList.remove('hidden');
             }
 
-            // Fungsi untuk menutup modal
             function closeEditModal() {
                 editModal.classList.add('hidden');
             }
 
-            // Fungsi untuk menghitung Change
             function calculateChange() {
                 const total = parseInt(document.getElementById('editTotal').value) || 0;
                 const paid = parseInt(document.getElementById('editPaid').value) || 0;
@@ -185,147 +193,31 @@
                 }
             }
 
-            // Menambahkan event listener untuk menghitung change otomatis
             document.getElementById('editTotal').addEventListener('input', calculateChange);
             document.getElementById('editPaid').addEventListener('input', calculateChange);
 
-            // Fungsi untuk menangani submit form edit
             document.getElementById("editOrderForm").addEventListener("submit", function(event) {
-                // Mengecek apakah pembayaran cukup sebelum mengirim formulir
                 const paid = parseInt(document.getElementById('editPaid').value) || 0;
                 const total = parseInt(document.getElementById('editTotal').value) || 0;
-                const status = document.getElementById('editStatus').value;
+                let status = document.getElementById('editStatus').value;
 
-                // Pastikan pembayaran lebih besar dari total
-                if (paid < total) {
-                    alert("Pembayaran tidak cukup! Total pembayaran harus lebih besar dari jumlah total.");
-                    event.preventDefault(); // Mencegah pengiriman formulir
-                    return;
+                // Otomatis ubah status menjadi "Processing" jika pembayaran terpenuhi
+                if (paid >= total && status === "Pending") {
+                    document.getElementById('editStatus').value = "Processing";
+                    status = "Processing"; // Update status setelah perubahan
                 }
 
-                // Jika status sedang "Processing" atau "Completed", jangan biarkan mundur ke "Pending"
-                if (status === "Pending") {
-                    alert("Status tidak bisa mundur menjadi 'Pending'.");
+                const previousStatus = document.getElementById('editStatus').dataset.previousStatus || "Pending";
+
+                // Validasi agar tidak mundur dari "Processing" atau "Completed" ke "Pending"
+                if ((previousStatus === "Processing" || previousStatus === "Completed") && status === "Pending") {
+                    alert("Status tidak bisa mundur dari 'Processing' atau 'Completed' ke 'Pending'.");
                     event.preventDefault();
                     return;
                 }
 
-                // Jika pembayaran sudah cukup, otomatis ganti status menjadi "Processing"
-                if (paid >= total && status === "Pending") {
-                    document.getElementById('editStatus').value = "Processing";
-                }
-            });
-
-            // Fungsi untuk memastikan status tidak bisa mundur
-            document.getElementById('editStatus').addEventListener('change', function(event) {
-                const currentStatus = event.target.value;
-
-                // Jangan biarkan status mundur dari Processing ke Pending
-                const previousStatus = document.getElementById('editStatus').dataset.previousStatus || "Pending";
-
-                if (previousStatus === "Processing" && currentStatus === "Pending") {
-                    alert("Tidak bisa mengubah status ke 'Pending' setelah status menjadi 'Processing'.");
-                    event.preventDefault(); // Mencegah perubahan status
-                    return;
-                }
-
-                // Simpan status sebelumnya untuk referensi
-                document.getElementById('editStatus').dataset.previousStatus = currentStatus;
-            });
-
-            document.getElementById('printButton').addEventListener('click', function() {
-                var originalTable = document.getElementById('reportTable');
-                var tempTable = document.createElement('table');
-                tempTable.innerHTML = originalTable.outerHTML;
-
-                var rows = tempTable.querySelectorAll('tr');
-                rows.forEach(row => {
-                    if (row.lastElementChild) {
-                        row.removeChild(row.lastElementChild);
-                    }
-                });
-
-                var printContent = tempTable.outerHTML;
-                var printWindow = window.open('', '', 'height=800,width=1200');
-                printWindow.document.write(`
-        <html>
-        <head>
-            <title>Order Report</title>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    margin: 20px;
-                    font-size: 14px;
-                    line-height: 1.6;
-                    color: #333;
-                }
-                h2 {
-                    text-align: center;
-                    margin-bottom: 20px;
-                    color: #555;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 20px;
-                }
-                th, td {
-                    border: 1px solid #ddd;
-                    padding: 10px;
-                    text-align: center;
-                }
-                th {
-                    background-color: #f2f2f2;
-                    color: #333;
-                    font-weight: bold;
-                }
-                td {
-                    background-color: #fff;
-                }
-                tr:nth-child(even) td {
-                    background-color: #f9f9f9;
-                }
-                @media print {
-                    body {
-                        margin: 0;
-                        padding: 0;
-                    }
-                    table {
-                        page-break-inside: auto;
-                    }
-                    tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <h2>Order Report</h2>
-            ${printContent}
-        </body>
-        </html>
-    `);
-                printWindow.document.close();
-                printWindow.print();
-            });
-
-            document.getElementById('exportButton').addEventListener('click', function() {
-                var originalTable = document.getElementById('reportTable');
-                var tempTable = document.createElement('table');
-                tempTable.innerHTML = originalTable.outerHTML;
-
-                var rows = tempTable.querySelectorAll('tr');
-                rows.forEach(row => {
-                    if (row.lastElementChild) {
-                        row.removeChild(row.lastElementChild);
-                    }
-                });
-
-                var wb = XLSX.utils.table_to_book(tempTable, {
-                    sheet: "Order Report"
-                });
-                XLSX.writeFile(wb, 'Order_Report.xlsx');
+                // Simpan status terbaru untuk referensi
+                document.getElementById('editStatus').dataset.previousStatus = status;
             });
 
             window.onload = function() {

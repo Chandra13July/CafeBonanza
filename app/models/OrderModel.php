@@ -380,4 +380,110 @@ class OrderModel
 
         return array_values($groupedOrderHistory); // Mengembalikan array yang sudah dikelompokkan
     }
+
+    public function exportCsv($startDate = null, $endDate = null)
+    {
+        // Dapatkan data pesanan
+        $orders = $this->getOrderReport($startDate, $endDate);
+
+        // Nama file CSV yang akan diunduh
+        $filename = "orders_report_" . date('Y-m-d_H-i-s') . ".csv";
+
+        // Set header untuk file CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Membuka file untuk output
+        $output = fopen('php://output', 'w');
+
+        // Menulis header kolom (misalnya: OrderId, Customer, Total, dll.)
+        fputcsv($output, ['OrderId', 'Customer', 'Total', 'Paid', 'Change', 'PaymentMethod', 'Status', 'CreatedAt']);
+
+        // Menulis data pesanan ke file CSV
+        foreach ($orders as $order) {
+            fputcsv($output, $order);
+        }
+
+        // Tutup file output
+        fclose($output);
+        exit();
+    }
+
+    public function exportOrderReportToExcel($startDate = null, $endDate = null)
+    {
+        require 'vendor/autoload.php';  // Pastikan path ini sesuai
+
+        $orders = $this->getOrderReport($startDate, $endDate);
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Menambahkan header
+        $sheet->setCellValue('A1', 'Order ID');
+        $sheet->setCellValue('B1', 'Customer');
+        $sheet->setCellValue('C1', 'Total');
+        $sheet->setCellValue('D1', 'Paid');
+        $sheet->setCellValue('E1', 'Change');
+        $sheet->setCellValue('F1', 'Payment Method');
+        $sheet->setCellValue('G1', 'Status');
+
+        // Menambahkan data pesanan
+        $row = 2;
+        foreach ($orders as $order) {
+            $sheet->setCellValue('A' . $row, $order['OrderId']);
+            $sheet->setCellValue('B' . $row, $order['Customer']);
+            $sheet->setCellValue('C' . $row, $order['Total']);
+            $sheet->setCellValue('D' . $row, $order['Paid']);
+            $sheet->setCellValue('E' . $row, $order['Change']);
+            $sheet->setCellValue('F' . $row, $order['PaymentMethod']);
+            $sheet->setCellValue('G' . $row, $order['Status']);
+            $row++;
+        }
+
+        // Menyimpan file Excel
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'order_report.xlsx';
+
+        // Output file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+    }
+
+    public function exportOrderReportToPdf($startDate = null, $endDate = null)
+    {
+
+        $orders = $this->getOrderReport($startDate, $endDate);
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 12);
+
+        // Menambahkan header
+        $pdf->Cell(40, 10, 'Order ID', 1);
+        $pdf->Cell(40, 10, 'Customer', 1);
+        $pdf->Cell(40, 10, 'Total', 1);
+        $pdf->Cell(40, 10, 'Paid', 1);
+        $pdf->Cell(40, 10, 'Change', 1);
+        $pdf->Cell(40, 10, 'Payment Method', 1);
+        $pdf->Cell(40, 10, 'Status', 1);
+        $pdf->Ln();
+
+        // Menambahkan data pesanan
+        foreach ($orders as $order) {
+            $pdf->Cell(40, 10, $order['OrderId'], 1);
+            $pdf->Cell(40, 10, $order['Customer'], 1);
+            $pdf->Cell(40, 10, $order['Total'], 1);
+            $pdf->Cell(40, 10, $order['Paid'], 1);
+            $pdf->Cell(40, 10, $order['Change'], 1);
+            $pdf->Cell(40, 10, $order['PaymentMethod'], 1);
+            $pdf->Cell(40, 10, $order['Status'], 1);
+            $pdf->Ln();
+        }
+
+        // Output PDF
+        $pdf->Output();
+    }
 }
