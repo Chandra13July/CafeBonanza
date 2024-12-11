@@ -4,3 +4,6 @@
 # Mengabaikan file composer.json dan composer.lock
 composer.json
 composer.lock
+
+# Mengabaikan folder public/report
+/public/report/

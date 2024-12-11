@@ -1,7 +1,0 @@
-OrderId,Customer,Total,Paid,Change,PaymentMethod,Status,CreatedAt
-5,Alief,84000,90000,6000,Cash,Completed,"2024-12-10 09:08:38"
-4,Alief,21000,25000,4000,Cash,Completed,"2024-12-10 09:05:05"
-3,Alief,84000,90000,6000,Cash,Completed,"2024-12-09 23:44:06"
-2,Alief,56000,60000,4000,Cash,Completed,"2024-12-09 23:06:39"
-1,Alief,63000,70000,7000,Cash,Completed,"2024-12-09 22:41:59"
-6,Raihan,84000,100000,16000,Cash,Completed,"2024-12-08 09:32:26"
