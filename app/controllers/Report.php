@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';  // Pastikan path ini benar
+require_once __DIR__ . '/../../vendor/autoload.php';  
 
 use setasign\Fpdi\Fpdi;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -31,14 +31,11 @@ class Report extends Controller
     public function filterReport()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Ensure data is sanitized and not null
             $startDate = trim($_POST['startDate'] ?? '');
             $endDate = trim($_POST['endDate'] ?? '');
 
-            // Call the updated method to fetch filtered data based on date range
             $orders = $this->orderModel->getOrderReport($startDate, $endDate);
 
-            // Pass the filtered data to the view
             $this->view('layout/header');
             $this->view('layout/sidebar');
             $this->view('admin/report', ['orders' => $orders]);

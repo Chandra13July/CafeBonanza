@@ -24,9 +24,9 @@ class Dashboard extends Controller
     {
         // Target yang bisa diubah dari pengaturan
         $targets = [
-            'menu' => 50,
-            'customer' => 100,
-            'order' => 300,
+            'menu' => 25,
+            'customer' => 50,
+            'order' => 150,
             'profit' => 3000000
         ];
 

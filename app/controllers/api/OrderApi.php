@@ -131,7 +131,6 @@ class OrderApi
         }
     }
 
-    // Mendapatkan semua pesanan
     // Mendapatkan semua pesanan atau berdasarkan CustomerId
     public function getAllOrders($customerId = null)
     {

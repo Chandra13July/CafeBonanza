@@ -54,7 +54,6 @@ class OrderModel
 
     public function getOrderReport($startDate = null, $endDate = null)
     {
-        // Prepare the base query
         $query = "
         SELECT 
             o.OrderId,
@@ -350,16 +349,14 @@ class OrderModel
 
         $orderHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Mengelompokkan item berdasarkan OrderId
         $groupedOrderHistory = [];
         foreach ($orderHistory as $order) {
             $orderId = $order['OrderId'];
-            // Jika OrderId belum ada dalam array, buat array baru untuk menyimpan item
             if (!isset($groupedOrderHistory[$orderId])) {
                 $groupedOrderHistory[$orderId] = [
                     'OrderId' => $order['OrderId'],
                     'CustomerId' => $order['CustomerId'],
-                    'Username' => $order['Username'],  // Menambahkan Username ke dalam array
+                    'Username' => $order['Username'], 
                     'Total' => $order['Total'],
                     'PaymentMethod' => $order['PaymentMethod'],
                     'Status' => $order['Status'],
@@ -367,7 +364,6 @@ class OrderModel
                     'items' => []
                 ];
             }
-            // Menambahkan item ke dalam array 'items'
             $groupedOrderHistory[$orderId]['items'][] = [
                 'MenuName' => $order['MenuName'],
                 'Description' => $order['Description'],
@@ -378,7 +374,7 @@ class OrderModel
             ];
         }
 
-        return array_values($groupedOrderHistory); // Mengembalikan array yang sudah dikelompokkan
+        return array_values($groupedOrderHistory); 
     }
 
     public function exportCsv($startDate = null, $endDate = null)
@@ -411,7 +407,7 @@ class OrderModel
         exit();
     }
 
-    public function exportOrderReportToExcel($startDate = null, $endDate = null)
+    public function exportExcel($startDate = null, $endDate = null)
     {
         require 'vendor/autoload.php';  // Pastikan path ini sesuai
 
@@ -453,7 +449,7 @@ class OrderModel
         $writer->save('php://output');
     }
 
-    public function exportOrderReportToPdf($startDate = null, $endDate = null)
+    public function exportPdf($startDate = null, $endDate = null)
     {
 
         $orders = $this->getOrderReport($startDate, $endDate);
