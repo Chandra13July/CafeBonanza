@@ -97,6 +97,11 @@ class Report extends Controller
         }
     }
 
+    public function formatRupiah($amount)
+    {
+        return "Rp " . number_format($amount, 0, ',', '.');
+    }
+
     public function exportPdf($startDate = null, $endDate = null)
     {
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
@@ -262,8 +267,7 @@ class Report extends Controller
     public function exportJson($startDate = null, $endDate = null)
     {
         try {
-            // Set timezone to your desired time zone
-            date_default_timezone_set('Asia/Jakarta'); // Sesuaikan zona waktu jika diperlukan
+            date_default_timezone_set('Asia/Jakarta');
 
             $orders = $this->orderModel->getOrders($startDate, $endDate);
 
@@ -279,11 +283,6 @@ class Report extends Controller
                 exit();
             }
 
-            function formatRupiah($amount)
-            {
-                return "Rp " . number_format($amount, 0, ',', '.');
-            }
-
             $result = [];
             foreach ($orders as $order) {
                 $orderId = $order['OrderId'];
@@ -291,14 +290,14 @@ class Report extends Controller
                     $result[$orderId] = [
                         'OrderId' => $orderId,
                         'Customer' => $order['CustomerUsername'],
-                        'Total' => formatRupiah($order['Total']),
-                        'Paid' => formatRupiah($order['Paid']),
-                        'Change' => formatRupiah($order['Change']),
+                        'Total' => $this->formatRupiah($order['Total']),
+                        'Paid' => $this->formatRupiah($order['Paid']),
+                        'Change' => $this->formatRupiah($order['Change']),
                         'PaymentMethod' => $order['PaymentMethod'],
                         'Status' => $order['Status'],
                         'CreatedAt' => $order['CreatedAt'],
                         'OrderDetails' => [],
-                        'totalPrice' => formatRupiah($order['Total']),
+                        'totalPrice' => $this->formatRupiah($order['Total']),
                     ];
                 }
 
@@ -306,29 +305,26 @@ class Report extends Controller
                     'OrderDetailId' => $order['OrderDetailId'],
                     'MenuName' => $order['MenuName'],
                     'Quantity' => $order['Quantity'],
-                    'Price' => formatRupiah($order['Price']),
-                    'Subtotal' => formatRupiah($order['Subtotal'])
+                    'Price' => $this->formatRupiah($order['Price']),
+                    'Subtotal' => $this->formatRupiah($order['Subtotal'])
                 ];
             }
 
             $finalResult = [
                 'status' => 'success',
                 'message' => 'Orders exported successfully.',
-                'date_exported' => date('Y-m-d H:i:s'), // Waktu sekarang sesuai zona waktu
+                'date_exported' => date('Y-m-d H:i:s'),
                 'totalOrders' => count($result),
                 'data' => array_values($result),
             ];
 
-            // Tentukan nama file dan path untuk penyimpanan
             $fileName = 'orders_report_' . date('Y-m-d_H-i-s') . '.json';
             $filePath = __DIR__ . '/../../public/report/json/' . $fileName;
 
-            // Simpan data JSON ke file
             if (file_put_contents($filePath, json_encode($finalResult, JSON_PRETTY_PRINT))) {
-                // Baca file yang disimpan dan tampilkan di browser
                 $jsonData = file_get_contents($filePath);
                 header('Content-Type: application/json');
-                echo $jsonData;  // Tampilkan JSON di browser
+                echo $jsonData;
             } else {
                 echo json_encode([
                     'status' => 'failure',
@@ -347,6 +343,200 @@ class Report extends Controller
                     'date_exported' => date('Y-m-d H:i:s'),
                 ]
             ]);
+        }
+    }
+
+    public function exportXml($startDate = null, $endDate = null)
+    {
+        try {
+            date_default_timezone_set('Asia/Jakarta');
+
+            $orders = $this->orderModel->getOrders($startDate, $endDate);
+
+            if (empty($orders)) {
+                header('Content-Type: application/xml');
+                echo "<?xml version='1.0' encoding='UTF-8'?><response><status>failure</status><message>No orders found for the given date range.</message><metadata><date_exported>" . date('Y-m-d H:i:s') . "</date_exported></metadata></response>";
+                exit();
+            }
+
+            $xml = new SimpleXMLElement('<OrdersExport/>');
+
+            $xml->addChild('status', 'success');
+            $xml->addChild('message', 'Orders exported successfully.');
+            $xml->addChild('date_exported', date('Y-m-d H:i:s'));
+
+            $ordersNode = $xml->addChild('Orders');
+            $orderCount = 0;
+
+            foreach ($orders as $order) {
+                $orderId = $order['OrderId'];
+
+                if (!$ordersNode->xpath("Order[OrderId='$orderId']")) {
+                    $orderNode = $ordersNode->addChild('Order');
+                    $orderNode->addChild('OrderId', $orderId);
+                    $orderNode->addChild('Customer', htmlspecialchars($order['CustomerUsername']));
+                    $orderNode->addChild('Total', $this->formatRupiah($order['Total']));
+                    $orderNode->addChild('Paid', $this->formatRupiah($order['Paid']));
+                    $orderNode->addChild('Change', $this->formatRupiah($order['Change']));
+                    $orderNode->addChild('PaymentMethod', htmlspecialchars($order['PaymentMethod']));
+                    $orderNode->addChild('Status', htmlspecialchars($order['Status']));
+                    $orderNode->addChild('CreatedAt', $order['CreatedAt']);
+
+                    $detailsNode = $orderNode->addChild('OrderDetails');
+                } else {
+                    $orderNode = $ordersNode->xpath("Order[OrderId='$orderId']")[0];
+                    $detailsNode = $orderNode->OrderDetails;
+                }
+
+                $detailNode = $detailsNode->addChild('OrderDetail');
+                $detailNode->addChild('OrderDetailId', $order['OrderDetailId']);
+                $detailNode->addChild('MenuName', htmlspecialchars($order['MenuName']));
+                $detailNode->addChild('Quantity', $order['Quantity']);
+                $detailNode->addChild('Price', $this->formatRupiah($order['Price']));
+                $detailNode->addChild('Subtotal', $this->formatRupiah($order['Subtotal']));
+
+                $orderCount++;
+            }
+
+            $xml->addChild('totalOrders', $orderCount);
+
+            $fileName = 'orders_report_' . date('Y-m-d_H-i-s') . '.xml';
+            $filePath = __DIR__ . '/../../public/report/xml/' . $fileName;
+
+            if ($xml->asXML($filePath)) {
+                header('Content-Type: application/xml');
+                echo file_get_contents($filePath);
+            } else {
+                header('Content-Type: application/xml');
+                echo "<?xml version='1.0' encoding='UTF-8'?><response><status>failure</status><message>Failed to save the file.</message></response>";
+            }
+
+            exit();
+        } catch (PDOException $e) {
+            header('Content-Type: application/xml');
+            echo "<?xml version='1.0' encoding='UTF-8'?><response><status>failure</status><message>Error executing query: " . htmlspecialchars($e->getMessage()) . "</message><metadata><date_exported>" . date('Y-m-d H:i:s') . "</date_exported></metadata></response>";
+        }
+    }
+
+    public function exportHtml($startDate = null, $endDate = null)
+    {
+        try {
+            date_default_timezone_set('Asia/Jakarta');
+
+            // Ambil data pesanan dan urutkan berdasarkan CreatedAt
+            $orders = $this->orderModel->getOrderReport($startDate, $endDate);
+
+            if (empty($orders)) {
+                echo "<h1>No orders found for the given date range.</h1>";
+                exit();
+            }
+
+            // Urutkan berdasarkan CreatedAt, pastikan dalam format yang sesuai
+            usort($orders, function ($a, $b) {
+                return strtotime($a['CreatedAt']) - strtotime($b['CreatedAt']);
+            });
+
+            $html = "<html><head><title>Orders Report</title></head><body>";
+            $html .= "<h1>Orders Report</h1>";
+            $html .= "<p>Date Exported: " . date('Y-m-d H:i:s') . "</p>";
+
+            $html .= "<table border='1' cellpadding='5' cellspacing='0'>";
+            $html .= "<tr><th>No</th><th>Customer</th><th>Total</th><th>Paid</th><th>Change</th><th>Payment Method</th><th>Status</th><th>Created At</th></tr>";
+
+            $no = 1; // Inisialisasi nomor urut
+            foreach ($orders as $order) {
+                $html .= "<tr>";
+                $html .= "<td>{$no}</td>"; // Menampilkan nomor urut
+                $html .= "<td>{$order['Customer']}</td>";
+                $html .= "<td>" . $this->formatRupiah($order['Total']) . "</td>";
+                $html .= "<td>" . $this->formatRupiah($order['Paid']) . "</td>";
+                $html .= "<td>" . $this->formatRupiah($order['Change']) . "</td>";
+                $html .= "<td>{$order['PaymentMethod']}</td>";
+                $html .= "<td>{$order['Status']}</td>";
+                $html .= "<td>{$order['CreatedAt']}</td>";
+                $html .= "</tr>";
+                $no++; // Increment nomor urut
+            }
+
+            $html .= "</table></body></html>";
+
+            $fileName = 'orders_report_' . date('Y-m-d_H-i-s') . '.html';
+            $filePath = __DIR__ . '/../../public/report/html/' . $fileName;
+
+            if (file_put_contents($filePath, $html)) {
+                header('Content-Type: text/html');
+                echo file_get_contents($filePath);
+            } else {
+                echo "<h1>Failed to save the file.</h1>";
+            }
+
+            exit();
+        } catch (PDOException $e) {
+            echo "<h1>Error executing query: " . htmlspecialchars($e->getMessage()) . "</h1>";
+        }
+    }
+
+    public function exportText($startDate = null, $endDate = null)
+    {
+        try {
+            date_default_timezone_set('Asia/Jakarta');
+
+            $orders = $this->orderModel->getOrders($startDate, $endDate);
+
+            if (empty($orders)) {
+                echo "No orders found for the given date range.\n";
+                exit();
+            }
+
+            // Menyusun header laporan
+            $result = "Orders Report\n";
+            $result .= "Date Exported: " . date('Y-m-d H:i:s') . "\n\n";
+            $result .= sprintf(
+                "%-5s %-15s %-15s %-15s %-15s %-20s %-15s %-20s\n",
+                "No",
+                "Customer",
+                "Total",
+                "Paid",
+                "Change",
+                "Payment Method",
+                "Status",
+                "Created At"
+            );
+
+            // Menyusun garis pemisah yang lebih pas
+            $result .= str_repeat("-", 130) . "\n";  // Garis pemisah yang lebih pas
+
+            // Menyusun data setiap order
+            $no = 1;
+            foreach ($orders as $order) {
+                $result .= sprintf(
+                    "%-5d %-15s %-15s %-15s %-15s %-20s %-15s %-20s\n",
+                    $no,
+                    $order['CustomerUsername'],
+                    $this->formatRupiah($order['Total']),
+                    $this->formatRupiah($order['Paid']),
+                    $this->formatRupiah($order['Change']),
+                    $order['PaymentMethod'],
+                    $order['Status'],
+                    $order['CreatedAt']
+                );
+                $no++;
+            }
+
+            // Menyimpan file laporan teks
+            $fileName = 'orders_report_' . date('Y-m-d_H-i-s') . '.txt';
+            $filePath = __DIR__ . '/../../public/report/text/' . $fileName;
+
+            if (file_put_contents($filePath, $result)) {
+                header('Content-Type: text/plain');
+                echo file_get_contents($filePath);
+            } else {
+                echo "Failed to save the file.\n";
+            }
+
+            exit();
+        } catch (PDOException $e) {
+            echo "Error executing query: " . $e->getMessage() . "\n";
         }
     }
 }

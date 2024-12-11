@@ -100,7 +100,10 @@
                             <option value="pdf">PDF</option>
                             <option value="excel">Excel</option>
                             <option value="csv">CSV</option>
-                            <option value="json">Json</option>
+                            <option value="json">JSON</option>
+                            <option value="xml">XML</option>
+                            <option value="html">HTML</option>
+                            <option value="text">Text</option>
                         </select>
 
                         <button id="exportButton" class="bg-blue-500 text-white px-6 py-2 rounded flex items-center">
@@ -308,6 +311,12 @@
                     window.location.href = "<?= BASEURL; ?>/report/exportCsv";
                 } else if (selectedFormat === "json") {
                     window.location.href = "<?= BASEURL; ?>/report/exportJson";
+                } else if (selectedFormat === "xml") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportXml";
+                } else if (selectedFormat === "html") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportHtml";
+                } else if (selectedFormat === "text") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportText";
                 }
             });
 
