@@ -356,7 +356,7 @@ class OrderModel
                 $groupedOrderHistory[$orderId] = [
                     'OrderId' => $order['OrderId'],
                     'CustomerId' => $order['CustomerId'],
-                    'Username' => $order['Username'], 
+                    'Username' => $order['Username'],
                     'Total' => $order['Total'],
                     'PaymentMethod' => $order['PaymentMethod'],
                     'Status' => $order['Status'],
@@ -374,7 +374,80 @@ class OrderModel
             ];
         }
 
-        return array_values($groupedOrderHistory); 
+        return array_values($groupedOrderHistory);
+    }
+
+    public function getOrders($startDate = null, $endDate = null)
+    {
+        // Query untuk mengambil data pesanan dan detail pesanan
+        if ($startDate && $endDate) {
+            $query = "
+            SELECT 
+                o.OrderId,
+                c.Username AS CustomerUsername,  -- Mengganti CustomerId dengan Username
+                o.Total,
+                o.Paid,
+                o.Change,
+                o.PaymentMethod,
+                o.Status,
+                o.CreatedAt,
+                od.OrderDetailId,
+                m.MenuName,  -- Mengganti MenuId dengan MenuName
+                od.Quantity,
+                od.Price,
+                od.Subtotal
+            FROM 
+                `order` o
+            LEFT JOIN 
+                `orderdetail` od ON o.OrderId = od.OrderId
+            LEFT JOIN 
+                `customer` c ON o.CustomerId = c.CustomerId  -- Join dengan tabel customers
+            LEFT JOIN 
+                `menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
+            WHERE
+                o.CreatedAt BETWEEN :startDate AND :endDate
+            ORDER BY
+                o.CreatedAt ASC
+        ";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ':startDate' => $startDate,
+                ':endDate' => $endDate
+            ]);
+        } else {
+            $query = "
+            SELECT 
+                o.OrderId,
+                c.Username AS CustomerUsername,  -- Mengganti CustomerId dengan Username
+                o.Total,
+                o.Paid,
+                o.Change,
+                o.PaymentMethod,
+                o.Status,
+                o.CreatedAt,
+                od.OrderDetailId,
+                m.MenuName,  -- Mengganti MenuId dengan MenuName
+                od.Quantity,
+                od.Price,
+                od.Subtotal
+            FROM 
+                `order` o
+            LEFT JOIN 
+                `orderdetail` od ON o.OrderId = od.OrderId
+            LEFT JOIN 
+                `customer` c ON o.CustomerId = c.CustomerId  -- Join dengan tabel customers
+            LEFT JOIN 
+                `menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
+            ORDER BY
+                o.CreatedAt ASC
+        ";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function exportCsv($startDate = null, $endDate = null)
@@ -481,5 +554,78 @@ class OrderModel
 
         // Output PDF
         $pdf->Output();
+    }
+
+    public function exportJson($startDate = null, $endDate = null)
+    {
+        // Query untuk mengambil data pesanan dan detail pesanan
+        $query = "
+            SELECT 
+                o.OrderId,
+                o.CustomerId,
+                o.Total,
+                o.Paid,
+                o.Change,
+                o.PaymentMethod,
+                o.Status,
+                o.CreatedAt,
+                od.OrderDetailId,
+                od.MenuId,
+                od.Quantity,
+                od.Price,
+                od.Subtotal
+            FROM 
+                orders o
+            LEFT JOIN 
+                orderdetails od ON o.OrderId = od.OrderId
+            WHERE
+                o.CreatedAt BETWEEN :startDate AND :endDate
+            ORDER BY
+                o.CreatedAt ASC
+        ";
+
+        // Menjalankan query dan mengambil hasilnya
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':startDate' => $startDate,
+            ':endDate' => $endDate
+        ]);
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mengatur header untuk file JSON
+        header('Content-Type: application/json');
+        header('Content-Disposition: attachment; filename="orders_report.json"');
+
+        // Mengelompokkan detail pesanan berdasarkan OrderId
+        $result = [];
+        foreach ($orders as $order) {
+            $orderId = $order['OrderId'];
+            if (!isset($result[$orderId])) {
+                $result[$orderId] = [
+                    'OrderId' => $orderId,
+                    'CustomerId' => $order['CustomerId'],
+                    'Total' => $order['Total'],
+                    'Paid' => $order['Paid'],
+                    'Change' => $order['Change'],
+                    'PaymentMethod' => $order['PaymentMethod'],
+                    'Status' => $order['Status'],
+                    'CreatedAt' => $order['CreatedAt'],
+                    'OrderDetails' => []
+                ];
+            }
+
+            // Menambahkan detail pesanan
+            $result[$orderId]['OrderDetails'][] = [
+                'OrderDetailId' => $order['OrderDetailId'],
+                'MenuId' => $order['MenuId'],
+                'Quantity' => $order['Quantity'],
+                'Price' => $order['Price'],
+                'Subtotal' => $order['Subtotal']
+            ];
+        }
+
+        // Mengeluarkan data dalam format JSON
+        echo json_encode(array_values($result), JSON_PRETTY_PRINT);
+        exit();
     }
 }

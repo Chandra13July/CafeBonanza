@@ -1,0 +1,3962 @@
+{
+    "status": "success",
+    "message": "Orders exported successfully.",
+    "date_exported": "2024-12-11 12:10:17",
+    "totalOrders": 106,
+    "data": [
+        {
+            "OrderId": 1,
+            "Customer": "Alief",
+            "Total": "Rp 22.000",
+            "Paid": "Rp 25.000",
+            "Change": "Rp 3.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-01 22:41:50",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 1,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                },
+                {
+                    "OrderDetailId": 2,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 1,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 4.000"
+                },
+                {
+                    "OrderDetailId": 3,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 1,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 4.000"
+                },
+                {
+                    "OrderDetailId": 4,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                }
+            ],
+            "totalPrice": "Rp 22.000"
+        },
+        {
+            "OrderId": 2,
+            "Customer": "Alief",
+            "Total": "Rp 84.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 16.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-02 22:54:49",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 5,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 4,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 6,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 7,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 4,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 28.000"
+                }
+            ],
+            "totalPrice": "Rp 84.000"
+        },
+        {
+            "OrderId": 3,
+            "Customer": "Alief",
+            "Total": "Rp 138.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 12.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-03 23:16:15",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 8,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                },
+                {
+                    "OrderDetailId": 9,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 10,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 11,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 6,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 24.000"
+                },
+                {
+                    "OrderDetailId": 12,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 6,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 24.000"
+                },
+                {
+                    "OrderDetailId": 13,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 3,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 15.000"
+                },
+                {
+                    "OrderDetailId": 14,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 3,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 21.000"
+                }
+            ],
+            "totalPrice": "Rp 138.000"
+        },
+        {
+            "OrderId": 4,
+            "Customer": "Alief",
+            "Total": "Rp 78.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 22.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-04 23:18:18",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 15,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 16,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 17,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 18,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 3,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 15.000"
+                },
+                {
+                    "OrderDetailId": 19,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                }
+            ],
+            "totalPrice": "Rp 78.000"
+        },
+        {
+            "OrderId": 5,
+            "Customer": "Alief",
+            "Total": "Rp 25.000",
+            "Paid": "Rp 25.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-05 23:18:44",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 20,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                },
+                {
+                    "OrderDetailId": 21,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                },
+                {
+                    "OrderDetailId": 22,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 1,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 4.000"
+                },
+                {
+                    "OrderDetailId": 23,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 1,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 4.000"
+                }
+            ],
+            "totalPrice": "Rp 25.000"
+        },
+        {
+            "OrderId": 6,
+            "Customer": "Alief",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-06 23:30:56",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 24,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 10,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 25,
+                    "MenuName": "Teh",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 26,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 27,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 7,
+            "Customer": "Alief",
+            "Total": "Rp 69.000",
+            "Paid": "Rp 70.000",
+            "Change": "Rp 1.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-07 23:34:29",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 28,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 3,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 30.000"
+                },
+                {
+                    "OrderDetailId": 29,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 3,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 12.000"
+                },
+                {
+                    "OrderDetailId": 30,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 31,
+                    "MenuName": "Taro",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                },
+                {
+                    "OrderDetailId": 32,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                },
+                {
+                    "OrderDetailId": 33,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 1,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 5.000"
+                }
+            ],
+            "totalPrice": "Rp 69.000"
+        },
+        {
+            "OrderId": 8,
+            "Customer": "Alief",
+            "Total": "Rp 180.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-08 23:40:55",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 34,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 35,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 36,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 37,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                },
+                {
+                    "OrderDetailId": 38,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 180.000"
+        },
+        {
+            "OrderId": 9,
+            "Customer": "Alief",
+            "Total": "Rp 99.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 1.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-09 23:43:02",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 39,
+                    "MenuName": "Teh",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                },
+                {
+                    "OrderDetailId": 40,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 6,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 30.000"
+                },
+                {
+                    "OrderDetailId": 41,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 7,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 28.000"
+                },
+                {
+                    "OrderDetailId": 42,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                }
+            ],
+            "totalPrice": "Rp 99.000"
+        },
+        {
+            "OrderId": 10,
+            "Customer": "Alief",
+            "Total": "Rp 114.000",
+            "Paid": "Rp 120.000",
+            "Change": "Rp 6.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-10 23:44:02",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 43,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 44,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 45,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 46,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 6,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 30.000"
+                },
+                {
+                    "OrderDetailId": 47,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 6,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 24.000"
+                }
+            ],
+            "totalPrice": "Rp 114.000"
+        },
+        {
+            "OrderId": 11,
+            "Customer": "Alief",
+            "Total": "Rp 125.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 25.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-01-11 23:52:26",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 48,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 49,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 50,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 51,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 3,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 21.000"
+                },
+                {
+                    "OrderDetailId": 52,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                }
+            ],
+            "totalPrice": "Rp 125.000"
+        },
+        {
+            "OrderId": 12,
+            "Customer": "Raihan",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-02-01 00:02:55",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 53,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 3,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 30.000"
+                },
+                {
+                    "OrderDetailId": 54,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 55,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 56,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 57,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 13,
+            "Customer": "Raihan",
+            "Total": "Rp 36.000",
+            "Paid": "Rp 50.000",
+            "Change": "Rp 14.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-02-02 00:26:44",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 58,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                },
+                {
+                    "OrderDetailId": 59,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 60,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                }
+            ],
+            "totalPrice": "Rp 36.000"
+        },
+        {
+            "OrderId": 14,
+            "Customer": "Raihan",
+            "Total": "Rp 95.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 5.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-02-03 00:32:46",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 61,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 62,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 63,
+                    "MenuName": "Joshua",
+                    "Quantity": 3,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 15.000"
+                },
+                {
+                    "OrderDetailId": 64,
+                    "MenuName": "Kubisue",
+                    "Quantity": 2,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 10.000"
+                }
+            ],
+            "totalPrice": "Rp 95.000"
+        },
+        {
+            "OrderId": 15,
+            "Customer": "Raihan",
+            "Total": "Rp 99.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 1.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-02-04 00:33:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 65,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 4,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 66,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 67,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 68,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 99.000"
+        },
+        {
+            "OrderId": 16,
+            "Customer": "Raihan",
+            "Total": "Rp 30.000",
+            "Paid": "Rp 50.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-02-05 00:33:42",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 69,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                },
+                {
+                    "OrderDetailId": 70,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                },
+                {
+                    "OrderDetailId": 71,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 2,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 10.000"
+                }
+            ],
+            "totalPrice": "Rp 30.000"
+        },
+        {
+            "OrderId": 17,
+            "Customer": "Raffi",
+            "Total": "Rp 84.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 16.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-01 01:18:37",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 72,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 4,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 73,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 74,
+                    "MenuName": "Taro",
+                    "Quantity": 4,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 28.000"
+                }
+            ],
+            "totalPrice": "Rp 84.000"
+        },
+        {
+            "OrderId": 18,
+            "Customer": "Raffi",
+            "Total": "Rp 190.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-02 01:19:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 75,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 76,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 77,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 78,
+                    "MenuName": "Taro",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                },
+                {
+                    "OrderDetailId": 79,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 190.000"
+        },
+        {
+            "OrderId": 19,
+            "Customer": "Raffi",
+            "Total": "Rp 200.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-03 01:20:01",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 80,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 81,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 82,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                },
+                {
+                    "OrderDetailId": 83,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 200.000"
+        },
+        {
+            "OrderId": 20,
+            "Customer": "Raffi",
+            "Total": "Rp 70.000",
+            "Paid": "Rp 70.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-04 01:20:27",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 84,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                },
+                {
+                    "OrderDetailId": 85,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 70.000"
+        },
+        {
+            "OrderId": 21,
+            "Customer": "Raffi",
+            "Total": "Rp 170.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-05 01:21:11",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 86,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 6,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 24.000"
+                },
+                {
+                    "OrderDetailId": 87,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 88,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 89,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                },
+                {
+                    "OrderDetailId": 90,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 170.000"
+        },
+        {
+            "OrderId": 22,
+            "Customer": "Raffi",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-06 01:22:54",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 91,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 92,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 93,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 23,
+            "Customer": "Raffi",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 210.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-07 01:23:25",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 94,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 95,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 96,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 24,
+            "Customer": "Raffi",
+            "Total": "Rp 315.000",
+            "Paid": "Rp 350.000",
+            "Change": "Rp 35.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-08 01:24:32",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 97,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 15,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 150.000"
+                },
+                {
+                    "OrderDetailId": 98,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 99,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 100,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 15,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 105.000"
+                }
+            ],
+            "totalPrice": "Rp 315.000"
+        },
+        {
+            "OrderId": 25,
+            "Customer": "Raffi",
+            "Total": "Rp 54.000",
+            "Paid": "Rp 60.000",
+            "Change": "Rp 6.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-03-09 01:24:56",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 101,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 102,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 103,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 104,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 2,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 10.000"
+                }
+            ],
+            "totalPrice": "Rp 54.000"
+        },
+        {
+            "OrderId": 26,
+            "Customer": "Finno",
+            "Total": "Rp 260.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-01 01:32:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 105,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 106,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 107,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                },
+                {
+                    "OrderDetailId": 108,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                }
+            ],
+            "totalPrice": "Rp 260.000"
+        },
+        {
+            "OrderId": 27,
+            "Customer": "Finno",
+            "Total": "Rp 190.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-02 01:32:55",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 109,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 110,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 111,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 190.000"
+        },
+        {
+            "OrderId": 28,
+            "Customer": "Finno",
+            "Total": "Rp 180.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-03 01:33:33",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 112,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 113,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 114,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 180.000"
+        },
+        {
+            "OrderId": 29,
+            "Customer": "Finno",
+            "Total": "Rp 410.000",
+            "Paid": "Rp 450.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-04 01:34:35",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 115,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 116,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 117,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 118,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 119,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 5,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 15.000"
+                },
+                {
+                    "OrderDetailId": 120,
+                    "MenuName": "Joshua",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                }
+            ],
+            "totalPrice": "Rp 410.000"
+        },
+        {
+            "OrderId": 30,
+            "Customer": "Finno",
+            "Total": "Rp 478.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 22.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-05 01:36:43",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 121,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 122,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 123,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 25,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 250.000"
+                },
+                {
+                    "OrderDetailId": 124,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 478.000"
+        },
+        {
+            "OrderId": 31,
+            "Customer": "Finno",
+            "Total": "Rp 524.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 76.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-06 01:37:35",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 125,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 126,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 27,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 189.000"
+                },
+                {
+                    "OrderDetailId": 127,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 27,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 135.000"
+                }
+            ],
+            "totalPrice": "Rp 524.000"
+        },
+        {
+            "OrderId": 32,
+            "Customer": "Finno",
+            "Total": "Rp 30.000",
+            "Paid": "Rp 30.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-04-07 01:37:55",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 128,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 129,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 2,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 10.000"
+                }
+            ],
+            "totalPrice": "Rp 30.000"
+        },
+        {
+            "OrderId": 33,
+            "Customer": "Alexx",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 50.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-01 02:02:58",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 130,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 131,
+                    "MenuName": "Kubisue",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 34,
+            "Customer": "Alexx",
+            "Total": "Rp 260.000",
+            "Paid": "Rp 260.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-02 02:04:25",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 132,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 133,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 134,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 260.000"
+        },
+        {
+            "OrderId": 35,
+            "Customer": "Alexx",
+            "Total": "Rp 174.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 26.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-03 02:06:36",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 135,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                },
+                {
+                    "OrderDetailId": 136,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 137,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 12,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 60.000"
+                }
+            ],
+            "totalPrice": "Rp 174.000"
+        },
+        {
+            "OrderId": 36,
+            "Customer": "Alexx",
+            "Total": "Rp 220.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-04 02:07:06",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 138,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 20,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 139,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 220.000"
+        },
+        {
+            "OrderId": 37,
+            "Customer": "Alexx",
+            "Total": "Rp 480.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-05 02:08:19",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 140,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 141,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 142,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 143,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 15,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 105.000"
+                },
+                {
+                    "OrderDetailId": 144,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 15,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 75.000"
+                }
+            ],
+            "totalPrice": "Rp 480.000"
+        },
+        {
+            "OrderId": 38,
+            "Customer": "Alexx",
+            "Total": "Rp 55.000",
+            "Paid": "Rp 60.000",
+            "Change": "Rp 5.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-06 02:10:29",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 145,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 5,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 30.000"
+                },
+                {
+                    "OrderDetailId": 146,
+                    "MenuName": "Joshua",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                }
+            ],
+            "totalPrice": "Rp 55.000"
+        },
+        {
+            "OrderId": 39,
+            "Customer": "Alexx",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 50.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-07 02:11:07",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 147,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 148,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 149,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 10,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 30.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 40,
+            "Customer": "Alexx",
+            "Total": "Rp 690.000",
+            "Paid": "Rp 700.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-08 02:12:33",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 150,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 151,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 152,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 153,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 154,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                }
+            ],
+            "totalPrice": "Rp 690.000"
+        },
+        {
+            "OrderId": 41,
+            "Customer": "Alexx",
+            "Total": "Rp 100.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-05-09 02:13:39",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 155,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 100.000"
+        },
+        {
+            "OrderId": 42,
+            "Customer": "Raihan",
+            "Total": "Rp 260.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-01 02:22:46",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 156,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 20,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 157,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 260.000"
+        },
+        {
+            "OrderId": 43,
+            "Customer": "Raihan",
+            "Total": "Rp 266.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 34.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-02 02:37:41",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 158,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 10,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 159,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 160,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 17,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 85.000"
+                },
+                {
+                    "OrderDetailId": 161,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 3,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 21.000"
+                }
+            ],
+            "totalPrice": "Rp 266.000"
+        },
+        {
+            "OrderId": 44,
+            "Customer": "Raihan",
+            "Total": "Rp 98.000",
+            "Paid": "Rp 100.000",
+            "Change": "Rp 2.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-03 02:38:26",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 162,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 4,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 163,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 6,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 42.000"
+                },
+                {
+                    "OrderDetailId": 164,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 6,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 36.000"
+                }
+            ],
+            "totalPrice": "Rp 98.000"
+        },
+        {
+            "OrderId": 45,
+            "Customer": "Raihan",
+            "Total": "Rp 340.000",
+            "Paid": "Rp 350.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-04 02:39:14",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 165,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 166,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 167,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 340.000"
+        },
+        {
+            "OrderId": 46,
+            "Customer": "Raihan",
+            "Total": "Rp 260.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-05 02:39:53",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 168,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 20,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 169,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 19,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 133.000"
+                },
+                {
+                    "OrderDetailId": 170,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                }
+            ],
+            "totalPrice": "Rp 260.000"
+        },
+        {
+            "OrderId": 47,
+            "Customer": "Raihan",
+            "Total": "Rp 561.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 39.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-06-06 02:40:33",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 171,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 33,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 330.000"
+                },
+                {
+                    "OrderDetailId": 172,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 33,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 231.000"
+                }
+            ],
+            "totalPrice": "Rp 561.000"
+        },
+        {
+            "OrderId": 48,
+            "Customer": "Alief",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-01 09:25:52",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 173,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 174,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 175,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 49,
+            "Customer": "Alief",
+            "Total": "Rp 240.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-02 09:26:27",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 176,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 177,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 178,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 179,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 10,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 60.000"
+                }
+            ],
+            "totalPrice": "Rp 240.000"
+        },
+        {
+            "OrderId": 50,
+            "Customer": "Alief",
+            "Total": "Rp 460.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-03 09:28:13",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 180,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 181,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 182,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 183,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 184,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 185,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 460.000"
+        },
+        {
+            "OrderId": 51,
+            "Customer": "Alief",
+            "Total": "Rp 350.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 50.000",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-04 09:29:14",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 186,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 187,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 188,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 189,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 190,
+                    "MenuName": "Teh",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 350.000"
+        },
+        {
+            "OrderId": 52,
+            "Customer": "Alief",
+            "Total": "Rp 440.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 60.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-05 09:30:05",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 191,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 192,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 193,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 30,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 194,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 440.000"
+        },
+        {
+            "OrderId": 53,
+            "Customer": "Alief",
+            "Total": "Rp 510.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 90.000",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Completed",
+            "CreatedAt": "2024-07-06 09:30:49",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 195,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 196,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 197,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 30,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 210.000"
+                }
+            ],
+            "totalPrice": "Rp 510.000"
+        },
+        {
+            "OrderId": 54,
+            "Customer": "Alief",
+            "Total": "Rp 630.000",
+            "Paid": "Rp 700.000",
+            "Change": "Rp 70.000",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Processing",
+            "CreatedAt": "2024-07-07 09:31:28",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 198,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 30,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 300.000"
+                },
+                {
+                    "OrderDetailId": 199,
+                    "MenuName": "Taro",
+                    "Quantity": 30,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 210.000"
+                },
+                {
+                    "OrderDetailId": 200,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 201,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 630.000"
+        },
+        {
+            "OrderId": 55,
+            "Customer": "Alief",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 50.000",
+            "PaymentMethod": "Cash",
+            "Status": "Cancelled",
+            "CreatedAt": "2024-07-08 09:31:59",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 202,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 203,
+                    "MenuName": "Kubisue",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                },
+                {
+                    "OrderDetailId": 204,
+                    "MenuName": "Joshua",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 56,
+            "Customer": "Alief",
+            "Total": "Rp 350.000",
+            "Paid": "Rp 350.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "E-Wallet",
+            "Status": "Pending",
+            "CreatedAt": "2024-07-09 09:35:37",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 205,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 21,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 210.000"
+                },
+                {
+                    "OrderDetailId": 206,
+                    "MenuName": "Taro",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 350.000"
+        },
+        {
+            "OrderId": 57,
+            "Customer": "Raffi",
+            "Total": "Rp 420.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 80.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-01 09:43:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 207,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 208,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 209,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                }
+            ],
+            "totalPrice": "Rp 420.000"
+        },
+        {
+            "OrderId": 58,
+            "Customer": "Raffi",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-02 09:43:53",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 210,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 211,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 212,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 59,
+            "Customer": "Raffi",
+            "Total": "Rp 320.000",
+            "Paid": "Rp 350.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-03 09:44:42",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 213,
+                    "MenuName": "Choco Milo",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 214,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 215,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                }
+            ],
+            "totalPrice": "Rp 320.000"
+        },
+        {
+            "OrderId": 60,
+            "Customer": "Raffi",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 220.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-04 09:45:11",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 216,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 217,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 218,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 61,
+            "Customer": "Raffi",
+            "Total": "Rp 300.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-05 09:46:00",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 219,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 20,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 220,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 221,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 300.000"
+        },
+        {
+            "OrderId": 62,
+            "Customer": "Raffi",
+            "Total": "Rp 600.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-06 09:46:35",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 222,
+                    "MenuName": "Joshua",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 223,
+                    "MenuName": "Kubisue",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 224,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 39,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 390.000"
+                },
+                {
+                    "OrderDetailId": 225,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                }
+            ],
+            "totalPrice": "Rp 600.000"
+        },
+        {
+            "OrderId": 63,
+            "Customer": "Raffi",
+            "Total": "Rp 420.000",
+            "Paid": "Rp 450.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-08-07 09:47:23",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 226,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 227,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 228,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 420.000"
+        },
+        {
+            "OrderId": 64,
+            "Customer": "Finno",
+            "Total": "Rp 380.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-01 09:52:01",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 229,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 230,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 231,
+                    "MenuName": "Teh",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 380.000"
+        },
+        {
+            "OrderId": 65,
+            "Customer": "Finno",
+            "Total": "Rp 480.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-02 09:52:45",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 232,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 233,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 234,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 235,
+                    "MenuName": "Joshua",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 236,
+                    "MenuName": "Kubisue",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 480.000"
+        },
+        {
+            "OrderId": 66,
+            "Customer": "Finno",
+            "Total": "Rp 105.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 45.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-03 09:53:06",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 237,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 10,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 238,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 15,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 45.000"
+                }
+            ],
+            "totalPrice": "Rp 105.000"
+        },
+        {
+            "OrderId": 67,
+            "Customer": "Finno",
+            "Total": "Rp 270.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-04 09:53:52",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 239,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 240,
+                    "MenuName": "Joshua",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 241,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 10,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 30.000"
+                }
+            ],
+            "totalPrice": "Rp 270.000"
+        },
+        {
+            "OrderId": 68,
+            "Customer": "Finno",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 50.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-05 09:54:33",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 242,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 243,
+                    "MenuName": "Joshua",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 69,
+            "Customer": "Finno",
+            "Total": "Rp 380.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-06 09:54:59",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 244,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 245,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 246,
+                    "MenuName": "Joshua",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 380.000"
+        },
+        {
+            "OrderId": 70,
+            "Customer": "Finno",
+            "Total": "Rp 395.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 5.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-09-07 09:55:56",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 247,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 248,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 249,
+                    "MenuName": "Kubisue",
+                    "Quantity": 23,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 115.000"
+                }
+            ],
+            "totalPrice": "Rp 395.000"
+        },
+        {
+            "OrderId": 71,
+            "Customer": "Alexx",
+            "Total": "Rp 380.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-01 10:00:12",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 250,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 251,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 252,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 253,
+                    "MenuName": "Kubisue",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 380.000"
+        },
+        {
+            "OrderId": 72,
+            "Customer": "Alexx",
+            "Total": "Rp 580.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-02 10:01:17",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 254,
+                    "MenuName": "Kopi Robusta",
+                    "Quantity": 40,
+                    "Price": "Rp 3.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 255,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 256,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 30,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 257,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 30,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 300.000"
+                }
+            ],
+            "totalPrice": "Rp 580.000"
+        },
+        {
+            "OrderId": 73,
+            "Customer": "Alexx",
+            "Total": "Rp 520.000",
+            "Paid": "Rp 600.000",
+            "Change": "Rp 80.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-03 10:02:01",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 258,
+                    "MenuName": "Teh",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 259,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 260,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 261,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 40,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 280.000"
+                }
+            ],
+            "totalPrice": "Rp 520.000"
+        },
+        {
+            "OrderId": 74,
+            "Customer": "Alexx",
+            "Total": "Rp 665.000",
+            "Paid": "Rp 700.000",
+            "Change": "Rp 35.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-04 10:02:46",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 262,
+                    "MenuName": "Teh",
+                    "Quantity": 35,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 175.000"
+                },
+                {
+                    "OrderDetailId": 263,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 35,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 264,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 35,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 350.000"
+                }
+            ],
+            "totalPrice": "Rp 665.000"
+        },
+        {
+            "OrderId": 75,
+            "Customer": "Alexx",
+            "Total": "Rp 285.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 15.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-05 10:03:09",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 265,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 15,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 266,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 15,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 150.000"
+                },
+                {
+                    "OrderDetailId": 267,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 15,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 75.000"
+                }
+            ],
+            "totalPrice": "Rp 285.000"
+        },
+        {
+            "OrderId": 76,
+            "Customer": "Alexx",
+            "Total": "Rp 270.000",
+            "Paid": "Rp 300.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-06 10:03:34",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 268,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 20,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 269,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 30,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 150.000"
+                }
+            ],
+            "totalPrice": "Rp 270.000"
+        },
+        {
+            "OrderId": 77,
+            "Customer": "Alexx",
+            "Total": "Rp 132.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 68.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-10-07 10:04:13",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 270,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 4,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 271,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 6,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 42.000"
+                },
+                {
+                    "OrderDetailId": 272,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 132.000"
+        },
+        {
+            "OrderId": 78,
+            "Customer": "Fiqoo",
+            "Total": "Rp 170.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-01 10:12:17",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 273,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 274,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 170.000"
+        },
+        {
+            "OrderId": 79,
+            "Customer": "Fiqoo",
+            "Total": "Rp 340.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 60.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-02 10:12:42",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 275,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 276,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 340.000"
+        },
+        {
+            "OrderId": 80,
+            "Customer": "Fiqoo",
+            "Total": "Rp 195.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 5.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-03 10:13:04",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 277,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 15,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 90.000"
+                },
+                {
+                    "OrderDetailId": 278,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 15,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 105.000"
+                }
+            ],
+            "totalPrice": "Rp 195.000"
+        },
+        {
+            "OrderId": 81,
+            "Customer": "Fiqoo",
+            "Total": "Rp 340.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 60.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-04 10:13:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 279,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                },
+                {
+                    "OrderDetailId": 280,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                }
+            ],
+            "totalPrice": "Rp 340.000"
+        },
+        {
+            "OrderId": 82,
+            "Customer": "Fiqoo",
+            "Total": "Rp 213.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 37.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-05 10:13:47",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 281,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 14,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 98.000"
+                },
+                {
+                    "OrderDetailId": 282,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                },
+                {
+                    "OrderDetailId": 283,
+                    "MenuName": "Taro",
+                    "Quantity": 15,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 105.000"
+                }
+            ],
+            "totalPrice": "Rp 213.000"
+        },
+        {
+            "OrderId": 83,
+            "Customer": "Fiqoo",
+            "Total": "Rp 235.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 15.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-06 10:14:19",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 284,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 15,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 150.000"
+                },
+                {
+                    "OrderDetailId": 285,
+                    "MenuName": "Kubisue",
+                    "Quantity": 12,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 286,
+                    "MenuName": "Joshua",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                }
+            ],
+            "totalPrice": "Rp 235.000"
+        },
+        {
+            "OrderId": 84,
+            "Customer": "Fiqoo",
+            "Total": "Rp 195.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 5.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-07 10:14:50",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 287,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 288,
+                    "MenuName": "Teh",
+                    "Quantity": 5,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 25.000"
+                },
+                {
+                    "OrderDetailId": 289,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 195.000"
+        },
+        {
+            "OrderId": 85,
+            "Customer": "Fiqoo",
+            "Total": "Rp 220.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-11-08 10:15:11",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 290,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 20,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 120.000"
+                },
+                {
+                    "OrderDetailId": 291,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 220.000"
+        },
+        {
+            "OrderId": 86,
+            "Customer": "Alief",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:30:28",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 292,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 293,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 294,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 87,
+            "Customer": "Raihan",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:33:12",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 295,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 296,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 297,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 88,
+            "Customer": "Raffi",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:35:16",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 298,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 299,
+                    "MenuName": "Nasi Tempe Penyet",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 300,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 89,
+            "Customer": "Finno",
+            "Total": "Rp 340.000",
+            "Paid": "Rp 350.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:38:14",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 301,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 302,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 303,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 304,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 20,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 100.000"
+                }
+            ],
+            "totalPrice": "Rp 340.000"
+        },
+        {
+            "OrderId": 90,
+            "Customer": "Alexx",
+            "Total": "Rp 125.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 25.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:48:05",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 305,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 306,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 307,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 5,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 308,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 125.000"
+        },
+        {
+            "OrderId": 91,
+            "Customer": "Wahyu",
+            "Total": "Rp 390.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 10.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:52:02",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 309,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 200.000"
+                },
+                {
+                    "OrderDetailId": 310,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 311,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 312,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 390.000"
+        },
+        {
+            "OrderId": 92,
+            "Customer": "Waris",
+            "Total": "Rp 160.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:54:12",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 313,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 314,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 315,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 160.000"
+        },
+        {
+            "OrderId": 93,
+            "Customer": "Farhan",
+            "Total": "Rp 150.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:55:20",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 316,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 317,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 150.000"
+        },
+        {
+            "OrderId": 94,
+            "Customer": "Ganii",
+            "Total": "Rp 170.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 30.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:56:27",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 318,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 319,
+                    "MenuName": "Nasi Jagung",
+                    "Quantity": 10,
+                    "Price": "Rp 6.000",
+                    "Subtotal": "Rp 60.000"
+                },
+                {
+                    "OrderDetailId": 320,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 170.000"
+        },
+        {
+            "OrderId": 95,
+            "Customer": "Bustanul",
+            "Total": "Rp 46.000",
+            "Paid": "Rp 50.000",
+            "Change": "Rp 4.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 16:57:15",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 321,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 322,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 323,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 324,
+                    "MenuName": "Teh",
+                    "Quantity": 1,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 5.000"
+                },
+                {
+                    "OrderDetailId": 325,
+                    "MenuName": "Kopi Arabica",
+                    "Quantity": 1,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 5.000"
+                }
+            ],
+            "totalPrice": "Rp 46.000"
+        },
+        {
+            "OrderId": 96,
+            "Customer": "Fiqoo",
+            "Total": "Rp 210.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 40.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:00:07",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 326,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 327,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 328,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                }
+            ],
+            "totalPrice": "Rp 210.000"
+        },
+        {
+            "OrderId": 97,
+            "Customer": "Adell",
+            "Total": "Rp 36.000",
+            "Paid": "Rp 50.000",
+            "Change": "Rp 14.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:01:05",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 329,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 2,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 8.000"
+                },
+                {
+                    "OrderDetailId": 330,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                },
+                {
+                    "OrderDetailId": 331,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                }
+            ],
+            "totalPrice": "Rp 36.000"
+        },
+        {
+            "OrderId": 98,
+            "Customer": "Reooo",
+            "Total": "Rp 184.000",
+            "Paid": "Rp 200.000",
+            "Change": "Rp 16.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:02:09",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 332,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 333,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 11,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 44.000"
+                },
+                {
+                    "OrderDetailId": 334,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 184.000"
+        },
+        {
+            "OrderId": 99,
+            "Customer": "Dheden",
+            "Total": "Rp 378.000",
+            "Paid": "Rp 400.000",
+            "Change": "Rp 22.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:03:24",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 335,
+                    "MenuName": "Nasi Telur Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 336,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 337,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 338,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 339,
+                    "MenuName": "Red Velvet",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                },
+                {
+                    "OrderDetailId": 340,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 3,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 21.000"
+                },
+                {
+                    "OrderDetailId": 341,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 1,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 5.000"
+                },
+                {
+                    "OrderDetailId": 342,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                }
+            ],
+            "totalPrice": "Rp 378.000"
+        },
+        {
+            "OrderId": 100,
+            "Customer": "Dendi",
+            "Total": "Rp 480.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:04:33",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 343,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 344,
+                    "MenuName": "Nasi Pecel",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 345,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 346,
+                    "MenuName": "Thai Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 347,
+                    "MenuName": "Taro",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                },
+                {
+                    "OrderDetailId": 348,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 10,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 70.000"
+                }
+            ],
+            "totalPrice": "Rp 480.000"
+        },
+        {
+            "OrderId": 101,
+            "Customer": "Kamil",
+            "Total": "Rp 21.000",
+            "Paid": "Rp 25.000",
+            "Change": "Rp 4.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:05:19",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 349,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 1,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 10.000"
+                },
+                {
+                    "OrderDetailId": 350,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 1,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 4.000"
+                },
+                {
+                    "OrderDetailId": 351,
+                    "MenuName": "Cappuccino",
+                    "Quantity": 1,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 7.000"
+                }
+            ],
+            "totalPrice": "Rp 21.000"
+        },
+        {
+            "OrderId": 102,
+            "Customer": "Kholid",
+            "Total": "Rp 230.000",
+            "Paid": "Rp 250.000",
+            "Change": "Rp 20.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:11:14",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 352,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 353,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 20,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 80.000"
+                },
+                {
+                    "OrderDetailId": 354,
+                    "MenuName": "Grean Tea",
+                    "Quantity": 10,
+                    "Price": "Rp 5.000",
+                    "Subtotal": "Rp 50.000"
+                }
+            ],
+            "totalPrice": "Rp 230.000"
+        },
+        {
+            "OrderId": 103,
+            "Customer": "Akbar",
+            "Total": "Rp 420.000",
+            "Paid": "Rp 500.000",
+            "Change": "Rp 80.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:12:14",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 355,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 356,
+                    "MenuName": "Tempe Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 357,
+                    "MenuName": "Nasi Ayam Geprek",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 358,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 10,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 100.000"
+                },
+                {
+                    "OrderDetailId": 359,
+                    "MenuName": "Tiramisu",
+                    "Quantity": 20,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 140.000"
+                }
+            ],
+            "totalPrice": "Rp 420.000"
+        },
+        {
+            "OrderId": 104,
+            "Customer": "Jakfar",
+            "Total": "Rp 125.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 25.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:13:09",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 360,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 361,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 10,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 40.000"
+                },
+                {
+                    "OrderDetailId": 362,
+                    "MenuName": "Taro",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 125.000"
+        },
+        {
+            "OrderId": 105,
+            "Customer": "Sagita",
+            "Total": "Rp 50.000",
+            "Paid": "Rp 50.000",
+            "Change": "Rp 0",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:13:58",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 363,
+                    "MenuName": "Nasi Goreng",
+                    "Quantity": 2,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 20.000"
+                },
+                {
+                    "OrderDetailId": 364,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 4,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 16.000"
+                },
+                {
+                    "OrderDetailId": 365,
+                    "MenuName": "Taro",
+                    "Quantity": 2,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 14.000"
+                }
+            ],
+            "totalPrice": "Rp 50.000"
+        },
+        {
+            "OrderId": 106,
+            "Customer": "Ilham",
+            "Total": "Rp 109.000",
+            "Paid": "Rp 150.000",
+            "Change": "Rp 41.000",
+            "PaymentMethod": "Cash",
+            "Status": "Completed",
+            "CreatedAt": "2024-12-11 17:14:59",
+            "OrderDetails": [
+                {
+                    "OrderDetailId": 366,
+                    "MenuName": "Ayam Goreng Lalapan",
+                    "Quantity": 5,
+                    "Price": "Rp 10.000",
+                    "Subtotal": "Rp 50.000"
+                },
+                {
+                    "OrderDetailId": 367,
+                    "MenuName": "Tahu Crispy",
+                    "Quantity": 6,
+                    "Price": "Rp 4.000",
+                    "Subtotal": "Rp 24.000"
+                },
+                {
+                    "OrderDetailId": 368,
+                    "MenuName": "Taro",
+                    "Quantity": 5,
+                    "Price": "Rp 7.000",
+                    "Subtotal": "Rp 35.000"
+                }
+            ],
+            "totalPrice": "Rp 109.000"
+        }
+    ]
+}

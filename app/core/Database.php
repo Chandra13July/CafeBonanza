@@ -27,7 +27,6 @@ class Database
         }
     }
 
-    // Adding the prepare method
     public function prepare($query)
     {
         $this->stmt = $this->dbh->prepare($query);

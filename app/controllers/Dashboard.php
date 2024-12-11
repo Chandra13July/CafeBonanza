@@ -27,7 +27,7 @@ class Dashboard extends Controller
             'menu' => 25,
             'customer' => 50,
             'order' => 150,
-            'profit' => 3000000
+            'profit' => 5000000
         ];
 
         // Mengambil data statistik

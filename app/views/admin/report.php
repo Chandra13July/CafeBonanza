@@ -1,3 +1,59 @@
+<style>
+    @media print {
+
+        #exportFormat,
+        #exportButton,
+        #success-notification,
+        #error-notification,
+        .modal {
+            display: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-auto {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-auto th,
+        .table-auto td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table-auto th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .table-auto td {
+            background-color: #ffffff;
+        }
+
+        /* Adjust page size for printing */
+        .flex-1 {
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Adjust margins */
+        .overflow-x-auto {
+            margin-top: 20px;
+        }
+    }
+</style>
+
 <body class="bg-gray-100 flex">
     <?php if (isset($_SESSION['success'])): ?>
         <div id="success-notification" class="bg-green-500 text-white p-2 rounded shadow-lg absolute top-4 right-4 text-sm z-50">
@@ -18,31 +74,39 @@
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-700">Order Report</h2>
             </div>
-            <div class="mb-4 flex gap-4">
-                <form method="POST" action="<?= BASEURL; ?>/report/filterReport" class="flex items-center gap-4">
-                    <div>
+            <div class="mb-4 flex gap-4 justify-between">
+                <form method="POST" action="<?= BASEURL; ?>/report/filterReport" class="flex items-center gap-4 ml-4">
+                    <div class="flex items-center gap-2">
                         <label for="startDate" class="text-gray-600">Start Date:</label>
                         <input type="date" name="startDate" id="startDate" class="border rounded p-1">
                     </div>
-                    <div>
+                    <div class="flex items-center gap-2">
                         <label for="endDate" class="text-gray-600">End Date:</label>
                         <input type="date" name="endDate" id="endDate" class="border rounded p-1">
                     </div>
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded ml-2 flex items-center">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded flex items-center">
                         <i class="fas fa-filter mr-2"></i> Filter
                     </button>
+                    <button type="button" onclick="printReport()" class="bg-green-500 text-white px-6 py-2 rounded flex items-center ml-4">
+                        <i class="fas fa-print mr-2"></i> Print
+                    </button>
+
                 </form>
 
-                <div class="flex items-center gap-4">
-                    <a href="<?= BASEURL; ?>/report/exportPdf" id="exportPdfButton" class="bg-pink-500 text-white px-6 py-2 rounded flex items-center">
-                        <i class="fas fa-file-pdf mr-2"></i> Export to PDF
-                    </a>
-                    <a href="<?= BASEURL; ?>/report/exportExcel" id="exportExcelButton" class="bg-blue-500 text-white px-6 py-2 rounded flex items-center">
-                        <i class="fas fa-file-excel mr-2"></i> Export to Excel
-                    </a>
-                    <a href="<?= BASEURL; ?>/report/exportCsv" id="exportCsvButton" class="bg-yellow-500 text-white px-6 py-2 rounded flex items-center">
-                        <i class="fas fa-file-csv mr-2"></i> Export to CSV
-                    </a>
+                <div class="flex items-center gap-4 justify-end">
+                    <div class="flex items-center gap-2">
+                        <label for="exportFormat" class="text-gray-600">Export Format:</label>
+                        <select id="exportFormat" class="border rounded p-1">
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                            <option value="json">Json</option>
+                        </select>
+
+                        <button id="exportButton" class="bg-blue-500 text-white px-6 py-2 rounded flex items-center">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -64,7 +128,7 @@
                     <tbody>
                         <?php if (!empty($data['orders'])): ?>
                             <?php foreach ($data['orders'] as $index => $order): ?>
-                                <tr class="text-sm text-gray-600 text-center"> <!-- Tambahkan text-center di sini -->
+                                <tr class="text-sm text-gray-600 text-center">
                                     <td class="py-3 px-4"><?= $index + 1 ?></td>
                                     <td class="py-3 px-4"><?= htmlspecialchars($order['Customer'] ?? 'N/A') ?></td>
                                     <td class="py-3 px-4"><?= 'Rp ' . number_format($order['Total'] ?? 0, 0, ',', '.') ?></td>
@@ -218,6 +282,33 @@
 
                 // Simpan status terbaru untuk referensi
                 document.getElementById('editStatus').dataset.previousStatus = status;
+            });
+
+            function printReport() {
+                // Menyembunyikan elemen yang tidak ingin dicetak
+                document.getElementById("exportFormat").style.display = 'none';
+                document.getElementById("exportButton").style.display = 'none';
+
+                // Mencetak halaman
+                window.print();
+
+                // Menampilkan kembali elemen setelah pencetakan
+                document.getElementById("exportFormat").style.display = 'inline-block';
+                document.getElementById("exportButton").style.display = 'inline-block';
+            }
+
+            document.getElementById("exportButton").addEventListener("click", function() {
+                const selectedFormat = document.getElementById("exportFormat").value;
+
+                if (selectedFormat === "pdf") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportPdf";
+                } else if (selectedFormat === "excel") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportExcel";
+                } else if (selectedFormat === "csv") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportCsv";
+                } else if (selectedFormat === "json") {
+                    window.location.href = "<?= BASEURL; ?>/report/exportJson";
+                }
             });
 
             window.onload = function() {

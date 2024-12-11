@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';  
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use setasign\Fpdi\Fpdi;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -100,61 +100,61 @@ class Report extends Controller
     public function exportPdf($startDate = null, $endDate = null)
     {
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
-    
+
         usort($orders, function ($a, $b) {
             return strtotime($a['CreatedAt']) - strtotime($b['CreatedAt']);
         });
-    
-        $pdf = new Fpdi('L');  
+
+        $pdf = new Fpdi('L');
         $pdf->AddPage();
-    
+
         $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(0, 10, 'Report Order Cafe Bonanza', 0, 1, 'C'); 
+        $pdf->Cell(0, 10, 'Report Order Cafe Bonanza', 0, 1, 'C');
         $pdf->Ln(5);
-    
+
         $pdf->SetFont('Arial', '', 12);
-        $pdf->SetXY(180, 10); 
-        $pdf->Cell(0, 10, 'Tanggal Export: ' . date('Y-m-d H:i:s'), 0, 1, 'R'); 
-        $pdf->Ln(10); 
-    
+        $pdf->SetXY(180, 10);
+        $pdf->Cell(0, 10, 'Tanggal Export: ' . date('Y-m-d H:i:s'), 0, 1, 'R');
+        $pdf->Ln(10);
+
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Cell(20, 10, 'No', 1, 0, 'C');  
+        $pdf->Cell(20, 10, 'No', 1, 0, 'C');
         $pdf->Cell(40, 10, 'Customer', 1, 0, 'C');
         $pdf->Cell(30, 10, 'Total', 1, 0, 'C');
         $pdf->Cell(30, 10, 'Paid', 1, 0, 'C');
         $pdf->Cell(30, 10, 'Change', 1, 0, 'C');
         $pdf->Cell(40, 10, 'PaymentMethod', 1, 0, 'C');
         $pdf->Cell(30, 10, 'Status', 1, 0, 'C');
-        $pdf->Cell(50, 10, 'CreatedAt', 1, 1, 'C'); 
+        $pdf->Cell(50, 10, 'CreatedAt', 1, 1, 'C');
         $pdf->Ln();
-    
+
         $pdf->SetFont('Arial', '', 12);
         foreach ($orders as $index => $order) {
-            $pdf->Cell(20, 10, $index + 1, 1, 0, 'C');  
+            $pdf->Cell(20, 10, $index + 1, 1, 0, 'C');
             $pdf->Cell(40, 10, $order['Customer'], 1, 0, 'C');
-            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Total'], 0, ',', '.'), 1, 0, 'C'); 
+            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Total'], 0, ',', '.'), 1, 0, 'C');
             $pdf->Cell(30, 10, 'Rp ' . number_format($order['Paid'], 0, ',', '.'), 1, 0, 'C');
-            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Change'], 0, ',', '.'), 1, 0, 'C'); 
+            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Change'], 0, ',', '.'), 1, 0, 'C');
             $pdf->Cell(40, 10, $order['PaymentMethod'], 1, 0, 'C');
             $pdf->Cell(30, 10, $order['Status'], 1, 0, 'C');
             $pdf->Cell(50, 10, $order['CreatedAt'], 1, 0, 'C');
             $pdf->Ln();
         }
-    
+
         $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.pdf';
         $filePath = __DIR__ . '/../../public/report/pdf/' . $fileName;
-    
+
         $pdf->Output('F', $filePath);
-    
+
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
         header('Content-Length: ' . filesize($filePath));
-    
+
         readfile($filePath);
-    
+
         exit();
     }
-    
+
     public function exportExcel($startDate = null, $endDate = null)
     {
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
@@ -257,5 +257,96 @@ class Report extends Controller
         readfile($filePath);
 
         exit();
+    }
+
+    public function exportJson($startDate = null, $endDate = null)
+    {
+        try {
+            // Set timezone to your desired time zone
+            date_default_timezone_set('Asia/Jakarta'); // Sesuaikan zona waktu jika diperlukan
+
+            $orders = $this->orderModel->getOrders($startDate, $endDate);
+
+            if (empty($orders)) {
+                echo json_encode([
+                    'status' => 'failure',
+                    'message' => 'No orders found for the given date range.',
+                    'data' => [],
+                    'metadata' => [
+                        'date_exported' => date('Y-m-d H:i:s'),
+                    ]
+                ]);
+                exit();
+            }
+
+            function formatRupiah($amount)
+            {
+                return "Rp " . number_format($amount, 0, ',', '.');
+            }
+
+            $result = [];
+            foreach ($orders as $order) {
+                $orderId = $order['OrderId'];
+                if (!isset($result[$orderId])) {
+                    $result[$orderId] = [
+                        'OrderId' => $orderId,
+                        'Customer' => $order['CustomerUsername'],
+                        'Total' => formatRupiah($order['Total']),
+                        'Paid' => formatRupiah($order['Paid']),
+                        'Change' => formatRupiah($order['Change']),
+                        'PaymentMethod' => $order['PaymentMethod'],
+                        'Status' => $order['Status'],
+                        'CreatedAt' => $order['CreatedAt'],
+                        'OrderDetails' => [],
+                        'totalPrice' => formatRupiah($order['Total']),
+                    ];
+                }
+
+                $result[$orderId]['OrderDetails'][] = [
+                    'OrderDetailId' => $order['OrderDetailId'],
+                    'MenuName' => $order['MenuName'],
+                    'Quantity' => $order['Quantity'],
+                    'Price' => formatRupiah($order['Price']),
+                    'Subtotal' => formatRupiah($order['Subtotal'])
+                ];
+            }
+
+            $finalResult = [
+                'status' => 'success',
+                'message' => 'Orders exported successfully.',
+                'date_exported' => date('Y-m-d H:i:s'), // Waktu sekarang sesuai zona waktu
+                'totalOrders' => count($result),
+                'data' => array_values($result),
+            ];
+
+            // Tentukan nama file dan path untuk penyimpanan
+            $fileName = 'orders_report_' . date('Y-m-d_H-i-s') . '.json';
+            $filePath = __DIR__ . '/../../public/report/json/' . $fileName;
+
+            // Simpan data JSON ke file
+            if (file_put_contents($filePath, json_encode($finalResult, JSON_PRETTY_PRINT))) {
+                // Baca file yang disimpan dan tampilkan di browser
+                $jsonData = file_get_contents($filePath);
+                header('Content-Type: application/json');
+                echo $jsonData;  // Tampilkan JSON di browser
+            } else {
+                echo json_encode([
+                    'status' => 'failure',
+                    'message' => 'Failed to save the file.',
+                    'data' => [],
+                ]);
+            }
+
+            exit();
+        } catch (PDOException $e) {
+            echo json_encode([
+                'status' => 'failure',
+                'message' => 'Error executing query: ' . $e->getMessage(),
+                'data' => [],
+                'metadata' => [
+                    'date_exported' => date('Y-m-d H:i:s'),
+                ]
+            ]);
+        }
     }
 }
