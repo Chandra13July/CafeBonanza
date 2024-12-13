@@ -15,7 +15,7 @@ class OrderApi
     public function checkoutOrderFromCart($customerId = 1)
     {
         // Ambil data cart customer
-        $this->db->query("SELECT * FROM `cart` WHERE CustomerId = :customerId");
+        $this->db->query("SELECT * FROM cart WHERE CustomerId = :customerId");
         $this->db->bind(':customerId', $customerId);
         $cartItems = $this->db->resultSet();
 
@@ -33,7 +33,7 @@ class OrderApi
         foreach ($cartItems as $item) {
             // Jika Price kosong, ambil dari tabel menu
             if (empty($item['Price'])) {
-                $this->db->query("SELECT Price FROM `menu` WHERE MenuId = :menuId");
+                $this->db->query("SELECT Price FROM menu WHERE MenuId = :menuId");
                 $this->db->bind(':menuId', $item['MenuId']);
                 $menuItem = $this->db->single();
                 $item['Price'] = $menuItem['Price']; // Set price from menu table if it's missing in the cart
@@ -69,8 +69,8 @@ class OrderApi
         $this->db->beginTransaction();
 
         try {
-            // Insert ke tabel `order`
-            $this->db->query("INSERT INTO `order` (CustomerId, Total, Paid, `Change`, PaymentMethod, Status, CreatedAt) 
+            // Insert ke tabel order
+            $this->db->query("INSERT INTO order (CustomerId, Total, Paid, Change, PaymentMethod, Status, CreatedAt) 
                         VALUES (:customerId, :total, :paid, :change, :paymentMethod, :status, NOW())");
 
             // Bind parameter
@@ -87,7 +87,7 @@ class OrderApi
 
             // Insert order details
             foreach ($orderDetails as $detail) {
-                $this->db->query("INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal) 
+                $this->db->query("INSERT INTO orderdetail (OrderId, MenuId, Quantity, Price, Subtotal) 
                               VALUES (:orderId, :menuId, :quantity, :price, :subtotal)");
 
                 $this->db->bind(':orderId', $orderId);
@@ -102,7 +102,7 @@ class OrderApi
             $this->db->commit();
 
             // Hapus cart setelah checkout
-            $this->db->query("DELETE FROM `cart` WHERE CustomerId = :customerId");
+            $this->db->query("DELETE FROM cart WHERE CustomerId = :customerId");
             $this->db->bind(':customerId', $customerId);
             $this->db->execute();
 
@@ -131,98 +131,29 @@ class OrderApi
         }
     }
 
-    // Mendapatkan semua pesanan atau berdasarkan CustomerId
-    public function getAllOrders($customerId = null)
+    // Mendapatkan semua pesanan
+    public function getAllOrders()
     {
-        $query = "
-        SELECT 
-            o.OrderId, 
-            o.CustomerId, 
-            o.Total, 
-            o.Paid, 
-            o.Change, 
-            o.PaymentMethod, 
-            o.Status, 
-            o.CreatedAt, 
-            od.MenuId, 
-            od.Quantity, 
-            od.Price, 
-            od.Subtotal
-        FROM `order` o
-        LEFT JOIN `orderdetail` od ON o.OrderId = od.OrderId
-    ";
-
-        if ($customerId !== null) {
-            $query .= " WHERE o.CustomerId = :customerId";
-            $this->db->query($query);
-            $this->db->bind(':customerId', $customerId);
-        } else {
-            $this->db->query($query);
-        }
-
+        $this->db->query("SELECT * FROM order");
         $orders = $this->db->resultSet();
 
-        // Cek jika tidak ada pesanan
-        if (empty($orders)) {
-            http_response_code(404);
-            echo json_encode(["message" => "No orders found"]);
-            return;
-        }
-
-        // Format data
         $data = ["data" => []];
-        $currentOrderId = null;
-        $orderDetails = [];
 
         foreach ($orders as $order) {
-            // Jika OrderId berubah, simpan pesanan sebelumnya
-            if ($order['OrderId'] !== $currentOrderId) {
-                if ($currentOrderId !== null) {
-                    $data['data'][] = [
-                        "OrderId" => $currentOrderId,
-                        "CustomerId" => $order['CustomerId'],
-                        "Total" => $order['Total'],
-                        "Paid" => $order['Paid'],
-                        "Change" => $order['Change'],
-                        "PaymentMethod" => $order['PaymentMethod'],
-                        "Status" => $order['Status'],
-                        "CreatedAt" => $order['CreatedAt'],
-                        "OrderDetails" => $orderDetails
-                    ];
-                }
-
-                // Reset detail pesanan
-                $currentOrderId = $order['OrderId'];
-                $orderDetails = [];
-            }
-
-            // Tambahkan detail pesanan
-            if (!empty($order['MenuId'])) {
-                $orderDetails[] = [
-                    "MenuId" => $order['MenuId'],
-                    "Quantity" => $order['Quantity'],
-                    "Price" => $order['Price'],
-                    "Subtotal" => $order['Subtotal']
-                ];
-            }
-        }
-
-        // Tambahkan pesanan terakhir
-        if ($currentOrderId !== null) {
-            $data['data'][] = [
-                "OrderId" => $currentOrderId,
-                "CustomerId" => $orders[count($orders) - 1]['CustomerId'],
-                "Total" => $orders[count($orders) - 1]['Total'],
-                "Paid" => $orders[count($orders) - 1]['Paid'],
-                "Change" => $orders[count($orders) - 1]['Change'],
-                "PaymentMethod" => $orders[count($orders) - 1]['PaymentMethod'],
-                "Status" => $orders[count($orders) - 1]['Status'],
-                "CreatedAt" => $orders[count($orders) - 1]['CreatedAt'],
-                "OrderDetails" => $orderDetails
+            $data_order = [
+                "OrderId" => $order["OrderId"],
+                "CustomerId" => $order["CustomerId"],
+                "Total" => $order["Total"] ?? 0,
+                "Paid" => $order["Paid"] ?? 0,
+                "Change" => $order["Change"] ?? 0,
+                "PaymentMethod" => $order["PaymentMethod"] ?? 'N/A',
+                "Status" => $order["Status"] ?? 'Unknown',
+                "CreatedAt" => $order["CreatedAt"] ?? 'Unknown'
             ];
+
+            array_push($data['data'], $data_order);
         }
 
-        // Return hasil
         header('Content-Type: application/json');
         echo json_encode($data);
     }
@@ -245,8 +176,8 @@ class OrderApi
             od.Quantity, 
             od.Price, 
             od.Subtotal
-        FROM `order` o
-        LEFT JOIN `orderdetail` od ON o.OrderId = od.OrderId
+        FROM order o
+        LEFT JOIN orderdetail od ON o.OrderId = od.OrderId
         WHERE o.CustomerId = :customerId
     ");
         $this->db->bind(':customerId', $customerId);

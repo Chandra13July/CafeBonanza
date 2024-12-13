@@ -222,9 +222,45 @@ class MenuApi
         }
     }
 
+    public function getStockStatus($threshold = 5)
+    {
+        // Fixing the SQL query by removing the trailing comma
+        $this->db->query("
+        SELECT 
+            m.MenuId,
+            m.MenuName,
+            m.Stock,
+            m.ImageUrl
+        FROM menu m
+        WHERE m.Stock = 0  -- Menampilkan menu dengan stok habis
+        OR m.Stock <= :threshold  -- Atau stok hampir habis
+        ORDER BY m.MenuName
+    ");
 
+        // Bind the threshold value to the SQL query
+        $this->db->bind(':threshold', $threshold);
 
+        // Execute the query and get the results
+        $menus = $this->db->resultSet();
 
+        // Prepare the response data
+        $data = ["data" => []];
+        foreach ($menus as $menu) {
+            $data_menu = [
+                "MenuId" => $menu["MenuId"],
+                "MenuName" => $menu["MenuName"],
+                "Stock" => $menu["Stock"],
+                "ImageUrl" => BASEURL . '/' . $menu["ImageUrl"]
+            ];
+
+            // Add the menu item to the response data
+            array_push($data['data'], $data_menu);
+        }
+
+        // Return the data as a JSON response
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
 
     public function deleteMenu($id)
     {
@@ -258,6 +294,7 @@ function handleError($message)
 }
 
 // Main routing logic
+// Main routing logic
 try {
     // Create instance of MenuApi
     $menuApi = new MenuApi();
@@ -265,15 +302,19 @@ try {
     // Determine request method
     $method = $_SERVER['REQUEST_METHOD'];
 
-    // Extract ID from URL if present
+    // Extract ID or action from URL if present
     $id = $_GET['id'] ?? null;
+    $action = $_GET['action'] ?? null; // Check for 'action' parameter in the URL
 
     // Route the request
     header('Content-Type: application/json');
 
     switch ($method) {
         case 'GET':
-            if ($id) {
+            if ($action == 'stockstatus') {
+                $threshold = $_GET['threshold'] ?? 5;  // Get threshold from URL or default to 5
+                $menuApi->getStockStatus($threshold);  // Call the stock status function
+            } elseif ($id) {
                 $menuApi->getMenuById($id);
             } else {
                 $menuApi->getAllMenus();
