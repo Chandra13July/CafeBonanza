@@ -20,13 +20,14 @@ class Dashboard extends Controller
             exit;
         }
     }
+
     public function index()
     {
         // Target yang bisa diubah dari pengaturan
         $targets = [
             'menu' => 25,
             'customer' => 50,
-            'order' => 150,
+            'order' => 100,
             'profit' => 5000000
         ];
 
@@ -49,6 +50,9 @@ class Dashboard extends Controller
         // Mendapatkan data profit per bulan (Januari sampai Desember)
         $monthlyCompletedProfit1 = $this->OrderModel->getMonthlyCompletedProfit1(date('Y'));
 
+        // Mendapatkan data menu populer
+        $popularMenu = $this->MenuModel->getPopularMenu();
+
         // Menyusun data bulan (dari Januari sampai Desember)
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -65,7 +69,8 @@ class Dashboard extends Controller
             'targets' => $targets,
             'monthlyOrders' => $monthlyOrders,
             'monthlyCompletedProfit1' => $monthlyCompletedProfit1,
-            'months' => $months
+            'months' => $months,
+            'popularMenu' => $popularMenu  // Menambahkan data menu populer
         ];
 
         // Menampilkan view

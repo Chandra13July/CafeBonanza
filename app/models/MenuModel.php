@@ -104,4 +104,26 @@ class MenuModel
 
         return $this->db->execute();
     }
+
+    public function getPopularMenu($limit = 5)
+    {
+        $query = "
+            SELECT 
+                m.MenuName,
+                m.Description,
+                m.ImageUrl,
+                SUM(od.Quantity) AS totalQuantity
+            FROM `orderdetail` od
+            JOIN `menu` m ON od.MenuId = m.MenuId
+            GROUP BY m.MenuId
+            ORDER BY totalQuantity DESC
+            LIMIT :limit
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
