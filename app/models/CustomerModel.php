@@ -158,4 +158,27 @@ class CustomerModel
         $this->db->bind(':password', $hashedPassword);
         return $this->db->execute();
     }
+
+    public function getPopularCustomer($limit = 5)
+{
+    $query = "
+        SELECT 
+            c.Username,
+            c.Email,
+            c.ImageUrl,
+            COUNT(DISTINCT o.OrderId) AS totalOrders
+        FROM `order` o
+        JOIN `customer` c ON o.CustomerId = c.CustomerId
+        GROUP BY o.CustomerId
+        ORDER BY totalOrders DESC
+        LIMIT :limit
+    ";
+
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

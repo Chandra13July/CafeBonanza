@@ -156,11 +156,11 @@
                     <!-- Chart Section -->
                     <div class="w-full lg:w-full bg-white p-4 rounded-lg shadow">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-semibold text-gray-700">
-                                Chart
+                            <h3 id="chartTitle" class="text-xl font-semibold text-gray-700">
+                                Order Chart
                             </h3>
-                            <div class="flex space-x-2">
-                                <select class="border border-gray-300 rounded-md p-2" id="chartType" onchange="updateChart()">
+                            <div class="flex items-center space-x-2">
+                                <select class="border border-gray-300 rounded-md p-2 text-sm" id="chartType" onchange="updateChart()">
                                     <option value="orders">Orders</option>
                                     <option value="profit">Profit</option>
                                 </select>
@@ -281,10 +281,12 @@
 
                             function updateChart() {
                                 var selectedType = document.getElementById('chartType').value;
+                                var chartTitle = document.getElementById('chartTitle');
 
                                 if (selectedType === 'orders') {
                                     chartData = monthlyOrders;
                                     chartLabel = 'Total Orders';
+                                    chartTitle.textContent = 'Order Chart'; // Ganti judul menjadi Order Chart
                                     chartConfig.data.datasets = [{
                                         label: chartLabel,
                                         data: chartData,
@@ -304,6 +306,7 @@
                                 } else if (selectedType === 'profit') {
                                     chartData = monthlyProfit;
                                     chartLabel = 'Total Profit';
+                                    chartTitle.textContent = 'Profit Chart'; // Ganti judul menjadi Profit Chart
                                     chartConfig.data.datasets = [{
                                         label: chartLabel,
                                         data: chartData,
@@ -330,32 +333,84 @@
 
                 <!-- Menu Popular Section -->
                 <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 mt-8">
-                    <!-- Empty Left Section -->
-                    <div class="w-full lg:w-1/2 bg-white p-4 rounded-lg shadow hidden lg:block"></div>
+                    <!-- Grafik Section (3/4) -->
+                    <div class="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 id="chartTitle" class="text-xl font-semibold text-gray-700">
+                                Weekly Crowd Chart
+                            </h3>
+                            <div class="flex items-center space-x-2">
+                                <select class="border border-gray-300 rounded-md p-2 text-sm" id="chartType" onchange="updateChart()">
+                                    <option value="weekly">Weekly Crowd Chart</option>
+                                    <option value="hourly">Hourly Traffic Graph</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="grafik" class="h-64 bg-gray-200 rounded-lg"></div>
+                    </div>
 
-                    <!-- Popular Menu Section -->
-                    <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Popular Menu</h3>
-                        <div class="space-y-6">
-                            <?php $counter = 1; ?>
-                            <?php foreach ($data['popularMenu'] as $menu): ?>
-                                <div class="flex items-start space-x-6 <?= 'top-' . $counter; ?>"> <!-- Add dynamic class based on counter -->
-                                    <!-- Numbering Section -->
-                                    <div class="text-xl font-bold text-gray-800"><?= $counter++; ?>.</div>
+                    <!-- Popular Menu Section (1/4) -->
+                    <div class="w-full lg:w-2/6 bg-white p-6 rounded-lg shadow-lg ml-4">
+                        <h3 class="text-xl font-semibold text-gray-700 flex justify-between mb-4">
+                            <span id="menuTitle">Top Menu</span>
+                            <select class="border border-gray-300 rounded-md p-2 text-sm" id="menuType" onchange="updateMenuList()">
+                                <option value="best-menu">Top Menu</option>
+                                <option value="best-customer">Loyal Customer</option>
+                                <option value="stock-out">Stock Status</option>
+                            </select>
+                        </h3>
 
-                                    <!-- Menu Item Section -->
-                                    <div class="flex space-x-6 w-full">
-                                        <!-- Image Section -->
-                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ? htmlspecialchars($menu['ImageUrl']) : 'default_image.jpg'; ?>"
-                                            alt="<?= htmlspecialchars($menu['MenuName']); ?>"
-                                            class="zoom-image w-24 h-24 object-cover rounded-lg">
+                        <div id="menuList" class="space-y-4">
+                            <!-- Best Menu items -->
+                            <?php foreach ($popularMenu as $menu) : ?>
+                                <div class="flex items-center space-x-4 menu-item" data-type="best-menu">
+                                    <div class="flex space-x-4 w-full">
+                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="<?= htmlspecialchars($menu['MenuName']) ?>" class="w-10 h-10 object-cover mx-auto rounded-full">
+                                        <div class="flex-1 space-y-1">
+                                            <h4 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($menu['MenuName']) ?></h4>
+                                            <p class="text-sm text-gray-600"><?= htmlspecialchars($menu['Description']) ?></p> <!-- Menambahkan Description di bawah MenuName -->
+                                            <div class="flex justify-between items-center text-sm mt-1">
+                                                <p class="text-gray-700 font-semibold">Sold: <?= htmlspecialchars($menu['totalQuantity']) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
 
-                                        <!-- Text Content Section -->
-                                        <div class="flex-1 space-y-2">
-                                            <h4 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($menu['MenuName']); ?></h4>
-                                            <p class="text-sm text-gray-600 line-clamp-2"><?= htmlspecialchars($menu['Description']); ?></p>
-                                            <div class="flex justify-between items-center text-sm mt-2">
-                                                <p class="text-gray-700 font-semibold">Sold: <?= htmlspecialchars($menu['totalQuantity']); ?></p>
+                            <!-- Best Customer items -->
+                            <div id="bestCustomerItems" style="display: none;" class="space-y-4 mt-4"> <!-- Added mt-4 for margin-top -->
+                                <?php foreach ($popularCustomer as $customer) : ?>
+                                    <div class="flex items-center space-x-4 menu-item" data-type="best-customer">
+                                        <div class="flex space-x-4 w-full">
+                                            <img src="<?= BASEURL; ?>/<?= !empty($customer['ImageUrl']) ? htmlspecialchars($customer['ImageUrl']) : 'img/user.png' ?>" alt="<?= htmlspecialchars($customer['Username']) ?>" class="w-10 h-10 object-cover mx-auto rounded-full">
+                                            <div class="flex-1 space-y-1">
+                                                <h4 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($customer['Username']) ?></h4>
+                                                <p class="text-sm text-gray-600"><?= htmlspecialchars($customer['Email']) ?></p> <!-- Added Email below username -->
+                                                <div class="flex justify-between items-center text-sm mt-1">
+                                                    <p class="text-gray-700 font-semibold">Orders: <?= htmlspecialchars($customer['totalOrders']) ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <!-- Stock Menu items -->
+                            <?php foreach ($stockStatusMenu as $menu) : ?>
+                                <div class="flex items-center space-x-4 menu-item" data-type="stock-out">
+                                    <div class="flex space-x-4 w-full">
+                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="<?= htmlspecialchars($menu['MenuName']) ?>" class="w-10 h-10 object-cover mx-auto rounded-full">
+                                        <div class="flex-1 space-y-1">
+                                            <h4 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($menu['MenuName']) ?></h4>
+                                            <p class="text-sm text-gray-600"><?= htmlspecialchars($menu['Description']) ?></p> <!-- Added Description below MenuName -->
+                                            <div class="flex justify-between items-center text-sm mt-1">
+                                                <?php if ($menu['Stock'] == 0): ?>
+                                                    <p class="text-red-500 font-semibold">Stok Habis</p>
+                                                <?php elseif ($menu['Stock'] <= 5): ?>
+                                                    <p class="text-yellow-500 font-semibold">Stok Hampir Habis (Tersisa <?= htmlspecialchars($menu['Stock']) ?>)</p>
+                                                <?php else: ?>
+                                                    <p class="text-gray-700 font-semibold">Stok: <?= htmlspecialchars($menu['Stock']) ?></p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -363,9 +418,61 @@
                             <?php endforeach; ?>
                         </div>
                     </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            // Pastikan data stockStatusMenu sudah diterima dengan benar
+                            console.log('Data Stock Status Menu:', <?= json_encode($stockStatusMenu); ?>);
+
+                            updateMenuList(); // This will ensure that the correct items are displayed initially
+                        });
+
+                        function updateMenuList() {
+                            const selectedType = document.getElementById('menuType').value;
+                            const menuTitle = document.getElementById('menuTitle');
+                            const menuItems = document.querySelectorAll('.menu-item');
+                            const bestCustomerItems = document.getElementById('bestCustomerItems');
+                            const stockItems = document.querySelectorAll('.stock-out'); // Select stock-out items
+
+                            console.log("Selected Type:", selectedType); // Cek apa yang dipilih di dropdown
+
+                            // Update the title based on selection
+                            if (selectedType === 'best-menu') {
+                                menuTitle.textContent = 'Top Menu';
+                                bestCustomerItems.style.display = 'none'; // Hide Best Customer items
+                                stockItems.forEach(item => item.style.display = 'none');
+                            } else if (selectedType === 'best-customer') {
+                                menuTitle.textContent = 'Loyal Customer';
+                                bestCustomerItems.style.display = 'block'; // Show Best Customer items
+                                stockItems.forEach(item => item.style.display = 'none');
+                            } else if (selectedType === 'stock-out') {
+                                menuTitle.textContent = 'Stock Status';
+                                bestCustomerItems.style.display = 'block'; // Hide Best Customer items
+                                stockItems.forEach(item => item.style.display = 'flex'); // Show Stock Habits items
+                            }
+
+                            // Filter menu items based on the selected type
+                            menuItems.forEach(item => {
+                                if (selectedType === 'best-menu' && item.dataset.type === 'best-menu') {
+                                    item.style.display = 'flex'; // Show Best Menu items
+                                } else if (selectedType === 'best-customer' && item.dataset.type === 'best-customer') {
+                                    item.style.display = 'flex'; // Show Best Customer items
+                                } else if (selectedType === 'stock-out' && item.dataset.type === 'stock-out') {
+                                    item.style.display = 'flex'; // Show Stock Habits items
+                                } else {
+                                    item.style.display = 'none'; // Hide other items
+                                }
+                            });
+                        }
+
+                        // Initialize the display on page load (to show only best-menu initially)
+                        document.addEventListener('DOMContentLoaded', () => {
+                            updateMenuList(); // This will ensure that the correct items are displayed initially
+                        });
+                    </script>
+
                 </div>
             </div>
-        </div>
 </body>
 
 </html>

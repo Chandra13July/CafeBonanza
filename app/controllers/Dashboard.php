@@ -44,19 +44,18 @@ class Dashboard extends Controller
         $currentMonthProfit = $this->OrderModel->getCurrentMonthCompletedProfit();
         $profitPercentage = ($currentMonthProfit / $targets['profit']) * 100;
 
-        // Mendapatkan data total order per bulan untuk grafik
         $monthlyOrders = $this->OrderModel->getMonthlyTotalOrdersWithZero(date('Y'));
 
-        // Mendapatkan data profit per bulan (Januari sampai Desember)
         $monthlyCompletedProfit1 = $this->OrderModel->getMonthlyCompletedProfit1(date('Y'));
 
-        // Mendapatkan data menu populer
         $popularMenu = $this->MenuModel->getPopularMenu();
 
-        // Menyusun data bulan (dari Januari sampai Desember)
+        $stockStatusMenu = $this->MenuModel->getStockStatus();  // Mengambil data stok habis atau hampir habis
+
+        $popularCustomer = $this->CustomerModel->getPopularCustomer();
+
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Menyusun data untuk view
         $data = [
             'totalMenu' => $totalMenu,
             'menuPercentage' => $menuPercentage,
@@ -70,7 +69,10 @@ class Dashboard extends Controller
             'monthlyOrders' => $monthlyOrders,
             'monthlyCompletedProfit1' => $monthlyCompletedProfit1,
             'months' => $months,
-            'popularMenu' => $popularMenu  // Menambahkan data menu populer
+            'popularMenu' => $popularMenu,
+            'popularCustomer' => $popularCustomer,
+            'stockStatusMenu' => $stockStatusMenu,
+
         ];
 
         // Menampilkan view

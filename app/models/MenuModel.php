@@ -126,4 +126,25 @@ class MenuModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getStockStatus($threshold = 5)
+    {
+        $query = "
+        SELECT 
+            m.MenuName,
+            m.Description,
+            m.ImageUrl,
+            m.Stock
+        FROM `menu` m
+        WHERE m.Stock = 0  -- Menampilkan menu dengan stok habis
+        OR m.Stock <= :threshold  -- Atau stok hampir habis
+        ORDER BY m.MenuName
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':threshold', $threshold, PDO::PARAM_INT);  // Menambahkan batas stok hampir habis
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
