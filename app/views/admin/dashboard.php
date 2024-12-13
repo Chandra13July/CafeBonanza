@@ -11,6 +11,17 @@
             padding-left: 250px;
             padding-right: 10px;
         }
+
+        .single-line-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            /* Membatasi menjadi satu baris */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            /* Pastikan elemen memiliki lebar penuh untuk bekerja dengan baik */
+        }
     </style>
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -334,20 +345,161 @@
                 <!-- Menu Popular Section -->
                 <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 mt-8">
                     <!-- Grafik Section (3/4) -->
-                    <div class="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow-lg">
+                    <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 id="chartTitle" class="text-xl font-semibold text-gray-700">
-                                Weekly Crowd Chart
+                            <h3 id="chartTitle1" class="text-xl font-semibold text-gray-700">
+                                Crowd Chart Weekly
                             </h3>
-                            <div class="flex items-center space-x-2">
-                                <select class="border border-gray-300 rounded-md p-2 text-sm" id="chartType" onchange="updateChart()">
-                                    <option value="weekly">Weekly Crowd Chart</option>
-                                    <option value="hourly">Hourly Traffic Graph</option>
-                                </select>
-                            </div>
+
+                            <!-- Dropdown untuk memilih tipe grafik (Per Minggu, Per Jam, Per Bulan per Minggu) -->
+                            <select id="chartSelector" class="border border-gray-300 rounded-md p-2 text-sm" onchange="updateChart1()">
+                                <option value="weekly">Weekly</option>
+                                <option value="hourly">Hourly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
                         </div>
-                        <div id="grafik" class="h-64 bg-gray-200 rounded-lg"></div>
+                        <div id="grafik" class="bg-gray-200 rounded-lg" style="height: 450px;">
+                            <canvas id="chartCanvas"></canvas>
+                        </div>
+                        <!-- Menyimpan data JSON dalam elemen HTML tersembunyi -->
+                        <div id="monthlyOrdersData" style="display: none;"
+                            data-orders='<?php echo json_encode($monthlyOrdersByWeek); ?>'>
+                        </div>
                     </div>
+
+                    <!-- Include Chart.js library -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <style>
+                        #chartCanvas {
+                            background-color: white;
+                        }
+                    </style>
+
+                    <script>
+                        let chartInstance;
+
+                        // Data yang diterima dari controller
+                        const weeklyData = <?php echo json_encode($weeklyOrders); ?>;
+                        const hourlyData = <?php echo json_encode($hourlyOrders); ?>;
+                        const monthlyDataByWeek = JSON.parse(document.getElementById('monthlyOrdersData').getAttribute('data-orders'));
+
+                        // Data untuk grafik mingguan
+                        const weeklyChartData = {
+                            labels: <?php echo json_encode($daysOfWeek); ?>,
+                            datasets: [{
+                                label: 'Jumlah Pesanan',
+                                data: weeklyData.map(day => day.totalOrders),
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        };
+
+                        // Data untuk grafik per jam
+                        const hourlyChartData = {
+                            labels: ['18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '00:00', '01:00', '02:00'],
+                            datasets: [{
+                                label: 'Jumlah Pesanan',
+                                data: hourlyData.map(hour => hour.totalOrders),
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        };
+
+                        // Data untuk grafik per bulan per minggu
+                        const monthlyChartData = {
+                            labels: monthlyDataByWeek.map(week => `Minggu ${week.weekInMonth}`), // Label Minggu (Minggu 1, Minggu 2, dst.)
+                            datasets: [{
+                                label: 'Jumlah Pesanan',
+                                data: monthlyDataByWeek.map(week => week.totalOrders),
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        };
+
+                        // Fungsi untuk menentukan status keramaian
+                        function getStatusMessage(totalPesanan) {
+                            if (totalPesanan >= 6) {
+                                return "Sangat Ramai 🚀";
+                            } else if (totalPesanan >= 4) {
+                                return "Cukup Ramai 😊";
+                            } else if (totalPesanan >= 2) {
+                                return "Tidak Terlalu Ramai 😌";
+                            } else if (totalPesanan >= 1) {
+                                return "Hampir Sepi 😶";
+                            } else {
+                                return "Sepi 😔";
+                            }
+                        }
+
+                        // Konfigurasi chart
+                        const chartOptions = {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            const totalPesanan = tooltipItem.raw;
+                                            const status = getStatusMessage(totalPesanan);
+                                            return `Pesanan: ${totalPesanan} - ${status}`;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    labels: {
+                                        color: 'black'
+                                    }
+                                }
+                            }
+                        };
+
+                        // Fungsi untuk membuat chart
+                        function createChart1(chartData) {
+                            const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+                            // Hancurkan grafik yang ada jika sudah ada sebelumnya
+                            if (chartInstance) {
+                                chartInstance.destroy();
+                            }
+
+                            // Buat grafik baru
+                            chartInstance = new Chart(ctx, {
+                                type: 'bar',
+                                data: chartData,
+                                options: chartOptions
+                            });
+                        }
+
+                        // Fungsi untuk memperbarui grafik berdasarkan tipe yang dipilih
+                        function updateChart1() {
+                            const selectedChartType = document.getElementById('chartSelector').value;
+
+                            // Update chart title berdasarkan tipe grafik yang dipilih
+                            const chartTitle = document.getElementById('chartTitle1');
+                            if (selectedChartType === 'weekly') {
+                                createChart1(weeklyChartData); // Grafik Mingguan
+                                chartTitle.innerText = "Crowd Chart Weekly";
+                            } else if (selectedChartType === 'hourly') {
+                                createChart1(hourlyChartData); // Grafik Per Jam
+                                chartTitle.innerText = "Crowd Chart Hourly";
+                            } else if (selectedChartType === 'monthly') {
+                                createChart1(monthlyChartData); // Grafik Per Bulan per Minggu
+                                chartTitle.innerText = "Crowd Chart Monthly";
+                            }
+                        }
+
+                        // Membuat chart pertama kali (default: per minggu)
+                        createChart1(weeklyChartData);
+                    </script>
 
                     <!-- Popular Menu Section (1/4) -->
                     <div class="w-full lg:w-2/6 bg-white p-6 rounded-lg shadow-lg ml-4">
@@ -368,7 +520,9 @@
                                         <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="<?= htmlspecialchars($menu['MenuName']) ?>" class="w-10 h-10 object-cover mx-auto rounded-full">
                                         <div class="flex-1 space-y-1">
                                             <h4 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($menu['MenuName']) ?></h4>
-                                            <p class="text-sm text-gray-600"><?= htmlspecialchars($menu['Description']) ?></p> <!-- Menambahkan Description di bawah MenuName -->
+                                            <p class="text-sm text-gray-600 single-line-description">
+                                                <?= htmlspecialchars(substr($menu['Description'], 0, 40)) ?><?php if (strlen($menu['Description']) > 40) echo '...'; ?>
+                                            </p> <!-- Menambahkan batasan 40 karakter dengan ellipsis jika lebih -->
                                             <div class="flex justify-between items-center text-sm mt-1">
                                                 <p class="text-gray-700 font-semibold">Sold: <?= htmlspecialchars($menu['totalQuantity']) ?></p>
                                             </div>
@@ -402,7 +556,9 @@
                                         <img src="<?= BASEURL; ?>/<?= htmlspecialchars($menu['ImageUrl']) ?>" alt="<?= htmlspecialchars($menu['MenuName']) ?>" class="w-10 h-10 object-cover mx-auto rounded-full">
                                         <div class="flex-1 space-y-1">
                                             <h4 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($menu['MenuName']) ?></h4>
-                                            <p class="text-sm text-gray-600"><?= htmlspecialchars($menu['Description']) ?></p> <!-- Added Description below MenuName -->
+                                            <p class="text-sm text-gray-600 single-line-description">
+                                                <?= htmlspecialchars(substr($menu['Description'], 0, 40)) ?><?php if (strlen($menu['Description']) > 40) echo '...'; ?>
+                                            </p> <!-- Menambahkan batasan 40 karakter dengan elipsis jika lebih -->
                                             <div class="flex justify-between items-center text-sm mt-1">
                                                 <?php if ($menu['Stock'] == 0): ?>
                                                     <p class="text-red-500 font-semibold">Stok Habis</p>
@@ -417,61 +573,60 @@
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                    </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                // Pastikan data stockStatusMenu sudah diterima dengan benar
+                                console.log('Data Stock Status Menu:', <?= json_encode($stockStatusMenu); ?>);
 
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            // Pastikan data stockStatusMenu sudah diterima dengan benar
-                            console.log('Data Stock Status Menu:', <?= json_encode($stockStatusMenu); ?>);
+                                updateMenuList(); // This will ensure that the correct items are displayed initially
+                            });
 
-                            updateMenuList(); // This will ensure that the correct items are displayed initially
-                        });
+                            function updateMenuList() {
+                                const selectedType = document.getElementById('menuType').value;
+                                const menuTitle = document.getElementById('menuTitle');
+                                const menuItems = document.querySelectorAll('.menu-item');
+                                const bestCustomerItems = document.getElementById('bestCustomerItems');
+                                const stockItems = document.querySelectorAll('.stock-out'); // Select stock-out items
 
-                        function updateMenuList() {
-                            const selectedType = document.getElementById('menuType').value;
-                            const menuTitle = document.getElementById('menuTitle');
-                            const menuItems = document.querySelectorAll('.menu-item');
-                            const bestCustomerItems = document.getElementById('bestCustomerItems');
-                            const stockItems = document.querySelectorAll('.stock-out'); // Select stock-out items
+                                console.log("Selected Type:", selectedType); // Cek apa yang dipilih di dropdown
 
-                            console.log("Selected Type:", selectedType); // Cek apa yang dipilih di dropdown
+                                // Update the title based on selection
+                                if (selectedType === 'best-menu') {
+                                    menuTitle.textContent = 'Top Menu';
+                                    bestCustomerItems.style.display = 'none'; // Hide Best Customer items
+                                    stockItems.forEach(item => item.style.display = 'none');
+                                } else if (selectedType === 'best-customer') {
+                                    menuTitle.textContent = 'Loyal Customer';
+                                    bestCustomerItems.style.display = 'block'; // Show Best Customer items
+                                    stockItems.forEach(item => item.style.display = 'none');
+                                } else if (selectedType === 'stock-out') {
+                                    menuTitle.textContent = 'Stock Status';
+                                    bestCustomerItems.style.display = 'block'; // Hide Best Customer items
+                                    stockItems.forEach(item => item.style.display = 'flex'); // Show Stock Habits items
+                                }
 
-                            // Update the title based on selection
-                            if (selectedType === 'best-menu') {
-                                menuTitle.textContent = 'Top Menu';
-                                bestCustomerItems.style.display = 'none'; // Hide Best Customer items
-                                stockItems.forEach(item => item.style.display = 'none');
-                            } else if (selectedType === 'best-customer') {
-                                menuTitle.textContent = 'Loyal Customer';
-                                bestCustomerItems.style.display = 'block'; // Show Best Customer items
-                                stockItems.forEach(item => item.style.display = 'none');
-                            } else if (selectedType === 'stock-out') {
-                                menuTitle.textContent = 'Stock Status';
-                                bestCustomerItems.style.display = 'block'; // Hide Best Customer items
-                                stockItems.forEach(item => item.style.display = 'flex'); // Show Stock Habits items
+                                // Filter menu items based on the selected type
+                                menuItems.forEach(item => {
+                                    if (selectedType === 'best-menu' && item.dataset.type === 'best-menu') {
+                                        item.style.display = 'flex'; // Show Best Menu items
+                                    } else if (selectedType === 'best-customer' && item.dataset.type === 'best-customer') {
+                                        item.style.display = 'flex'; // Show Best Customer items
+                                    } else if (selectedType === 'stock-out' && item.dataset.type === 'stock-out') {
+                                        item.style.display = 'flex'; // Show Stock Habits items
+                                    } else {
+                                        item.style.display = 'none'; // Hide other items
+                                    }
+                                });
                             }
 
-                            // Filter menu items based on the selected type
-                            menuItems.forEach(item => {
-                                if (selectedType === 'best-menu' && item.dataset.type === 'best-menu') {
-                                    item.style.display = 'flex'; // Show Best Menu items
-                                } else if (selectedType === 'best-customer' && item.dataset.type === 'best-customer') {
-                                    item.style.display = 'flex'; // Show Best Customer items
-                                } else if (selectedType === 'stock-out' && item.dataset.type === 'stock-out') {
-                                    item.style.display = 'flex'; // Show Stock Habits items
-                                } else {
-                                    item.style.display = 'none'; // Hide other items
-                                }
+                            // Initialize the display on page load (to show only best-menu initially)
+                            document.addEventListener('DOMContentLoaded', () => {
+                                updateMenuList(); // This will ensure that the correct items are displayed initially
                             });
-                        }
-
-                        // Initialize the display on page load (to show only best-menu initially)
-                        document.addEventListener('DOMContentLoaded', () => {
-                            updateMenuList(); // This will ensure that the correct items are displayed initially
-                        });
-                    </script>
-
+                        </script>
+                    </div>
                 </div>
+
             </div>
 </body>
 

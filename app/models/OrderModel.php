@@ -449,4 +449,107 @@ class OrderModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getWeeklyOrderCount()
+    {
+        // Query SQL untuk mendapatkan jumlah pesanan per hari dalam minggu
+        $query = "
+    SELECT 
+        days.dayOfWeek,
+        COALESCE(COUNT(o.OrderId), 0) AS totalOrders
+    FROM 
+        (SELECT 1 AS dayOfWeek UNION ALL 
+         SELECT 2 UNION ALL 
+         SELECT 3 UNION ALL 
+         SELECT 4 UNION ALL 
+         SELECT 5 UNION ALL 
+         SELECT 6 UNION ALL 
+         SELECT 7) AS days
+    LEFT JOIN `order` o 
+        ON DAYOFWEEK(o.CreatedAt) = days.dayOfWeek
+        AND YEARWEEK(o.CreatedAt, 1) = YEARWEEK(CURDATE(), 1)
+    GROUP BY days.dayOfWeek
+    ORDER BY days.dayOfWeek;
+    ";
+
+        // Persiapkan dan jalankan query
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        // Ambil hasil dan kembalikan dalam bentuk array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHourlyOrderCount()
+    {
+        // Query SQL untuk mendapatkan jumlah pesanan per jam
+        $query = "
+        SELECT 
+            hours.hourOfDay, 
+            COALESCE(COUNT(o.OrderId), 0) AS totalOrders
+        FROM (
+            -- Jam 18 hingga 23 hari ini
+            SELECT 18 AS hourOfDay UNION ALL
+            SELECT 19 UNION ALL
+            SELECT 20 UNION ALL
+            SELECT 21 UNION ALL
+            SELECT 22 UNION ALL
+            SELECT 23 UNION ALL
+            -- Jam 00 hingga 2 besok
+            SELECT 0 UNION ALL
+            SELECT 1 UNION ALL
+            SELECT 2
+        ) AS hours
+        LEFT JOIN `order` o 
+            ON (
+                HOUR(o.CreatedAt) = hours.hourOfDay AND (
+                    -- Kondisi untuk jam 18-23 pada hari ini
+                    (HOUR(o.CreatedAt) >= 18 AND DATE(o.CreatedAt) = CURDATE()) OR
+                    -- Kondisi untuk jam 00-02 pada hari berikutnya
+                    (HOUR(o.CreatedAt) BETWEEN 0 AND 2 AND DATE(o.CreatedAt) = DATE_ADD(CURDATE(), INTERVAL 1 DAY))
+                )
+            )
+        GROUP BY hours.hourOfDay
+        ORDER BY hours.hourOfDay;
+    ";
+
+        // Persiapkan dan jalankan query
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        // Ambil hasil dan kembalikan dalam bentuk array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMonthlyOrderCountByWeek($month, $year)
+    {
+        // Query SQL untuk mendapatkan jumlah pesanan per minggu dalam bulan dan tahun tertentu
+        $query = "
+            SELECT 
+                weeks.weekInMonth,
+                COALESCE(COUNT(o.OrderId), 0) AS totalOrders
+            FROM (
+                SELECT 1 AS weekInMonth UNION ALL
+                SELECT 2 UNION ALL
+                SELECT 3 UNION ALL
+                SELECT 4 UNION ALL
+                SELECT 5
+            ) AS weeks
+            LEFT JOIN `order` o 
+                ON FLOOR((DAY(o.CreatedAt) - 1) / 7) + 1 = weeks.weekInMonth
+                AND MONTH(o.CreatedAt) = :month
+                AND YEAR(o.CreatedAt) = :year
+            GROUP BY weeks.weekInMonth
+            ORDER BY weeks.weekInMonth;
+        ";
+
+        // Persiapkan dan jalankan query
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Ambil hasil dan kembalikan dalam bentuk array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
