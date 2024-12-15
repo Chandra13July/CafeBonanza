@@ -716,7 +716,7 @@
                         }
                     </script>
 
-                    <!-- Kartu 2 (Kalender) -->
+                    <!-- Kartu Kalender -->
                     <div class="w-full lg:w-2/6 bg-white p-6 rounded-lg shadow-lg">
                         <h3 class="text-xl font-semibold text-gray-700 flex justify-between mb-4">
                             <span>Calendar</span>
@@ -737,37 +737,108 @@
                         </h3>
                         <div id="calendarContainer">
                             <div id="calendarDisplay" class="text-gray-600">Loading date...</div>
-                            <div id="holidayMessage" class="mt-4 text-red-500 font-semibold text-sm"></div>
-                            <div id="specialDayMessage" class="mt-4 text-blue-500 font-semibold text-sm"></div>
+                            <div id="holidayMessage" class="mt-4 text-sm"></div>
                         </div>
                     </div>
 
-                    <style>
-                        /* Animasi Fade In */
-                        @keyframes fadeIn {
-                            from {
-                                opacity: 0;
-                            }
-
-                            to {
-                                opacity: 1;
-                            }
-                        }
-
-                        /* Menambahkan transisi saat hover */
-                        .date-hover:hover {
-                            transform: scale(1.1);
-                            /* Efek membesar sedikit saat hover */
-                            transition: transform 0.2s ease;
-                        }
-
-                        .fade-in {
-                            animation: fadeIn 0.5s ease-out;
-                        }
-                    </style>
-
                     <script>
                         const nationalHolidays = [{
+                                date: '2024-01-01',
+                                name: 'Tahun Baru 2024 Masehi'
+                            },
+                            {
+                                date: '2024-02-08',
+                                name: 'Isra\' Mi\'raj Nabi Muhammad SAW'
+                            },
+                            {
+                                date: '2024-02-09',
+                                name: 'Cuti Bersama Imlek 2575 Kongzili'
+                            },
+                            {
+                                date: '2024-02-10',
+                                name: 'Tahun Baru Imlek 2575 Kongzili'
+                            },
+                            {
+                                date: '2024-03-11',
+                                name: 'Hari Raya Nyepi Tahun Baru Saka 1946'
+                            },
+                            {
+                                date: '2024-03-12',
+                                name: 'Cuti Bersama Hari Raya Nyepi'
+                            },
+                            {
+                                date: '2024-03-29',
+                                name: 'Wafat Isa Al Masih'
+                            },
+                            {
+                                date: '2024-03-31',
+                                name: 'Hari Paskah'
+                            },
+                            {
+                                date: '2024-04-08',
+                                name: 'Cuti Bersama Hari Raya Idul Fitri'
+                            },
+                            {
+                                date: '2024-04-10',
+                                name: 'Hari Raya Idul Fitri 1445 H'
+                            },
+                            {
+                                date: '2024-04-11',
+                                name: 'Hari Raya Idul Fitri 1445 H'
+                            },
+                            {
+                                date: '2024-04-12',
+                                name: 'Cuti Bersama Hari Raya Idul Fitri'
+                            },
+                            {
+                                date: '2024-04-15',
+                                name: 'Cuti Bersama Hari Raya Idul Fitri'
+                            },
+                            {
+                                date: '2024-05-01',
+                                name: 'Hari Buruh Internasional'
+                            },
+                            {
+                                date: '2024-05-09',
+                                name: 'Kenaikan Isa Al Masih'
+                            },
+                            {
+                                date: '2024-05-10',
+                                name: 'Cuti Bersama Kenaikan Isa Al Masih'
+                            },
+                            {
+                                date: '2024-05-23',
+                                name: 'Hari Raya Waisak 2568 BE'
+                            },
+                            {
+                                date: '2024-05-24',
+                                name: 'Cuti Bersama Hari Raya Waisak'
+                            },
+                            {
+                                date: '2024-06-01',
+                                name: 'Hari Lahir Pancasila'
+                            },
+                            {
+                                date: '2024-06-17',
+                                name: 'Hari Raya Idul Adha 1445 H'
+                            },
+                            {
+                                date: '2024-06-18',
+                                name: 'Cuti Bersama Hari Raya Idul Adha'
+                            },
+                            {
+                                date: '2024-07-07',
+                                name: 'Tahun Baru Islam 1446 H'
+                            },
+                            {
+                                date: '2024-08-17',
+                                name: 'Hari Kemerdekaan Republik Indonesia ke 79'
+                            },
+                            {
+                                date: '2024-09-16',
+                                name: 'Maulid Nabi Muhammad SAW'
+                            },
+                            {
                                 date: '2024-12-25',
                                 name: 'Hari Raya Natal'
                             },
@@ -777,15 +848,84 @@
                             }
                         ];
 
-                        const specialDays = [{
-                            date: '2024-12-13',
-                            name: 'Hari Ayah'
-                        }];
+                        const nationalCommemorations = [{
+                                date: '2024-01-10',
+                                name: 'Hari Kewirausahaan Nasional'
+                            },
+                            {
+                                date: '2024-01-14',
+                                name: 'Hari Tata Ruang Nasional'
+                            },
+                            {
+                                date: '2024-02-14',
+                                name: 'Hari Valentine'
+                            },
+                            {
+                                date: '2024-02-20',
+                                name: 'Hari Pengendalian Inflasi Nasional'
+                            },
+                            {
+                                date: '2024-03-08',
+                                name: 'Hari Perempuan Internasional'
+                            },
+                            {
+                                date: '2024-04-02',
+                                name: 'Hari Otomotif Nasional'
+                            },
+                            {
+                                date: '2024-04-21',
+                                name: 'Hari Kartini'
+                            },
+                            {
+                                date: '2024-05-20',
+                                name: 'Hari Kebangkitan Nasional'
+                            },
+                            {
+                                date: '2024-05-21',
+                                name: 'Hari Kerja'
+                            },
+                            {
+                                date: '2024-06-1',
+                                name: 'Hari Anak Internasional'
+                            },
+                            {
+                                date: '2024-07-30',
+                                name: 'Hari Bekas Tentara'
+                            },
+                            {
+                                date: '2024-08-17',
+                                name: 'Hari Kemerdekaan Republik Indonesia'
+                            },
+                            {
+                                date: '2024-09-27',
+                                name: 'Hari Pariwisata Dunia'
+                            },
+                            {
+                                date: '2024-10-10',
+                                name: 'Hari Kesehatan Mental Sedunia'
+                            },
+                            {
+                                date: '2024-10-28',
+                                name: 'Hari Sumpah Pemuda'
+                            },
+                            {
+                                date: '2024-11-10',
+                                name: 'Hari Pahlawan'
+                            },
+                            {
+                                date: '2024-11-25',
+                                name: 'Hari Penghapusan Kekerasan terhadap Perempuan'
+                            },
+                            {
+                                date: '2024-12-22',
+                                name: 'Hari Ibu'
+                            }
+                        ];
 
                         function displayCalendar(selectedMonth = null, selectedYear = null) {
                             const calendarContainer = document.getElementById('calendarDisplay');
                             const holidayMessageContainer = document.getElementById('holidayMessage');
-                            const specialDayMessageContainer = document.getElementById('specialDayMessage');
+                            const commemorationMessageContainer = document.getElementById('commemorationMessage');
 
                             const months = [
                                 'January', 'February', 'March', 'April', 'May', 'June',
@@ -803,25 +943,25 @@
 
                             let calendarHTML = `<h3 class="text-lg font-semibold text-center">${months[month]} ${year}</h3>`;
 
+                            // Header untuk nama hari
                             calendarHTML += '<div class="grid grid-cols-7 gap-2 text-center text-sm font-semibold">';
                             daysOfWeek.forEach(day => {
                                 calendarHTML += `<div class="text-gray-700">${day}</div>`;
                             });
                             calendarHTML += '</div>';
 
+                            // Grid kalender
                             calendarHTML += '<div class="grid grid-cols-7 gap-2">';
                             for (let i = 0; i < firstDay; i++) {
                                 calendarHTML += '<div></div>';
                             }
-
-                            const todayDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
 
                             for (let date = 1; date <= lastDate; date++) {
                                 const dayOfWeek = (firstDay + date - 1) % 7;
                                 const isSunday = dayOfWeek === 0;
                                 const isFriday = dayOfWeek === 5;
                                 const isHoliday = nationalHolidays.some(holiday => holiday.date === `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`);
-                                const isSpecialDay = specialDays.some(day => day.date === `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`);
+                                const isCommemorationDay = nationalCommemorations.some(day => day.date === `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`);
 
                                 let textColor = 'text-gray-600';
                                 let additionalClass = 'font-normal';
@@ -834,25 +974,26 @@
                                     additionalClass = 'font-bold';
                                 }
 
-                                if (isSpecialDay) {
-                                    textColor = 'text-blue-500';
-                                    additionalClass = 'font-bold';
+                                // Highlight hari ini
+                                const todayDate = new Date();
+                                const isToday = todayDate.getFullYear() === year &&
+                                    todayDate.getMonth() === month &&
+                                    todayDate.getDate() === date;
+
+                                if (isToday) {
+                                    additionalClass += ' bg-yellow-200'; // Highlight untuk hari ini
                                 }
 
-                                if (`${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}` === todayDate) {
-                                    additionalClass += ' bg-yellow-200'; // Highlight for today
-                                }
-
-                                additionalClass += ' cursor-pointer date-hover'; // Added hover class
+                                additionalClass += ' cursor-pointer date-hover'; // Hover effect
 
                                 const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                                 const holiday = nationalHolidays.find(holiday => holiday.date === formattedDate);
-                                const specialDay = specialDays.find(day => day.date === formattedDate);
+                                const commemoration = nationalCommemorations.find(day => day.date === formattedDate);
 
                                 calendarHTML += `<div class="p-2 text-center ${textColor} ${additionalClass} fade-in" 
-        title="${holiday ? holiday.name : specialDay ? specialDay.name : ''}" 
-        data-date="${formattedDate}">
-        ${date}</div>`;
+title="${holiday ? holiday.name : commemoration ? commemoration.name : ''}" 
+data-date="${formattedDate}">
+${date}</div>`;
 
                                 if (dayOfWeek === 6) {
                                     calendarHTML += '</div><div class="grid grid-cols-7 gap-2">';
@@ -862,14 +1003,14 @@
 
                             calendarContainer.innerHTML = calendarHTML;
 
-                            // Menampilkan pesan libur nasional
+                            // Menampilkan pesan Hari Libur Nasional
                             const currentMonthHolidays = nationalHolidays.filter(holiday => {
                                 const holidayDate = new Date(holiday.date);
                                 return holidayDate.getFullYear() === year && holidayDate.getMonth() === month;
                             });
 
                             if (currentMonthHolidays.length > 0) {
-                                holidayMessageContainer.innerHTML = `<h4 class="text-lg font-semibold">National Holidays:</h4>` + currentMonthHolidays.map(holiday => {
+                                holidayMessageContainer.innerHTML = `<h4 class="text-lg font-semibold">Hari Libur Nasional:</h4>` + currentMonthHolidays.map(holiday => {
                                     const holidayDate = new Date(holiday.date);
                                     const date = holidayDate.getDate();
                                     const month = holidayDate.getMonth() + 1;
@@ -879,21 +1020,21 @@
                                 holidayMessageContainer.innerHTML = '';
                             }
 
-                            // Menampilkan pesan hari spesial
-                            const currentMonthSpecialDays = specialDays.filter(day => {
-                                const specialDate = new Date(day.date);
-                                return specialDate.getFullYear() === year && specialDate.getMonth() === month;
+                            // Menampilkan pesan Hari Peringatan Nasional
+                            const currentMonthCommemorations = nationalCommemorations.filter(day => {
+                                const commemorationDate = new Date(day.date);
+                                return commemorationDate.getFullYear() === year && commemorationDate.getMonth() === month;
                             });
 
-                            if (currentMonthSpecialDays.length > 0) {
-                                specialDayMessageContainer.innerHTML = `<h4 class="text-lg font-semibold">Special Days:</h4>` + currentMonthSpecialDays.map(day => {
-                                    const specialDate = new Date(day.date);
-                                    const date = specialDate.getDate();
-                                    const month = specialDate.getMonth() + 1;
+                            if (currentMonthCommemorations.length > 0) {
+                                commemorationMessageContainer.innerHTML = `<h4 class="text-lg font-semibold">Hari Peringatan Nasional:</h4>` + currentMonthCommemorations.map(day => {
+                                    const commemorationDate = new Date(day.date);
+                                    const date = commemorationDate.getDate();
+                                    const month = commemorationDate.getMonth() + 1;
                                     return `<p class="text-sm">${date} ${months[month - 1]}: ${day.name}</p>`;
                                 }).join('');
                             } else {
-                                specialDayMessageContainer.innerHTML = '';
+                                commemorationMessageContainer.innerHTML = '';
                             }
                         }
 
