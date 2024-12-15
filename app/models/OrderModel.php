@@ -552,4 +552,34 @@ class OrderModel
         // Ambil hasil dan kembalikan dalam bentuk array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function donutChartStatusOrder()
+    {
+        $query = "
+    SELECT 
+        o.Status,
+        COUNT(o.OrderId) AS totalOrders
+    FROM `order` o
+    WHERE o.Status IN ('Pending', 'Processing', 'Completed', 'Cancelled')
+    GROUP BY o.Status;
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $status = [];
+        $statusData = [];
+
+        foreach ($result as $row) {
+            $status[] = $row['Status'];  // Ini akan menjadi array di PHP
+            $statusData[] = $row['totalOrders'];
+        }
+
+        return [
+            'status' => $status,  // Kirim status sebagai array
+            'statusData' => $statusData  // Kirim statusData sebagai array
+        ];
+    }
 }

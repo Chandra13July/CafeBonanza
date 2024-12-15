@@ -23,7 +23,6 @@ class Dashboard extends Controller
 
     public function index()
     {
-        // Target yang bisa diubah dari pengaturan
         $targets = [
             'menu' => 25,
             'customer' => 50,
@@ -31,7 +30,6 @@ class Dashboard extends Controller
             'profit' => 5000000
         ];
 
-        // Mengambil data statistik
         $totalMenu = $this->MenuModel->getTotalMenu();
         $menuPercentage = ($totalMenu / $targets['menu']) * 100;
 
@@ -50,33 +48,26 @@ class Dashboard extends Controller
 
         $popularMenu = $this->MenuModel->getPopularMenu();
 
-        $stockStatusMenu = $this->MenuModel->getStockStatus();  // Mengambil data stok habis atau hampir habis
+        $stockStatusMenu = $this->MenuModel->getStockStatus();
 
         $popularCustomer = $this->CustomerModel->getPopularCustomer();
 
-        // Memanggil fungsi untuk mendapatkan jumlah pesanan berdasarkan hari dalam minggu
         $weeklyOrders = $this->OrderModel->getWeeklyOrderCount();
 
-        // Memanggil fungsi untuk mendapatkan jumlah pesanan per jam
         $hourlyOrders = $this->OrderModel->getHourlyOrderCount();
 
-        // Memanggil fungsi untuk mendapatkan jumlah pesanan berdasarkan minggu dalam bulan
-        $month = date('m'); // Mendapatkan bulan saat ini
-        $year = date('Y');  // Mendapatkan tahun saat ini
+        $month = date('m');
+        $year = date('Y');
         $monthlyOrdersByWeek = $this->OrderModel->getMonthlyOrderCountByWeek($month, $year);
 
-        // Menambahkan label minggu (Minggu 1, Minggu 2, dst.)
         foreach ($monthlyOrdersByWeek as $index => &$weekData) {
-            $weekData['weekLabel'] = 'Minggu ' . ($index + 1);  // Menambahkan label "Minggu 1", "Minggu 2", dst.
+            $weekData['weekLabel'] = 'Minggu ' . ($index + 1);
         }
 
-        // Nama hari dalam minggu
         $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-        // Nama bulan
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Jam 18:00 hingga 02:00
         $hoursOfDay = [
             18 => '18:00',
             19 => '19:00',
@@ -88,6 +79,9 @@ class Dashboard extends Controller
             1  => '01:00',
             2  => '02:00'
         ];
+
+        $donutChartCategoryOrder = $this->MenuModel->donutChartCategoryOrder();
+        $donutChartStatusData = $this->OrderModel->donutChartStatusOrder();
 
         $data = [
             'totalMenu' => $totalMenu,
@@ -104,15 +98,16 @@ class Dashboard extends Controller
             'popularMenu' => $popularMenu,
             'popularCustomer' => $popularCustomer,
             'stockStatusMenu' => $stockStatusMenu,
-            'weeklyOrders' => $weeklyOrders,  // Menambahkan data pesanan mingguan
-            'hourlyOrders' => $hourlyOrders,  // Menambahkan data pesanan per jam
-            'hoursOfDay' => $hoursOfDay,  // Menambahkan array jam 18:00 hingga 02:00
-            'daysOfWeek' => $daysOfWeek,  // Menambahkan array hari dalam minggu
+            'weeklyOrders' => $weeklyOrders,
+            'hourlyOrders' => $hourlyOrders,
+            'hoursOfDay' => $hoursOfDay,
+            'daysOfWeek' => $daysOfWeek,
             'months' => $months,
-            'monthlyOrdersByWeek' => $monthlyOrdersByWeek, // Data pesanan per minggu
+            'monthlyOrdersByWeek' => $monthlyOrdersByWeek,
+            'donutChartCategoryOrder' => $donutChartCategoryOrder,
+            'donutChartStatusData' => $donutChartStatusData
         ];
 
-        // Menampilkan view
         $this->view('layout/header', $data);
         $this->view('layout/sidebar', $data);
         $this->view('admin/dashboard', $data);

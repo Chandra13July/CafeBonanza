@@ -147,4 +147,35 @@ class MenuModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function donutChartCategoryOrder()
+    {
+        $query = "
+    SELECT 
+        m.Category,  
+        SUM(od.Quantity) AS totalSold  
+    FROM `order` o
+    JOIN `orderdetail` od ON o.OrderId = od.OrderId  
+    JOIN `menu` m ON od.MenuId = m.MenuId  
+    GROUP BY m.Category;
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $categories = [];
+        $totalSold = [];
+
+        foreach ($result as $row) {
+            $categories[] = $row['Category'];
+            $totalSold[] = $row['totalSold'];
+        }
+
+        return [
+            'categories' => $categories,
+            'totalSold' => $totalSold
+        ];
+    }
 }

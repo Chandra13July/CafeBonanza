@@ -358,7 +358,7 @@
                                 <option value="monthly">Monthly</option>
                             </select>
                         </div>
-                        <div id="grafik" class="bg-gray-200 rounded-lg" style="height: 450px;">
+                        <div id="grafik" class="bg-gray-200 rounded-lg" style="height: 400px;">
                             <canvas id="chartCanvas"></canvas>
                         </div>
                         <!-- Menyimpan data JSON dalam elemen HTML tersembunyi -->
@@ -410,7 +410,7 @@
 
                         // Data untuk grafik per bulan per minggu
                         const monthlyChartData = {
-                            labels: monthlyDataByWeek.map(week => `Minggu ${week.weekInMonth}`), // Label Minggu (Minggu 1, Minggu 2, dst.)
+                            labels: monthlyDataByWeek.map(week => `Minggu ${week.weekInMonth}`),
                             datasets: [{
                                 label: 'Jumlah Pesanan',
                                 data: monthlyDataByWeek.map(week => week.totalOrders),
@@ -498,7 +498,16 @@
                         }
 
                         // Membuat chart pertama kali (default: per minggu)
-                        createChart1(weeklyChartData);
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const selectedChartType = localStorage.getItem('selectedChartType') || 'weekly'; // Ambil pilihan terakhir atau default 'weekly'
+                            document.getElementById('chartSelector').value = selectedChartType;
+                            updateChart1(); // Menampilkan grafik sesuai pilihan saat halaman dimuat
+                        });
+
+                        // Simpan pilihan chart ke localStorage saat dropdown berubah
+                        document.getElementById('chartSelector').addEventListener('change', function() {
+                            localStorage.setItem('selectedChartType', this.value);
+                        });
                     </script>
 
                     <!-- Popular Menu Section (1/4) -->
@@ -627,7 +636,274 @@
                     </div>
                 </div>
 
+                <!-- Card Section (1 & 2 combined, Card 3 on the right) -->
+                <div class="flex space-x-6 mt-8">
+                    <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg">
+                        <!-- Card 1 -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-xl font-semibold text-gray-700">Donut Chart</h4>
+                                <select id="chartSelector1" class="border border-gray-300 rounded-md p-2 text-sm" onchange="updatePieChart()">
+                                    <option value="category">Category</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <!-- Donut Chart -->
+                            <canvas id="donutChart" width="300" height="300" class="mx-auto"></canvas>
+                        </div>
+                </div>
+
+                <!-- Include Chart.js -->
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    // Data dari PHP untuk kategori dan status
+                    const categoryChartData = {
+                        labels: <?php echo json_encode($donutChartCategoryOrder['categories'] ?? []); ?>,
+                        datasets: [{
+                            label: 'Jumlah Pesanan',
+                            data: <?php echo json_encode($donutChartCategoryOrder['totalSold'] ?? []); ?>,
+                            backgroundColor: ['#FF5733', '#3498DB'],
+                            borderColor: ['#FF5733', '#3498DB'],
+                            borderWidth: 1
+                        }]
+                    };
+
+                    const statusChartData = {
+                        labels: <?php echo json_encode($donutChartStatusData['status'] ?? []); ?>,
+                        datasets: [{
+                            label: 'Jumlah Pesanan',
+                            data: <?php echo json_encode($donutChartStatusData['statusData'] ?? []); ?>,
+                            backgroundColor: ['#e74c3c', '#f1c40f', '#2ecc71', '#95a5a6'],
+                            borderColor: ['#e74c3c', '#f1c40f', '#2ecc71', '#95a5a6'],
+                            borderWidth: 1
+                        }]
+                    };
+
+                    // Debugging Data
+                    console.log("Categories:", categoryChartData.labels);
+                    console.log("Total Sold:", categoryChartData.datasets[0].data);
+                    console.log("Status:", statusChartData.labels);
+                    console.log("Status Data:", statusChartData.datasets[0].data);
+
+                    // Inisialisasi chart dengan data kategori
+                    var ctx = document.getElementById('donutChart').getContext('2d');
+                    var donutChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: categoryChartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            cutout: '50%' // Membuat bentuk donut
+                        }
+                    });
+
+                    // Fungsi untuk memperbarui chart berdasarkan kategori atau status
+                    function updatePieChart() {
+                        var selectedValue = document.getElementById('chartSelector1').value;
+
+                        if (selectedValue === 'category') {
+                            donutChart.data = categoryChartData;
+                        } else if (selectedValue === 'status') {
+                            donutChart.data = statusChartData;
+                        } else {
+                            console.error("Invalid data for chart rendering.");
+                        }
+
+                        donutChart.update();
+                    }
+                </script>
+
+                <!-- Kartu 2 (Kalender) -->
+                <div class="w-full lg:w-2/6 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-700 flex justify-between mb-4">
+                        <span>Calendar</span>
+                        <!-- Dropdown untuk memilih bulan -->
+                        <select id="monthSelector" class="border border-gray-300 rounded-md p-2 text-sm">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                    </h3>
+                    <div id="calendarContainer">
+                        <div id="calendarDisplay" class="text-gray-600">Loading date...</div>
+                        <div id="holidayMessage" class="mt-4 text-red-500 font-semibold text-sm"></div>
+                    </div>
+                </div>
+
+                <script>
+                    // Data hari nasional
+                    const nationalHolidays = [{
+                            date: '2024-01-01',
+                            name: 'New Year\'s Day'
+                        }, // New Year
+                        {
+                            date: '2024-02-08',
+                            name: 'Isra Miraj of Prophet Muhammad'
+                        }, // Isra Miraj
+                        {
+                            date: '2024-02-10',
+                            name: 'Chinese New Year 2575'
+                        }, // Chinese New Year
+                        {
+                            date: '2024-03-11',
+                            name: 'Nyepi Day - Saka New Year 1946'
+                        }, // Nyepi
+                        {
+                            date: '2024-03-29',
+                            name: 'Good Friday'
+                        }, // Good Friday
+                        {
+                            date: '2024-04-10',
+                            name: 'Eid al-Fitr 1445 Hijri - First Day'
+                        }, // Eid al-Fitr 1
+                        {
+                            date: '2024-04-11',
+                            name: 'Eid al-Fitr 1445 Hijri - Second Day'
+                        }, // Eid al-Fitr 2
+                        {
+                            date: '2024-05-01',
+                            name: 'International Labor Day'
+                        }, // Labor Day
+                        {
+                            date: '2024-05-09',
+                            name: 'Ascension of Jesus Christ'
+                        }, // Ascension Day
+                        {
+                            date: '2024-05-23',
+                            name: 'Vesak Day 2568 BE'
+                        }, // Vesak Day
+                        {
+                            date: '2024-06-01',
+                            name: 'Pancasila Day'
+                        },
+                        {
+                            date: '2024-06-17',
+                            name: 'Eid al-Adha 1445 Hijri'
+                        },
+                        {
+                            date: '2024-07-07',
+                            name: 'Islamic New Year 1446 Hijri'
+                        },
+                        {
+                            date: '2024-08-17',
+                            name: 'Indonesian Independence Day'
+                        },
+                        {
+                            date: '2024-09-16',
+                            name: 'Prophet Muhammad\'s Birthday'
+                        },
+                        {
+                            date: '2024-12-25',
+                            name: 'Christmas Day'
+                        },
+                        {
+                            date: '2024-12-26',
+                            name: 'Christmas Holiday Leave'
+                        }
+                    ];
+
+                    function displayCalendar(selectedMonth = null, selectedYear = null) {
+                        const calendarContainer = document.getElementById('calendarDisplay');
+                        const holidayMessageContainer = document.getElementById('holidayMessage');
+
+                        const months = [
+                            'January', 'February', 'March', 'April', 'May', 'June',
+                            'July', 'August', 'September', 'October', 'November', 'December'
+                        ];
+
+                        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                        const currentDate = new Date();
+                        const year = selectedYear || currentDate.getFullYear();
+                        const month = selectedMonth !== null ? selectedMonth : currentDate.getMonth();
+
+                        const firstDay = new Date(year, month).getDay();
+                        const lastDate = new Date(year, month + 1, 0).getDate();
+
+                        let calendarHTML = `<h3 class="text-lg font-semibold text-center">${months[month]} ${year}</h3>`;
+
+                        calendarHTML += '<div class="grid grid-cols-7 gap-2 text-center text-sm font-semibold">';
+                        daysOfWeek.forEach(day => {
+                            calendarHTML += `<div class="text-gray-700">${day}</div>`;
+                        });
+                        calendarHTML += '</div>';
+
+                        calendarHTML += '<div class="grid grid-cols-7 gap-2">';
+                        for (let i = 0; i < firstDay; i++) {
+                            calendarHTML += '<div></div>';
+                        }
+                        for (let date = 1; date <= lastDate; date++) {
+                            const dayOfWeek = (firstDay + date - 1) % 7;
+                            const isSunday = dayOfWeek === 0;
+                            const isFriday = dayOfWeek === 5;
+
+                            const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                            let textColor = 'text-gray-600';
+                            if (isSunday) textColor = 'text-red-500';
+                            if (isFriday) textColor = 'text-green-500';
+
+                            const holiday = nationalHolidays.find(holiday => holiday.date === formattedDate);
+                            const additionalClass = holiday ? 'text-red-500 font-bold' : '';
+
+                            calendarHTML += `<div class="p-2 text-center ${textColor} ${additionalClass} hover:bg-gray-200 cursor-pointer" 
+        title="${holiday ? holiday.name : ''}">
+        ${date}</div>`;
+                            if (dayOfWeek === 6) {
+                                calendarHTML += '</div><div class="grid grid-cols-7 gap-2">';
+                            }
+                        }
+                        calendarHTML += '</div>';
+
+                        calendarContainer.innerHTML = calendarHTML;
+
+                        const currentMonthHolidays = nationalHolidays.filter(holiday => {
+                            const holidayDate = new Date(holiday.date);
+                            return holidayDate.getFullYear() === year && holidayDate.getMonth() === month;
+                        });
+
+                        if (currentMonthHolidays.length > 0) {
+                            holidayMessageContainer.innerHTML = currentMonthHolidays.map(holiday => {
+                                const holidayDate = new Date(holiday.date);
+                                const date = holidayDate.getDate();
+                                const month = holidayDate.getMonth() + 1;
+                                return `<p class="text-sm">${date} ${months[month - 1]} : ${holiday.name}</p>`;
+                            }).join('');
+                        } else {
+                            holidayMessageContainer.innerHTML = '';
+                        }
+                    }
+
+                    document.getElementById('monthSelector').addEventListener('change', function() {
+                        const selectedMonth = parseInt(this.value, 10);
+                        displayCalendar(selectedMonth);
+                    });
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const currentMonth = new Date().getMonth();
+                        document.getElementById('monthSelector').value = currentMonth;
+                        displayCalendar();
+                    });
+
+                    function showDateInfo(event) {
+                        const date = event.target.dataset.date;
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        displayCalendar();
+                    });
+                </script>
+
             </div>
+        </div>
 </body>
 
 </html>
