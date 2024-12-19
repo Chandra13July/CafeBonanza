@@ -10,7 +10,7 @@
 </style>
 
 <body class="bg-gray-100 min-h-screen flex">
-    <aside class="fixed top-0 left-0 h-full w-64 bg-gray-900 text-white flex flex-col p-6 no-scrollbar overflow-y-auto transition-all duration-400">
+    <aside class="fixed top-0 left-0 h-full w-64 bg-black text-white flex flex-col p-6 no-scrollbar overflow-y-auto transition-all duration-400">
         <div class="flex items-center mb-6">
             <img alt="Logo of Cafe Bonanza" class="w-10 h-10 rounded-full" src="<?= BASEURL; ?>/img/logo-bonanza1.png" width="50" height="50" />
             <h2 class="ml-4 text-xl font-semibold">Cafe Bonanza</h2>
@@ -90,7 +90,6 @@
         }
 
         function confirmLogout() {
-            // Redirect to the logout URL
             window.location.href = '<?= BASEURL; ?>/auth/logoutAdmin';
         }
     </script>

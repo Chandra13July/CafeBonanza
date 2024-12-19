@@ -156,32 +156,39 @@ class OrderModel
         try {
             $status = 'pending';
             $queryOrder = "
-                INSERT INTO `order` (CustomerId, Total, PaymentMethod, Status)
-                VALUES (:customerId, :total, :paymentMethod, :status)
-            ";
+            INSERT INTO `order` (CustomerId, Total, PaymentMethod, Status)
+            VALUES (:customerId, :total, :paymentMethod, :status)
+        ";
 
             $stmtOrder = $this->db->prepare($queryOrder);
             $stmtOrder->bindValue(':customerId', $customerId, PDO::PARAM_INT);
             $stmtOrder->bindValue(':total', 0, PDO::PARAM_STR);
             $stmtOrder->bindValue(':paymentMethod', $paymentMethod, PDO::PARAM_STR);
-            $stmtOrder->bindValue(':status', $status, PDO::PARAM_STR);  // Bind status
-
+            $stmtOrder->bindValue(':status', $status, PDO::PARAM_STR);
             $stmtOrder->execute();
-            $orderId = $this->db->lastInsertId();
-            $queryOrderDetails = "
-                INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal)
-                VALUES (:orderId, :menuId, :quantity, :price, :subtotal)
-            ";
 
+            $orderId = $this->db->lastInsertId();
+
+            $queryOrderDetails = "
+            INSERT INTO `OrderDetail` (OrderId, MenuId, Quantity, Price, Subtotal)
+            VALUES (:orderId, :menuId, :quantity, :price, :subtotal)
+        ";
 
             $total = 0;
+
             foreach ($orderDetails as $item) {
-                $cart = $this->db->prepare("SELECT * FROM cart JOIN 
-            menu m ON cart.MenuId = m.MenuId WHERE CartId = $item");
+                $cart = $this->db->prepare("SELECT * FROM cart JOIN menu m ON cart.MenuId = m.MenuId WHERE CartId = :item");
+                $cart->bindValue(':item', $item, PDO::PARAM_INT);
                 $cart->execute();
                 $data = $cart->fetch();
-                $subTotal = $data['Quantity'] *  $data['Price'];
+
+                if (!$data) {
+                    throw new Exception("Cart item with ID $item not found");
+                }
+
+                $subTotal = $data['Quantity'] * $data['Price'];
                 $total += $subTotal;
+
                 $stmtOrderDetails = $this->db->prepare($queryOrderDetails);
                 $stmtOrderDetails->bindValue(':orderId', $orderId, PDO::PARAM_INT);
                 $stmtOrderDetails->bindValue(':menuId', $data['MenuId'], PDO::PARAM_INT);
@@ -191,9 +198,12 @@ class OrderModel
                 $stmtOrderDetails->execute();
             }
 
-            $query = "UPDATE `order` SET total = '$total' WHERE OrderId = $orderId";
+            $query = "UPDATE `order` SET total = :total WHERE OrderId = :orderId";
             $cart = $this->db->prepare($query);
+            $cart->bindValue(':total', $total, PDO::PARAM_STR);
+            $cart->bindValue(':orderId', $orderId, PDO::PARAM_INT);
             $cart->execute();
+
             $this->db->commit();
             return $orderId;
         } catch (Exception $e) {
@@ -480,47 +490,6 @@ class OrderModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getHourlyOrderCount()
-    {
-        // Query SQL untuk mendapatkan jumlah pesanan per jam
-        $query = "
-        SELECT 
-            hours.hourOfDay, 
-            COALESCE(COUNT(o.OrderId), 0) AS totalOrders
-        FROM (
-            -- Jam 18 hingga 23 hari ini
-            SELECT 18 AS hourOfDay UNION ALL
-            SELECT 19 UNION ALL
-            SELECT 20 UNION ALL
-            SELECT 21 UNION ALL
-            SELECT 22 UNION ALL
-            SELECT 23 UNION ALL
-            -- Jam 00 hingga 2 besok
-            SELECT 0 UNION ALL
-            SELECT 1 UNION ALL
-            SELECT 2
-        ) AS hours
-        LEFT JOIN `order` o 
-            ON (
-                HOUR(o.CreatedAt) = hours.hourOfDay AND (
-                    -- Kondisi untuk jam 18-23 pada hari ini
-                    (HOUR(o.CreatedAt) >= 18 AND DATE(o.CreatedAt) = CURDATE()) OR
-                    -- Kondisi untuk jam 00-02 pada hari berikutnya
-                    (HOUR(o.CreatedAt) BETWEEN 0 AND 2 AND DATE(o.CreatedAt) = DATE_ADD(CURDATE(), INTERVAL 1 DAY))
-                )
-            )
-        GROUP BY hours.hourOfDay
-        ORDER BY hours.hourOfDay;
-    ";
-
-        // Persiapkan dan jalankan query
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-
-        // Ambil hasil dan kembalikan dalam bentuk array
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function getMonthlyOrderCountByWeek($month, $year)
     {
         // Query SQL untuk mendapatkan jumlah pesanan per minggu dalam bulan dan tahun tertentu
@@ -580,6 +549,36 @@ class OrderModel
         return [
             'status' => $status,  // Kirim status sebagai array
             'statusData' => $statusData  // Kirim statusData sebagai array
+        ];
+    }
+
+    public function donutChartPaymentMethod()
+    {
+        $query = "
+    SELECT 
+        o.PaymentMethod,
+        COUNT(o.OrderId) AS totalOrders
+    FROM `order` o
+    WHERE o.PaymentMethod IN ('Cash', 'E-Wallet')
+    GROUP BY o.PaymentMethod;
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $paymentMethods = [];
+        $paymentData = [];
+
+        foreach ($result as $row) {
+            $paymentMethods[] = $row['PaymentMethod'];
+            $paymentData[] = $row['totalOrders'];
+        }
+
+        return [
+            'paymentMethods' => $paymentMethods,
+            'paymentData' => $paymentData
         ];
     }
 }

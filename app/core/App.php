@@ -1,44 +1,57 @@
-<?php 
+<?php
 
-class App {
-    protected $controller = 'Home';
-    protected $method = 'index';
-    protected $params = [];
+class App
+{
+
+    protected $controller = 'Home'; // Default controller
+    protected $method = 'index';    // Default method
+    protected $params = [];         // Default params
 
     public function __construct()
     {
         $url = $this->parseURL();
-
-        // Cek apakah $url ada dan berisi elemen
-        if ($url && file_exists('../app/controllers/' . $url[0] . '.php')) {
-            $this->controller = $url[0];
+        // Cek apakah $url valid dan file controller ada
+        if (!empty($url) && file_exists(__DIR__ . '/../controllers/' . ucfirst($url[0]) . '.php')) {
+            $this->controller = ucfirst($url[0]); // Pastikan nama controller diawali huruf besar
             unset($url[0]);
         }
 
-        require_once '../app/controllers/' . $this->controller . '.php';
-        $this->controller = new $this->controller;
+        // Require file controller
+        $controllerPath = __DIR__ . '/../controllers/' . $this->controller . '.php';
+        if (file_exists($controllerPath)) {
+            require_once $controllerPath;
+        } else {
+            die("Controller file not found: " . $controllerPath);
+        }
 
-        // method
+        // Instantiate controller
+        if (class_exists($this->controller)) {
+            $this->controller = new $this->controller;
+        } else {
+            die("Controller class not found: " . $this->controller);
+        }
+
+        // Cek apakah method valid
         if (isset($url[1]) && method_exists($this->controller, $url[1])) {
             $this->method = $url[1];
             unset($url[1]);
         }
 
-        // params
-        $this->params = $url ? array_values($url) : [];
+        // Atur parameter (jika ada)
+        $this->params = !empty($url) ? array_values($url) : [];
 
-        // jalankan controller & method, serta kirimkan params jika ada
+        // Jalankan controller & method, serta kirimkan params jika ada
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
     public function parseURL()
     {
         if (isset($_GET['url'])) {
-            $url = rtrim($_GET['url'], '/');
-            $url = filter_var($url, FILTER_SANITIZE_URL);
-            $url = explode('/', $url);
+            $url = rtrim($_GET['url'], '/'); // Hapus '/' di akhir URL
+            $url = filter_var($url, FILTER_SANITIZE_URL); // Sanitasi URL
+            $url = explode('/', $url); // Pecah URL menjadi array
             return $url;
         }
-        return []; // Mengembalikan array kosong jika tidak ada 'url' di $_GET
+        return []; // Kembalikan array kosong jika tidak ada 'url' di $_GET
     }
 }

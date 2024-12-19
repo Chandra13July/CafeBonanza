@@ -348,13 +348,12 @@
                     <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg">
                         <div class="flex justify-between items-center mb-4">
                             <h3 id="chartTitle1" class="text-xl font-semibold text-gray-700">
-                                Crowd Chart Weekly
+                                Crowd Chart Daily
                             </h3>
 
-                            <!-- Dropdown untuk memilih tipe grafik (Per Minggu, Per Jam, Per Bulan per Minggu) -->
+                            <!-- Dropdown untuk memilih tipe grafik (Per Hari, Per Bulan per Minggu) -->
                             <select id="chartSelector" class="border border-gray-300 rounded-md p-2 text-sm" onchange="updateChart1()">
                                 <option value="weekly">Weekly</option>
-                                <option value="hourly">Hourly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
                         </div>
@@ -381,7 +380,6 @@
 
                         // Data yang diterima dari controller
                         const weeklyData = <?php echo json_encode($weeklyOrders); ?>;
-                        const hourlyData = <?php echo json_encode($hourlyOrders); ?>;
                         const monthlyDataByWeek = JSON.parse(document.getElementById('monthlyOrdersData').getAttribute('data-orders'));
 
                         // Data untuk grafik mingguan
@@ -390,18 +388,6 @@
                             datasets: [{
                                 label: 'Jumlah Pesanan',
                                 data: weeklyData.map(day => day.totalOrders),
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
-                            }]
-                        };
-
-                        // Data untuk grafik per jam
-                        const hourlyChartData = {
-                            labels: ['18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '00:00', '01:00', '02:00'],
-                            datasets: [{
-                                label: 'Jumlah Pesanan',
-                                data: hourlyData.map(hour => hour.totalOrders),
                                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                 borderColor: 'rgba(54, 162, 235, 1)',
                                 borderWidth: 1
@@ -487,20 +473,16 @@
                             const chartTitle = document.getElementById('chartTitle1');
                             if (selectedChartType === 'weekly') {
                                 createChart1(weeklyChartData); // Grafik Mingguan
-                                chartTitle.innerText = "Crowd Chart Weekly";
-                            } else if (selectedChartType === 'hourly') {
-                                createChart1(hourlyChartData); // Grafik Per Jam
-                                chartTitle.innerText = "Crowd Chart Hourly";
+                                chartTitle.innerText = "Crowd Chart Daily";
                             } else if (selectedChartType === 'monthly') {
                                 createChart1(monthlyChartData); // Grafik Per Bulan per Minggu
                                 chartTitle.innerText = "Crowd Chart Monthly";
                             }
                         }
 
-                        // Membuat chart pertama kali (default: per minggu)
+                        // Membuat chart pertama kali (default: per hari)
                         document.addEventListener('DOMContentLoaded', function() {
-                            const selectedChartType = localStorage.getItem('selectedChartType') || 'weekly'; // Ambil pilihan terakhir atau default 'weekly'
-                            document.getElementById('chartSelector').value = selectedChartType;
+                            document.getElementById('chartSelector').value = 'weekly';
                             updateChart1(); // Menampilkan grafik sesuai pilihan saat halaman dimuat
                         });
 
@@ -646,6 +628,7 @@
                                 <select id="chartSelector1" class="border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-300" onchange="updatePieChart()">
                                     <option value="category">Category</option>
                                     <option value="status">Status</option>
+                                    <option value="payment">Payment Method</option>
                                 </select>
                             </div>
                             <!-- Donut Chart -->
@@ -656,7 +639,7 @@
                     <!-- Include Chart.js -->
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
-                        // Data dari PHP untuk kategori dan status
+                        // Data dari PHP untuk kategori, status, dan metode pembayaran
                         const categoryChartData = {
                             labels: <?php echo json_encode($donutChartCategoryOrder['categories'] ?? []); ?>,
                             datasets: [{
@@ -679,11 +662,24 @@
                             }]
                         };
 
+                        const paymentChartData = {
+                            labels: <?php echo json_encode($donutChartPaymentMethod['paymentMethods'] ?? []); ?>,
+                            datasets: [{
+                                label: 'Jumlah Pesanan',
+                                data: <?php echo json_encode($donutChartPaymentMethod['paymentData'] ?? []); ?>,
+                                backgroundColor: ['#8e44ad', '#27ae60'],
+                                borderColor: ['#8e44ad', '#27ae60'],
+                                borderWidth: 1
+                            }]
+                        };
+
                         // Debugging Data
                         console.log("Categories:", categoryChartData.labels);
                         console.log("Total Sold:", categoryChartData.datasets[0].data);
                         console.log("Status:", statusChartData.labels);
                         console.log("Status Data:", statusChartData.datasets[0].data);
+                        console.log("Payment Methods:", paymentChartData.labels);
+                        console.log("Payment Data:", paymentChartData.datasets[0].data);
 
                         // Inisialisasi chart dengan data kategori
                         var ctx = document.getElementById('donutChart').getContext('2d');
@@ -707,7 +703,10 @@
                                 chartTitle.textContent = "Donut Chart Category";
                             } else if (selectedValue === 'status') {
                                 donutChart.data = statusChartData;
-                                chartTitle.textContent = "Donut Chart Status";
+                                chartTitle.textContent = "Donut Chart Status Order";
+                            } else if (selectedValue === 'payment') {
+                                donutChart.data = paymentChartData;
+                                chartTitle.textContent = "Donut Chart Payment Method";
                             } else {
                                 console.error("Invalid data for chart rendering.");
                             }
@@ -957,48 +956,55 @@
                             }
 
                             for (let date = 1; date <= lastDate; date++) {
-                                const dayOfWeek = (firstDay + date - 1) % 7;
-                                const isSunday = dayOfWeek === 0;
-                                const isFriday = dayOfWeek === 5;
-                                const isHoliday = nationalHolidays.some(holiday => holiday.date === `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`);
-                                const isCommemorationDay = nationalCommemorations.some(day => day.date === `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`);
+    const dayOfWeek = (firstDay + date - 1) % 7;
+    const isSunday = dayOfWeek === 0;
+    const isFriday = dayOfWeek === 5;
+    const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
 
-                                let textColor = 'text-gray-600';
-                                let additionalClass = 'font-normal';
+    const holiday = nationalHolidays.find(holiday => holiday.date === formattedDate);
+    const commemoration = nationalCommemorations.find(day => day.date === formattedDate);
 
-                                if (isSunday || isHoliday) {
-                                    textColor = 'text-red-500';
-                                    additionalClass = 'font-bold';
-                                } else if (isFriday) {
-                                    textColor = 'text-green-500';
-                                    additionalClass = 'font-bold';
-                                }
+    let textColor = 'text-gray-600';
+    let additionalClass = 'font-normal';
 
-                                // Highlight hari ini
-                                const todayDate = new Date();
-                                const isToday = todayDate.getFullYear() === year &&
-                                    todayDate.getMonth() === month &&
-                                    todayDate.getDate() === date;
+    if (isSunday || holiday) {
+        textColor = 'text-red-500';
+        additionalClass = 'font-bold';
+    } else if (isFriday) {
+        textColor = 'text-green-500';
+        additionalClass = 'font-bold';
+    }
 
-                                if (isToday) {
-                                    additionalClass += ' bg-yellow-200'; // Highlight untuk hari ini
-                                }
+    const todayDate = new Date();
+    const isToday = todayDate.getFullYear() === year &&
+        todayDate.getMonth() === month &&
+        todayDate.getDate() === date;
 
-                                additionalClass += ' cursor-pointer date-hover'; // Hover effect
+    if (isToday) {
+        additionalClass += ' bg-yellow-200';
+    }
 
-                                const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                                const holiday = nationalHolidays.find(holiday => holiday.date === formattedDate);
-                                const commemoration = nationalCommemorations.find(day => day.date === formattedDate);
+    additionalClass += ' cursor-pointer date-hover fade-in';
 
-                                calendarHTML += `<div class="p-2 text-center ${textColor} ${additionalClass} fade-in" 
-title="${holiday ? holiday.name : commemoration ? commemoration.name : ''}" 
-data-date="${formattedDate}">
-${date}</div>`;
+    let marker = '';
+    if (holiday) {
+        marker = '<span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-2"></span>';
+    } else if (commemoration) {
+        marker = '<span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>';
+    }
 
-                                if (dayOfWeek === 6) {
-                                    calendarHTML += '</div><div class="grid grid-cols-7 gap-2">';
-                                }
-                            }
+    calendarHTML += `
+        <div class="p-2 text-center flex items-center justify-center ${textColor} ${additionalClass}" 
+             title="${holiday ? holiday.name : commemoration ? commemoration.name : ''}" 
+             data-date="${formattedDate}">
+            ${marker}<span>${date}</span>
+        </div>`;
+
+    if (dayOfWeek === 6) {
+        calendarHTML += '</div><div class="grid grid-cols-7 gap-2">';
+    }
+}
+
                             calendarHTML += '</div>';
 
                             calendarContainer.innerHTML = calendarHTML;

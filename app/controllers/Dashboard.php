@@ -43,18 +43,11 @@ class Dashboard extends Controller
         $profitPercentage = ($currentMonthProfit / $targets['profit']) * 100;
 
         $monthlyOrders = $this->OrderModel->getMonthlyTotalOrdersWithZero(date('Y'));
-
         $monthlyCompletedProfit1 = $this->OrderModel->getMonthlyCompletedProfit1(date('Y'));
-
         $popularMenu = $this->MenuModel->getPopularMenu();
-
         $stockStatusMenu = $this->MenuModel->getStockStatus();
-
         $popularCustomer = $this->CustomerModel->getPopularCustomer();
-
         $weeklyOrders = $this->OrderModel->getWeeklyOrderCount();
-
-        $hourlyOrders = $this->OrderModel->getHourlyOrderCount();
 
         $month = date('m');
         $year = date('Y');
@@ -68,20 +61,9 @@ class Dashboard extends Controller
 
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        $hoursOfDay = [
-            18 => '18:00',
-            19 => '19:00',
-            20 => '20:00',
-            21 => '21:00',
-            22 => '22:00',
-            23 => '23:00',
-            0  => '00:00',
-            1  => '01:00',
-            2  => '02:00'
-        ];
-
         $donutChartCategoryOrder = $this->MenuModel->donutChartCategoryOrder();
         $donutChartStatusData = $this->OrderModel->donutChartStatusOrder();
+        $donutChartPaymentMethod = $this->OrderModel->donutChartPaymentMethod();
 
         $data = [
             'totalMenu' => $totalMenu,
@@ -99,13 +81,12 @@ class Dashboard extends Controller
             'popularCustomer' => $popularCustomer,
             'stockStatusMenu' => $stockStatusMenu,
             'weeklyOrders' => $weeklyOrders,
-            'hourlyOrders' => $hourlyOrders,
-            'hoursOfDay' => $hoursOfDay,
             'daysOfWeek' => $daysOfWeek,
             'months' => $months,
             'monthlyOrdersByWeek' => $monthlyOrdersByWeek,
             'donutChartCategoryOrder' => $donutChartCategoryOrder,
-            'donutChartStatusData' => $donutChartStatusData
+            'donutChartStatusData' => $donutChartStatusData,
+            'donutChartPaymentMethod' => $donutChartPaymentMethod 
         ];
 
         $this->view('layout/header', $data);
