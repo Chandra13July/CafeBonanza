@@ -11,7 +11,7 @@ class OrderModel
 
     public function getTotalOrders()
     {
-        $query = "SELECT COUNT(*) as totalOrders FROM `order`";
+        $query = "SELECT COUNT(*) as totalOrders FROM `orders`";
 
         $stmt = $this->db->prepare($query);
 
@@ -26,7 +26,7 @@ class OrderModel
     {
         $query = "
         SELECT SUM(Total) as completedProfit
-        FROM `order`
+        FROM `orders`
         WHERE MONTH(CreatedAt) = :month 
           AND YEAR(CreatedAt) = :year 
           AND Status = 'Completed'
@@ -64,7 +64,7 @@ class OrderModel
             o.PaymentMethod,
             o.Status,
             o.CreatedAt
-        FROM `order` o
+        FROM `orders` o
         JOIN `customer` c ON o.CustomerId = c.CustomerId
         WHERE 1=1
     ";
@@ -99,7 +99,7 @@ class OrderModel
         o.PaymentMethod,
         o.Status,
         o.CreatedAt
-    FROM `order` o
+    FROM `orders` o
     JOIN `customer` c ON o.CustomerId = c.CustomerId
     WHERE o.OrderId = :orderId
     ";
@@ -156,7 +156,7 @@ class OrderModel
         try {
             $status = 'pending';
             $queryOrder = "
-            INSERT INTO `order` (CustomerId, Total, PaymentMethod, Status)
+            INSERT INTO `orders` (CustomerId, Total, PaymentMethod, Status)
             VALUES (:customerId, :total, :paymentMethod, :status)
         ";
 
@@ -170,14 +170,14 @@ class OrderModel
             $orderId = $this->db->lastInsertId();
 
             $queryOrderDetails = "
-            INSERT INTO `OrderDetail` (OrderId, MenuId, Quantity, Price, Subtotal)
+            INSERT INTO `orderdetail` (OrderId, MenuId, Quantity, Price, Subtotal)
             VALUES (:orderId, :menuId, :quantity, :price, :subtotal)
         ";
 
             $total = 0;
 
             foreach ($orderDetails as $item) {
-                $cart = $this->db->prepare("SELECT * FROM cart JOIN menu m ON cart.MenuId = m.MenuId WHERE CartId = :item");
+                $cart = $this->db->prepare("SELECT * FROM cart JOIN `Menu` m ON cart.MenuId = m.MenuId WHERE CartId = :item");
                 $cart->bindValue(':item', $item, PDO::PARAM_INT);
                 $cart->execute();
                 $data = $cart->fetch();
@@ -198,7 +198,7 @@ class OrderModel
                 $stmtOrderDetails->execute();
             }
 
-            $query = "UPDATE `order` SET total = :total WHERE OrderId = :orderId";
+            $query = "UPDATE `orders` SET total = :total WHERE OrderId = :orderId";
             $cart = $this->db->prepare($query);
             $cart->bindValue(':total', $total, PDO::PARAM_STR);
             $cart->bindValue(':orderId', $orderId, PDO::PARAM_INT);
@@ -214,7 +214,7 @@ class OrderModel
 
     public function getOrderById($orderId)
     {
-        $query = "SELECT * FROM `order` WHERE OrderId = :orderId";
+        $query = "SELECT * FROM `orders` WHERE OrderId = :orderId";
         $stmt = $this->db->prepare($query);
         $stmt->bindValue(':orderId', $orderId, PDO::PARAM_INT);
         $stmt->execute();
@@ -224,7 +224,7 @@ class OrderModel
 
     public function findOrderById($id)
     {
-        $this->db->query('SELECT * FROM `order` WHERE OrderId = :OrderId');
+        $this->db->query('SELECT * FROM `orders` WHERE OrderId = :OrderId');
         $this->db->bind(':OrderId', $id, PDO::PARAM_INT);
         return $this->db->single();
     }
@@ -232,7 +232,7 @@ class OrderModel
     public function editOrder($data)
     {
         $query = "
-        UPDATE `order`
+        UPDATE `orders`
         SET Total = :total, Paid = :paid, 
             `Change` = :change, PaymentMethod = :paymentMethod, 
             Status = :status
@@ -271,7 +271,7 @@ class OrderModel
          SELECT 10 UNION ALL 
          SELECT 11 UNION ALL 
          SELECT 12) AS months
-    LEFT JOIN `order` o 
+    LEFT JOIN `orders` o 
         ON MONTH(o.CreatedAt) = months.month
         AND YEAR(o.CreatedAt) = :year
     GROUP BY months.month
@@ -306,7 +306,7 @@ class OrderModel
     SELECT 
         MONTH(CreatedAt) AS month,
         SUM(Total) AS completedProfit
-    FROM `order`
+    FROM `orders`
     WHERE YEAR(CreatedAt) = :year
     AND Status = 'Completed'
     GROUP BY MONTH(CreatedAt)
@@ -345,9 +345,9 @@ class OrderModel
         m.Description,
         m.ImageUrl,
         m.Price
-    FROM `order` o
+    FROM `orders` o
     JOIN `orderdetail` d ON o.OrderId = d.OrderId
-    JOIN `menu` m ON d.MenuId = m.MenuId
+    JOIN `Menu` m ON d.MenuId = m.MenuId
     JOIN `customer` c ON o.CustomerId = c.CustomerId  -- Menghubungkan tabel customer
     WHERE o.CustomerId = :customerId
     ORDER BY o.CreatedAt DESC
@@ -407,13 +407,13 @@ class OrderModel
                 od.Price,
                 od.Subtotal
             FROM 
-                `order` o
+                `orders` o
             LEFT JOIN 
                 `orderdetail` od ON o.OrderId = od.OrderId
             LEFT JOIN 
                 `customer` c ON o.CustomerId = c.CustomerId  -- Join dengan tabel customers
             LEFT JOIN 
-                `menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
+                `Menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
             WHERE
                 o.CreatedAt BETWEEN :startDate AND :endDate
             ORDER BY
@@ -442,13 +442,13 @@ class OrderModel
                 od.Price,
                 od.Subtotal
             FROM 
-                `order` o
+                `orders` o
             LEFT JOIN 
                 `orderdetail` od ON o.OrderId = od.OrderId
             LEFT JOIN 
                 `customer` c ON o.CustomerId = c.CustomerId  -- Join dengan tabel customers
             LEFT JOIN 
-                `menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
+                `Menu` m ON od.MenuId = m.MenuId  -- Join dengan tabel menus
             ORDER BY
                 o.CreatedAt ASC
         ";
@@ -475,7 +475,7 @@ class OrderModel
          SELECT 5 UNION ALL 
          SELECT 6 UNION ALL 
          SELECT 7) AS days
-    LEFT JOIN `order` o 
+    LEFT JOIN `orders` o 
         ON DAYOFWEEK(o.CreatedAt) = days.dayOfWeek
         AND YEARWEEK(o.CreatedAt, 1) = YEARWEEK(CURDATE(), 1)
     GROUP BY days.dayOfWeek
@@ -504,7 +504,7 @@ class OrderModel
                 SELECT 4 UNION ALL
                 SELECT 5
             ) AS weeks
-            LEFT JOIN `order` o 
+            LEFT JOIN `orders` o 
                 ON FLOOR((DAY(o.CreatedAt) - 1) / 7) + 1 = weeks.weekInMonth
                 AND MONTH(o.CreatedAt) = :month
                 AND YEAR(o.CreatedAt) = :year
@@ -528,7 +528,7 @@ class OrderModel
     SELECT 
         o.Status,
         COUNT(o.OrderId) AS totalOrders
-    FROM `order` o
+    FROM `orders` o
     WHERE o.Status IN ('Pending', 'Processing', 'Completed', 'Cancelled')
     GROUP BY o.Status;
     ";
@@ -558,7 +558,7 @@ class OrderModel
     SELECT 
         o.PaymentMethod,
         COUNT(o.OrderId) AS totalOrders
-    FROM `order` o
+    FROM `orders` o
     WHERE o.PaymentMethod IN ('Cash', 'E-Wallet')
     GROUP BY o.PaymentMethod;
     ";

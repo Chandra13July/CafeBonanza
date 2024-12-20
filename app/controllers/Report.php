@@ -99,8 +99,10 @@ class Report extends Controller
 
     public function formatRupiah($amount)
     {
+        // Pastikan $amount memiliki nilai numerik, default ke 0 jika null
+        $amount = is_numeric($amount) ? (float)$amount : 0;
         return "Rp " . number_format($amount, 0, ',', '.');
-    }
+    }    
 
     public function exportPdf($startDate = null, $endDate = null)
     {

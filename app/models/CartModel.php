@@ -90,7 +90,7 @@ class CartModel
 
     public function getMenuById($menuId)
     {
-        $stmt = $this->db->prepare("SELECT * FROM menu WHERE MenuId = :MenuId");
+        $stmt = $this->db->prepare("SELECT * FROM Menu WHERE MenuId = :MenuId");
         $stmt->bindParam(':MenuId', $menuId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -111,7 +111,7 @@ class CartModel
         FROM 
             cart c
         JOIN 
-            menu m ON c.MenuId = m.MenuId
+            Menu m ON c.MenuId = m.MenuId
         WHERE 
             c.CustomerId = :CustomerId
         ORDER BY 

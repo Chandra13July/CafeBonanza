@@ -33,7 +33,7 @@ class OrderApi
         foreach ($cartItems as $item) {
             // Jika Price kosong, ambil dari tabel menu
             if (empty($item['Price'])) {
-                $this->db->query("SELECT Price FROM menu WHERE MenuId = :menuId");
+                $this->db->query("SELECT Price FROM Menu WHERE MenuId = :menuId");
                 $this->db->bind(':menuId', $item['MenuId']);
                 $menuItem = $this->db->single();
                 $item['Price'] = $menuItem['Price']; // Set price from menu table if it's missing in the cart
@@ -70,7 +70,7 @@ class OrderApi
 
         try {
             // Insert ke tabel order
-            $this->db->query("INSERT INTO order (CustomerId, Total, Paid, Change, PaymentMethod, Status, CreatedAt) 
+            $this->db->query("INSERT INTO orders (CustomerId, Total, Paid, Change, PaymentMethod, Status, CreatedAt) 
                         VALUES (:customerId, :total, :paid, :change, :paymentMethod, :status, NOW())");
 
             // Bind parameter
@@ -134,7 +134,7 @@ class OrderApi
     // Mendapatkan semua pesanan
     public function getAllOrders()
     {
-        $this->db->query("SELECT * FROM order");
+        $this->db->query("SELECT * FROM orders");
         $orders = $this->db->resultSet();
 
         $data = ["data" => []];
@@ -176,7 +176,7 @@ class OrderApi
             od.Quantity, 
             od.Price, 
             od.Subtotal
-        FROM order o
+        FROM orders o
         LEFT JOIN orderdetail od ON o.OrderId = od.OrderId
         WHERE o.CustomerId = :customerId
     ");

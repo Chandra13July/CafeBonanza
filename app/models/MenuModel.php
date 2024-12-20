@@ -11,14 +11,14 @@ class MenuModel
 
     public function findMenuById($id)
     {
-        $this->db->query('SELECT * FROM menu WHERE MenuId = :MenuId');
+        $this->db->query('SELECT * FROM Menu WHERE MenuId = :MenuId');
         $this->db->bind(':MenuId', $id);
         return $this->db->single();
     }
 
     public function getAllMenu()
     {
-        $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM menu ORDER BY CreatedAt DESC');
+        $this->db->query('SELECT MenuId, MenuName, Description, Price, Stock, Category, ImageUrl FROM Menu ORDER BY CreatedAt DESC');
         return $this->db->resultSet();
     }
 
@@ -35,9 +35,9 @@ class MenuModel
                 m.ImageUrl, 
                 COALESCE(SUM(od.Quantity), 0) AS TotalSold
             FROM 
-                menu m
+                Menu m
             LEFT JOIN 
-                OrderDetail od ON m.MenuId = od.MenuId
+                orderdetail od ON m.MenuId = od.MenuId
             GROUP BY 
                 m.MenuId, m.MenuName, m.Description, m.Price, m.Stock, m.Category, m.ImageUrl
         ');
@@ -48,20 +48,20 @@ class MenuModel
 
     public function getMenuById($menuId)
     {
-        $this->db->query("SELECT * FROM menu WHERE MenuId = :menuId");
+        $this->db->query("SELECT * FROM Menu WHERE MenuId = :menuId");
         $this->db->bind(':menuId', $menuId);
         return $this->db->single();
     }
 
     public function getTotalMenu()
     {
-        $this->db->query("SELECT COUNT(MenuId) AS totalMenu FROM menu");
+        $this->db->query("SELECT COUNT(MenuId) AS totalMenu FROM Menu");
         return $this->db->single()['totalMenu'];
     }
 
     public function addMenu($data)
     {
-        $this->db->query("INSERT INTO menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
+        $this->db->query("INSERT INTO Menu (MenuName, Description, Price, Stock, Category, ImageUrl) 
                             VALUES (:menuName, :description, :price, :stock, :category, :imageUrl)");
 
         $this->db->bind(':menuName', $data['menuName']);
@@ -76,7 +76,7 @@ class MenuModel
 
     public function editMenu($data)
     {
-        $query = "UPDATE menu SET 
+        $query = "UPDATE Menu SET 
                     MenuName = :menuName, 
                     Description = :description, 
                     Price = :price, 
@@ -99,7 +99,7 @@ class MenuModel
 
     public function deleteMenu($menuId)
     {
-        $this->db->query("DELETE FROM menu WHERE MenuId = :MenuId");
+        $this->db->query("DELETE FROM Menu WHERE MenuId = :MenuId");
         $this->db->bind(':MenuId', $menuId);
 
         return $this->db->execute();
@@ -114,7 +114,7 @@ class MenuModel
                 m.ImageUrl,
                 SUM(od.Quantity) AS totalQuantity
             FROM `orderdetail` od
-            JOIN `menu` m ON od.MenuId = m.MenuId
+            JOIN `Menu` m ON od.MenuId = m.MenuId
             GROUP BY m.MenuId
             ORDER BY totalQuantity DESC
             LIMIT :limit
@@ -135,7 +135,7 @@ class MenuModel
             m.Description,
             m.ImageUrl,
             m.Stock
-        FROM `menu` m
+        FROM `Menu` m
         WHERE m.Stock = 0  -- Menampilkan menu dengan stok habis
         OR m.Stock <= :threshold  -- Atau stok hampir habis
         ORDER BY m.MenuName
@@ -156,7 +156,7 @@ class MenuModel
         SUM(od.Quantity) AS totalSold  
     FROM `order` o
     JOIN `orderdetail` od ON o.OrderId = od.OrderId  
-    JOIN `menu` m ON od.MenuId = m.MenuId  
+    JOIN `Menu` m ON od.MenuId = m.MenuId  
     GROUP BY m.Category;
     ";
 

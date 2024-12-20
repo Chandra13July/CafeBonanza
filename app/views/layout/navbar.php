@@ -46,7 +46,7 @@
         <header class="bg-white border-b border-gray-300 sticky top-0 z-30">
             <nav class="flex justify-between items-center w-[92%] mx-auto py-4">
                 <div class="flex items-center gap-4">
-                    <img src="<?= BASEURL; ?>/img/logo-bonanza.png" alt="Cafe Bonanza" class="w-10 h-10 rounded-full">
+                    <img src="<?= BASEURL; ?>/img/logo-bonanza.png" alt="Cafe Bonanza" class="w-10 h-10 rounded-full" id="profileImage2">
                     <h1 class="text-2xl font-bold text-black">
                         Cafe
                         <span class="text-black">Bonanza</span>

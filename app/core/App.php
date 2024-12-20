@@ -1,7 +1,6 @@
 <?php
 
-class App
-{
+class App {
 
     protected $controller = 'Home'; // Default controller
     protected $method = 'index';    // Default method
@@ -36,7 +35,7 @@ class App
             $this->method = $url[1];
             unset($url[1]);
         }
-
+        
         // Atur parameter (jika ada)
         $this->params = !empty($url) ? array_values($url) : [];
 

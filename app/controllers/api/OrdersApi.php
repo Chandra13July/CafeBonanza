@@ -141,21 +141,26 @@ class OrderApi
 
         foreach ($orders as $order) {
             $data_order = [
-                "OrderId" => $order["OrderId"],
-                "CustomerId" => $order["CustomerId"],
-                "Total" => $order["Total"] ?? 0,
-                "Paid" => $order["Paid"] ?? 0,
-                "Change" => $order["Change"] ?? 0,
+                "OrderId" => $order["OrderId"] ?? 0,
+                "CustomerId" => $order["CustomerId"] ?? 0,
+                "Total" => isset($order["Total"]) ? number_format((float)$order["Total"], 2) : '0.00',
+                "Paid" => isset($order["Paid"]) ? number_format((float)$order["Paid"], 2) : '0.00',
+                "Change" => isset($order["Change"]) ? number_format((float)$order["Change"], 2) : '0.00',
                 "PaymentMethod" => $order["PaymentMethod"] ?? 'N/A',
                 "Status" => $order["Status"] ?? 'Unknown',
                 "CreatedAt" => $order["CreatedAt"] ?? 'Unknown'
             ];
-
-            array_push($data['data'], $data_order);
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
+            
+            $data['data'][] = $data_order;
+            
+            // Pastikan tidak ada output sebelumnya
+            if (!headers_sent()) {
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            } else {
+                error_log("Headers sudah dikirim sebelumnya.");
+            }
+        }            
     }
 
     // Mendapatkan pesanan berdasarkan CustomerId
