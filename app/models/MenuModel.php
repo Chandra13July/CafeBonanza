@@ -154,7 +154,7 @@ class MenuModel
     SELECT 
         m.Category,  
         SUM(od.Quantity) AS totalSold  
-    FROM `order` o
+    FROM `orders` o
     JOIN `orderdetail` od ON o.OrderId = od.OrderId  
     JOIN `Menu` m ON od.MenuId = m.MenuId  
     GROUP BY m.Category;

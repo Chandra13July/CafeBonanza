@@ -167,7 +167,7 @@ class CustomerModel
             c.Email,
             c.ImageUrl,
             COUNT(DISTINCT o.OrderId) AS totalOrders
-        FROM `order` o
+        FROM `orders` o
         JOIN `customer` c ON o.CustomerId = c.CustomerId
         GROUP BY o.CustomerId
         ORDER BY totalOrders DESC

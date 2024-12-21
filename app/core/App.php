@@ -1,6 +1,7 @@
 <?php
 
-class App {
+class App
+{
 
     protected $controller = 'Home'; // Default controller
     protected $method = 'index';    // Default method
@@ -9,6 +10,7 @@ class App {
     public function __construct()
     {
         $url = $this->parseURL();
+
         // Cek apakah $url valid dan file controller ada
         if (!empty($url) && file_exists(__DIR__ . '/../controllers/' . ucfirst($url[0]) . '.php')) {
             $this->controller = ucfirst($url[0]); // Pastikan nama controller diawali huruf besar
@@ -35,7 +37,7 @@ class App {
             $this->method = $url[1];
             unset($url[1]);
         }
-        
+
         // Atur parameter (jika ada)
         $this->params = !empty($url) ? array_values($url) : [];
 

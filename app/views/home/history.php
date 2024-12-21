@@ -10,10 +10,18 @@
     <style>
         .message-text {
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Membatasi pesan menjadi 2 baris */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .details {
+            overflow: hidden;
+        }
+
+        .grid>div {
+            overflow: hidden;
         }
     </style>
 </head>
@@ -24,8 +32,7 @@
         <div class="text-3xl font-semibold mb-6 sm:mb-8 text-gray-900 text-center">Order History</div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-8">
             <?php foreach ($orderHistory as $order) : ?>
-                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out">
-                    <!-- Order ID dan Status -->
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out cursor-pointer" onclick="toggleDetails(<?= $order['OrderId'] ?>)">
                     <div class="relative">
                         <?php
                         $statuses = [
@@ -69,23 +76,34 @@
                             </div>
                             <p class="message-text text-gray-600 italic text-sm sm:text-base">"<?= htmlspecialchars($message) ?>"</p>
                         </div>
+                        <div class="hidden mt-4 details" id="details-<?= $order['OrderId'] ?>">
+                            <hr class="my-2">
+                            <h3 class="text-lg font-semibold mb-4">Detail Pesanan:</h3>
+                            <div class="space-y-4">
+                                <?php foreach ($order['items'] as $item) : ?>
+                                    <div class="flex items-center space-x-4">
+                                        <img src="<?= BASEURL; ?>/<?= htmlspecialchars($item['ImageUrl']) ?>" alt="<?= htmlspecialchars($item['MenuName']) ?>" class="w-16 h-16 object-cover rounded-lg">
+                                        <div class="flex-1">
+                                            <p class="text-gray-800 font-medium text-lg"><?= htmlspecialchars($item['MenuName']) ?></p>
+                                            <p class="text-gray-600 text-sm"><?= htmlspecialchars($item['Description']) ?></p>
+                                            <p class="text-gray-600">Rp<?= number_format($item['Price'], 0, ',', '.') ?> x <?= $item['Quantity'] ?> = Rp<?= number_format($item['Subtotal'], 0, ',', '.') ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 
-    <style>
-        .custom-scroll::-webkit-scrollbar {
-            display: none;
+    <script>
+        function toggleDetails(orderId) {
+            const details = document.getElementById('details-' + orderId);
+            details.classList.toggle('hidden');
         }
-
-        .custom-scroll {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
-
+    </script>
 </body>
 
 </html>

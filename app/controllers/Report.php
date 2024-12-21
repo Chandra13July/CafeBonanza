@@ -102,7 +102,7 @@ class Report extends Controller
         // Pastikan $amount memiliki nilai numerik, default ke 0 jika null
         $amount = is_numeric($amount) ? (float)$amount : 0;
         return "Rp " . number_format($amount, 0, ',', '.');
-    }    
+    }
 
     public function exportPdf($startDate = null, $endDate = null)
     {
@@ -124,6 +124,7 @@ class Report extends Controller
         $pdf->Cell(0, 10, 'Tanggal Export: ' . date('Y-m-d H:i:s'), 0, 1, 'R');
         $pdf->Ln(10);
 
+        // Header tabel PDF
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(20, 10, 'No', 1, 0, 'C');
         $pdf->Cell(40, 10, 'Customer', 1, 0, 'C');
@@ -137,11 +138,16 @@ class Report extends Controller
 
         $pdf->SetFont('Arial', '', 12);
         foreach ($orders as $index => $order) {
+            // Format angka menjadi Rupiah
+            $total = $this->formatRupiah($order['Total']);
+            $paid = $this->formatRupiah($order['Paid']);
+            $change = $this->formatRupiah($order['Change']);
+
             $pdf->Cell(20, 10, $index + 1, 1, 0, 'C');
             $pdf->Cell(40, 10, $order['Customer'], 1, 0, 'C');
-            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Total'], 0, ',', '.'), 1, 0, 'C');
-            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Paid'], 0, ',', '.'), 1, 0, 'C');
-            $pdf->Cell(30, 10, 'Rp ' . number_format($order['Change'], 0, ',', '.'), 1, 0, 'C');
+            $pdf->Cell(30, 10, $total, 1, 0, 'C');
+            $pdf->Cell(30, 10, $paid, 1, 0, 'C');
+            $pdf->Cell(30, 10, $change, 1, 0, 'C');
             $pdf->Cell(40, 10, $order['PaymentMethod'], 1, 0, 'C');
             $pdf->Cell(30, 10, $order['Status'], 1, 0, 'C');
             $pdf->Cell(50, 10, $order['CreatedAt'], 1, 0, 'C');
@@ -151,8 +157,14 @@ class Report extends Controller
         $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.pdf';
         $filePath = __DIR__ . '/../../public/report/pdf/' . $fileName;
 
+        // Pastikan folder ada dan bisa ditulis
+        if (!is_dir(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);  // Membuat folder jika belum ada
+        }
+
         $pdf->Output('F', $filePath);
 
+        // Mengirimkan header untuk unduhan PDF
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
         header('Content-Length: ' . filesize($filePath));
@@ -223,6 +235,9 @@ class Report extends Controller
 
     public function exportCsv($startDate = null, $endDate = null)
     {
+        // Menyalakan output buffering
+        ob_start();
+
         $orders = $this->orderModel->getOrderReport($startDate, $endDate);
 
         usort($orders, function ($a, $b) {
@@ -230,18 +245,18 @@ class Report extends Controller
         });
 
         $fileName = 'order_report_' . date('Y-m-d_H-i-s') . '.csv';
-
         $filePath = __DIR__ . '/../../public/report/csv/' . $fileName;
-
         $output = fopen($filePath, 'w');
 
+        // Menulis header CSV
         fputcsv($output, ['No', 'Customer', 'Total', 'Paid', 'Change', 'PaymentMethod', 'Status', 'CreatedAt']);
 
         $no = 1;
         foreach ($orders as $order) {
-            $total = 'Rp ' . number_format($order['Total'], 0, ',', '.');
-            $paid = 'Rp ' . number_format($order['Paid'], 0, ',', '.');
-            $change = 'Rp ' . number_format($order['Change'], 0, ',', '.');
+            // Memeriksa dan memformat nilai jika null atau tidak valid
+            $total = isset($order['Total']) && is_numeric($order['Total']) ? 'Rp ' . number_format($order['Total'], 0, ',', '.') : 'Rp 0';
+            $paid = isset($order['Paid']) && is_numeric($order['Paid']) ? 'Rp ' . number_format($order['Paid'], 0, ',', '.') : 'Rp 0';
+            $change = isset($order['Change']) && is_numeric($order['Change']) ? 'Rp ' . number_format($order['Change'], 0, ',', '.') : 'Rp 0';
 
             fputcsv($output, [
                 $no++,
@@ -257,11 +272,16 @@ class Report extends Controller
 
         fclose($output);
 
+        // Mengirimkan header untuk unduhan CSV
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
         header('Content-Length: ' . filesize($filePath));
 
+        // Membaca file untuk diunduh
         readfile($filePath);
+
+        // Menutup output buffer dan mengirimkan output
+        ob_end_flush();
 
         exit();
     }
